@@ -1,0 +1,9 @@
+^dist/
+^website/
+^build/
+^docs/
+.out$
+.pyc$
+.bat$
+.log$
+MANIFEST$

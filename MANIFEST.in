@@ -1,0 +1,9 @@
+graft bin
+graft 2.x
+graft 3.x
+include MANIFEST *.txt setup.py
+include src/hyphen.c src/hnjalloc.c
+graft include
+exclude textwrap2.py
+prune demo
+prune hyphen

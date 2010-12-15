@@ -135,7 +135,7 @@ class Hyphenator:
     'hyphen-2.3-1'.
     '''
     def __init__(self, language = 'en_US', lmin = 2, rmin = 2, compound_lmin = 2, compound_rmin = 2,
-            directory = config.default_dic_path):
+            directory = config.default_dict_path):
         '''
         Return a hyphenator object initialized with a dictionary for the specified language.
 

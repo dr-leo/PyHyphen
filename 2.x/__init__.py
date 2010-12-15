@@ -111,11 +111,14 @@ print h_en.wrap(u'beautiful', 7)
 '''
 
 
-import hnj, config
+import hnj, config, pickle, os
 
 __all__ = ['dictools', 'hyphenator']
 
 
+if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
+    dict_info = pickle.load(open(config.default_dict_path + '/dict_info.pickle'))
+else: dict_info = None
 
 
 class Hyphenator:
@@ -125,7 +128,7 @@ class Hyphenator:
     """
     def __init__(self, language = 'en_US', lmin = 2, rmin = 2, compound_lmin = 2,
     compound_rmin = 2,
-        directory = config.default_dic_path):
+        directory = config.default_dict_path):
         """
         Return a hyphenator object initialized with a dictionary for the
         specified language.
@@ -142,10 +145,16 @@ class Hyphenator:
             cut off at the beginning or end of the entire word
                or compound parts thereof.
         """
-        file_path = ''.join((directory, '/hyph_', language, '.dic'))
+        if dict_info:
+            file_name = dict_info[language]['file_name']
+        else: file_name = '/' + language
+        file_path = directory + u'/' + file_name
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin,
             compound_lmin, compound_rmin)
         self.language = language
+        if dict_info:
+            self.info = dict_info[language]
+        else: self.info = None
 
 
     def pairs(self, word):
@@ -229,6 +238,6 @@ class Hyphenator:
         else: return []
 
 
-# The following ensures backwards compatibility with version 0.9.3
+# The following ensures backward compatibility with version 0.9.3
 class hyphenator(Hyphenator):
     '''This class is deprecated. Use 'Hyphenator' instead.'''

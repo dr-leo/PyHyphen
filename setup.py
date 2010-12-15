@@ -111,11 +111,14 @@ if 'install' in sys.argv:
         
         # Install dictionaries
         if '--no_dictionaries' not in sys.argv:
-            sys.stdout.write('Installing dictionaries... ')
+            # install dict_info and dictionaries
             if py3k: from imp import reload
             reload(hyphen.config)
-            from hyphen.dictools import install
-            sys.stdout.write('en_US ')
+            from hyphen.dictools import install, install_dict_info
+            sys.stdout.write('Installing dictionary info...')
+            install_dict_info()
+            sys.stdout.write(' Done.\n')
+            sys.stdout.write('Installing dictionaries... en_US ')
             install('en_US')
             locale.setlocale(locale.LC_ALL, '')
             local_lang = locale.getlocale()[0]

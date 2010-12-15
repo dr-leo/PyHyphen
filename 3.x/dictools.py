@@ -12,14 +12,14 @@ from hyphen import config
 __all__ = ['install', 'uninstall', 'is_installed', 'list_installed']
 
 
-def list_installed(directory = config.default_dic_path):
+def list_installed(directory = config.default_dict_path):
     '''Return a list of strings containing language and country codes of the
     dictionaries installed in 'directory' (default as declared in config.py).
     Example: file name = 'hyph_en_US.dic'. Return value: ['en_US']'''
     return [d[5:-4] for d in os.listdir(directory)
             if (d.startswith('hyph_') and d.endswith('.dic'))]
 
-def is_installed(language, directory = config.default_dic_path):
+def is_installed(language, directory = config.default_dict_path):
     '''return True if 'directory' (default as declared in config.py)
     contains a dictionary file for 'language',
     False otherwise.
@@ -29,7 +29,7 @@ def is_installed(language, directory = config.default_dic_path):
     return (language in list_installed(directory))
 
 
-def install(language, directory = config.default_dic_path,
+def install(language, directory = config.default_dict_path,
             repos = config.default_repository):
     '''
     Download  and install a dictionary file.
@@ -49,12 +49,12 @@ def install(language, directory = config.default_dic_path,
     dest.write(dic_str)
     dest.close()
 
-def uninstall(language, directory = config.default_dic_path):
+def uninstall(language, directory = config.default_dict_path):
     '''
     Uninstall the dictionary of the specified language.
     'language': is by convention a string of the form 'll_CC' whereby ll is the
         language code and CC the country code.
-    'directory' (default: config.default_dic_path'. After installation of PyHyphen
+    'directory' (default: config.default_dict_path'. After installation of PyHyphen
     this is the package root of 'hyphen'.'''
     file_path = ''.join((directory, '/hyph_', language, '.dic'))
     os.remove(file_path)

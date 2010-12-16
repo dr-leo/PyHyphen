@@ -114,6 +114,7 @@ if 'install' in sys.argv:
             # install dict_info and dictionaries
             if py3k: from imp import reload
             reload(hyphen.config)
+            reload(hyphen)
             from hyphen.dictools import install, install_dict_info
             sys.stdout.write('Installing dictionary info...')
             install_dict_info()

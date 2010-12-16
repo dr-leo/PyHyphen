@@ -4,7 +4,7 @@
 This module contains convenience functions to handle hyphenation dictionaries.
 '''
 
-import os, urllib2, csv, pickle, config
+import os, urllib2, csv, pickle, config, hyphen
 from StringIO import StringIO
 from  zipfile import ZipFile
 
@@ -38,12 +38,12 @@ def install(language, directory = config.default_dict_path,
     value given in config.py. After installation this is the package root of 'hyphen'
     repos: the url of the dictionary repository. (Default: as declared in config.py;
     after installation this is the OpenOffice repository for dictionaries.).'''
-    url = ''.join((repos, 'hyph_', language, '.zip'))
+    url = ''.join((repos, hyphen.dict_info[language]['file_name']))
     s = urllib2.urlopen(url).read()
     z = ZipFile(StringIO(s))
     if z.testzip():
         raise IOError('The ZIP archive containing the dictionary is corrupt.')
-    dic_filename = ''.join(('hyph_', language, '.dic'))
+    dic_filename = ''.join((hyphen.dict_info[language]['name'], '.dic'))
     dic_str = z.read(dic_filename)
     dest = open('/'.join((directory, dic_filename)), 'w')
     dest.write(dic_str)
@@ -56,7 +56,7 @@ def uninstall(language, directory = config.default_dict_path):
         language code and CC the country code.
     'directory' (default: config.default_dict_path'. After installation of PyHyphen
     this is the package root of 'hyphen'.'''
-    file_path = ''.join((directory, '/hyph_', language, '.dic'))
+    file_path = ''.join((directory, hyphen.dict_info[language]['name'], '.dic'))
     os.remove(file_path)
 
 
@@ -73,8 +73,6 @@ def install_dict_info(save = True, directory = config.default_dict_path):
     avail_dict = {}
     for i in d:
         key = '_'.join((i['language_code'], i['country_code']))
-        # replace the .zip extension by the local file name extension
-        i['file_name'] = i['file_name'][:-3] + u'dic'
         avail_dict[key] = i
     
     if save:

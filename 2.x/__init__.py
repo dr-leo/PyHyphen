@@ -146,8 +146,8 @@ class Hyphenator:
                or compound parts thereof.
         """
         if dict_info:
-            file_name = dict_info[language]['file_name']
-        else: file_name = '/' + language
+            file_name = dict_info[language]['name'] + u'.dic'
+        else: file_name = language
         file_path = directory + u'/' + file_name
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin,
             compound_lmin, compound_rmin)

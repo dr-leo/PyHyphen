@@ -122,9 +122,16 @@ print h_en.wrap('beautiful', 7)
 '''
 
 
-import hyphen.hnj, hyphen.config
+from . import hnj, config
+import pickle, os
 
-__all__ = ['dictools', 'hyphenator']
+
+__all__ = ['dictools', 'Hyphenator']
+
+
+if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
+    dict_info = pickle.load(open(config.default_dict_path + '/dict_info.pickle', 'rb'))
+else: dict_info = None
 
 
 
@@ -147,9 +154,17 @@ class Hyphenator:
 
         Each class instance has a member 'language' showing the language of its dictionary.
         '''
+        if dict_info and language in ddict_info:
+            file_name = dict_info[language]['name'] + '.dic'
+        else: file_name = language
         file_path = ''.join((directory, '/hyph_', language, '.dic'))
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin, compound_lmin, compound_rmin)
         self.language = language
+        if dict_info:
+            self.info = dict_info[language]
+        else: self.info = None
+
+
 
 
     def pairs(self, word):

@@ -2,7 +2,7 @@
 PyHyphen - hyphenation for Python
 =================================
 
-(c) 2008-2010 Dr. Leo
+(c) 2008-2011 Dr. Leo
 
 Contact: fhaxbox66@googlemail.com
 
@@ -15,6 +15,26 @@ Mailing list: http://groups.google.com/group/pyhyphen
 
 Change log
 ======================
+
+New in version 0.11
+
+* Upgraded the C library libhyphen to v2.7
+* use a downloadable CSV file with meta information
+  on dictionaries for installation of dictionaries and
+  instantiation of hyphenators. Apps can access the table
+  pythonically and expose the meta info on installed and
+  ready-to-install dictionaries to the user.
+* Hyphenator objects have a 'info' attribute which is
+  a Python dictionary with meta information on
+  the hyphenation dictionary. The 'language' attribute
+  is deprecated
+* greatly simplified the installation process
+  The en_US hyphenation dictionary
+  has been removed from the package, but it is automatically
+  downloaded when installing PyHyphen. 
+* restructured the package and merged 2.x and 3.x setup files
+*
+* switched repository from svn to hg
 
 New in version 0.10
 
@@ -115,7 +135,7 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
 -------------------------------
 
 (no longer part of the distribution as of version 0.9.1; please
-    access the svn repository)
+    access the hg repository)
 
 This Python script is a framework for running large tests of the hyphen package.
 A test is a list of 3 elements: a text file (typically a word list), its encoding and a
@@ -230,7 +250,7 @@ http://wiki.services.openoffice.org/wiki/Dictionaries.
 6. Testing
 ==============
 
-This requires a checkout of the svn repository, as the test.py module is no longer part
+This requires cloning the hg repository, as the test.py module is no longer part
 of the source distribution. Please see the instructions in Demo/hyphen_test.py. All you need is a text file,
 and its encoding. Copy the text file into the Demo/input directory, add a new function
 call to hyphen_test.py, run it and read the .log file and the files created in the

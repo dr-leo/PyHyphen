@@ -8,7 +8,7 @@ import os, urllib2, csv, pickle, config, hyphen
 from StringIO import StringIO
 from  zipfile import ZipFile
 
-__all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
+__all__ = ['install', 'is_installed', 'uninstall', 'list_installed', 'install_dict_info']
 
 
 

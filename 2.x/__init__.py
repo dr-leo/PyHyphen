@@ -113,7 +113,7 @@ print h_en.wrap(u'beautiful', 7)
 
 import hnj, config, pickle, os
 
-__all__ = ['dictools', 'hyphenator']
+__all__ = ['dictools', 'Hyphenator']
 
 
 if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
@@ -130,7 +130,7 @@ class Hyphenator:
     compound_rmin = 2,
         directory = config.default_dict_path):
         """
-        Return a hyphenator object initialized with a dictionary for the
+        Return a Hyphenator object initialized with a dictionary for the
         specified language.
 
             'language' should by convention be a string of length 5 of the form
@@ -145,7 +145,7 @@ class Hyphenator:
             cut off at the beginning or end of the entire word
                or compound parts thereof.
         """
-        if dict_info:
+        if dict_info and language in dict_info:
             file_name = dict_info[language]['name'] + u'.dic'
         else: file_name = language
         file_path = directory + u'/' + file_name

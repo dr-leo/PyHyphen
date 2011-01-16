@@ -33,7 +33,6 @@ New in version 0.11
   has been removed from the package, but it is automatically
   downloaded when installing PyHyphen. 
 * restructured the package and merged 2.x and 3.x setup files
-*
 * switched repository from svn to hg
 
 New in version 0.10

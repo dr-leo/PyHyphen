@@ -117,7 +117,7 @@ if 'install' in sys.argv:
             reload(hyphen)
             from hyphen.dictools import install, install_dict_info
             sys.stdout.write('Installing dictionary info...')
-            install_dict_info()
+            hyphen.dict_info = install_dict_info()
             sys.stdout.write(' Done.\n')
             sys.stdout.write('Installing dictionaries... en_US ')
             install('en_US')

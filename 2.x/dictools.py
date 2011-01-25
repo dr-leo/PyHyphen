@@ -64,8 +64,6 @@ def install_dict_info(save = True, directory = config.default_dict_path):
     '''Loads the list of available dictionaries and stores it locally.'''
     
     l = urllib2.urlopen('http://ftp.osuosl.org/pub/openoffice/contrib/dictionaries/hyphavail.lst').readlines()
-    # the first line contains the URL which we don't need:
-    l.pop(0)
     
     stream = StringIO('\n'.join(l))
     d = csv.DictReader(stream, fieldnames = ['language_code', 'country_code',

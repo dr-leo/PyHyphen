@@ -66,8 +66,6 @@ def install_dict_info(save = True, directory = config.default_dict_path):
 
     raw_bytes = urllib.request.urlopen('http://ftp.osuosl.org/pub/openoffice/contrib/dictionaries/hyphavail.lst').read()
     stream = StringIO(raw_bytes.decode())
-    # the first line contains the URL which we don't need:
-    stream.readline()
 
     d = csv.DictReader(stream, fieldnames = ['language_code', 'country_code',
         'name', 'long_descr', 'file_name'])

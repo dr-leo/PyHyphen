@@ -1,7 +1,7 @@
 # Without prejudice to the license governing the use of
 # the Python standard module textwrap on which textwrap2 is based,
 # PyHyphen is licensed under the same terms as the underlying C library hyphen-2.3.1.
-# The essential parts of the license terms of hyphen-2.3.1 are quoted hereunder.
+# The essential parts of the license terms of libhyphen are quoted hereunder.
 #
 #
 #
@@ -34,8 +34,6 @@ Contents
 
 1. Overview
 2. Code examples
-3. Compiling and installing (left out here; see the README file for details)
-4. How to get dictionaries
 
 
 
@@ -76,48 +74,7 @@ This module is an enhanced though backwards compatible version of the module
 'textwrap' known from the Python standard library. Not very surprisingly, it adds
 hyphenation functionality to 'textwrap'.
 
-1.3 hyphen_test (in the demo/ subdirectory)
-
-This Python script is a framework for running large tests of the hyphen package.
-A test is a 3-tuple of a text file (typically a word list), its encoding and a
-list of strings specifying a dictionary to be applied to the word list. Adding a test
-is as easy as writing a function call. All results are logged.
-
-
-2. Code examples
-
-from hyphen import Hyphenator
-from hyphen.dictools import *
-
-# Download and install some dictionaries in the default directory using the derault
-# repository, usually the OpenOffice website
-for lang in ['de_DE', 'fr_FR', 'en_UK', 'ru_RU']:
-    if not is_installed(lang): install(lang)
-
-# Create some hyphenators
-h_de = Hyphenator('de_DE')
-h_en = Hyphenator('en_US')
-
-# Now hyphenate some words
-
-print h_en.pairs('beautiful')
-[['beau', 'tiful'], ['beauti', 'ful']]
-
-print h_en.wrap('beautiful', 6)
-['beau-', 'tiful']
-
-print h_en.wrap('beautiful', 7)
-['beauti-', 'ful']
-
-
-4. How to get dictionaries?
-
- Visit http://wiki.services.openoffice.org/wiki/Dictionaries for a
- complete list. If you know the language and country code of your favorite
- dictionary (e.g. 'it_IT' for Italian) and have internet access, you can take
- advantage of the install function in the hyphen.dictools module. See the code
- example above (2.) for more details, or read the module documentation.
-
+2. Code examples (see README.txt)
 
 '''
 
@@ -128,7 +85,7 @@ import pickle, os
 
 __all__ = ['dictools', 'Hyphenator']
 
-
+# Try to load meta information on downloadable dictionaries:
 if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
     dict_info = pickle.load(open(config.default_dict_path + '/dict_info.pickle', 'rb'))
 else: dict_info = None
@@ -139,22 +96,31 @@ else: dict_info = None
 class Hyphenator:
     '''
     Wrapper class around the class 'hnjmodule.hyphenator_'. It provides convenient access to the C library
-    'hyphen-2.3-1'.
+    'libhyphen'.
     '''
     def __init__(self, language = 'en_US', lmin = 2, rmin = 2, compound_lmin = 2, compound_rmin = 2,
             directory = config.default_dict_path):
         '''
         Return a hyphenator object initialized with a dictionary for the specified language.
 
-            'language' should by convention be a string of length 5 of the form "xx_YY" where xx
+            'language' should by convention be a string of length 5 of the form "ll_CC" where ll
             is the language code          and CC the country code.
             This is inspired by the file names of
             OpenOffice's hyphenation dictionaries.
             Example: 'en_NZ' for English / New Zealand
 
-        Each class instance has a member 'language' showing the language of its dictionary.
+        Each class instance has an attribute 'info' of type dict containing metadata on its dictionary.
+        If the module-level attribute dict_info is None
+        or does not contain an entry for this dictionary, the info attribute of the Hyphenator instance will be None.
+        There is also a 'language' attribute of type str which is deprecated since v1.0.
+        
+        lmin, rmin, compound_lmin and compound_rmin: set minimum number of chars to be cut off by hyphenation in
+        single or compound words
+        
         '''
-        if dict_info and language in ddict_info:
+        
+        
+        if dict_info and language in dict_info:
             file_name = dict_info[language]['name'] + '.dic'
         else: file_name = language
         file_path = ''.join((directory, '/hyph_', language, '.dic'))
@@ -237,12 +203,21 @@ class Hyphenator:
         It is added automatically and must fit
         into 'width' as well. If no hyphenation was found such that the
         shortest prefix (plus 'hyphen') fits into 'width', [] is returned.
+        If the left part ends with a hyphen such as in 'Python-powered', no hyphen is appended.
         '''
+        
         p = self.pairs(word)
         max_chars = width - len(hyphen)
-        while p and (len(p[-1][0]) > max_chars): p.pop()
+        while p:
+            if p[-1][0].endswith(hyphen): cur_max_chars = max_chars + 1
+            else: cur_max_chars = max_chars
+            if len(p[-1][0]) > cur_max_chars:
+                p.pop()
+            else: break
         if p:
-            p[-1][0] = ''.join((p[-1][0], hyphen))
+            # Need to append a hyphen?
+            if cur_max_chars == max_chars:
+                p[-1][0] += hyphen
             return p[-1]
         else: return []
 

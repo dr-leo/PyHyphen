@@ -3,7 +3,7 @@
 # Without prejudice to the license governing the use of
 # the Python standard module textwrap on which textwrap2 is based,
 # PyHyphen is licensed under the same terms as the underlying C library hyphen-2.3.1.
-# The essential parts of the license terms of hyphen-2.3.1 are quoted hereunder.
+# The essential parts of the license terms of libhyphen are quoted hereunder.
 #
 #
 #
@@ -28,7 +28,7 @@
 '''
 hyphen - hyphenation for Python
 
-This package adds hyphenation functionality to the Python programming language.
+This package adds a hyphenation functionality to the Python programming language.
 You may also wish to have a look at the module 'textwrap2' distributed jointly
 with this package.
 
@@ -36,8 +36,6 @@ Contents
 
 1. Overview
 2. Code examples
-3. Compiling and installing (left out here; see the README file for details)
-4. Obtaining dictionaries
 
 
 
@@ -59,13 +57,19 @@ PyHyphen consists of the package 'hyphen' and the module 'textwrap2'.
      - hyph_en_US.dic is the hyphenation dictionary for US English as found on
        the OpenOffice.org repository.
     - 'hnj' is the C extension module that does all the ground work. It
-      contains the C library hyphen-2.4 used in OpenOffice and Mozilla products.
+      contains the C library libhyphen used in OpenOffice and Mozilla products.
       It supports non-standard hyphenation and - as of version 2.4 - compound words.
       Moreover, the minimum number of characters cut off by the hyphen can be set
       both for the entire word and compound parts thereof.
          Note that hyphenation dictionaries are invisible to the
-      Python programmer. But each hyphenator object has a member 'language' which is a
-      string showing the language of the dictionary in use.
+      Python programmer. But each Hyphenator object has a member 'info' of type dict which
+      contains meta information on the hyphenation dictionary.
+      
+      The module-level attribute is a dictionary with meta information on all dictionaries available for download
+      at the specified location. It relies on the successful install
+      of a meta data file from the oo website.
+      If you use other repository locations, this feature will not
+      work.
 
 
 1.2 The module 'textwrap2'
@@ -74,40 +78,8 @@ This module is an enhanced though backwards compatible version of the module
 'textwrap' known from the Python standard library. Not very surprisingly, it adds
 hyphenation functionality to 'textwrap'.
 
-2. Code examples
 
-from hyphen import Hyphenator
-from hyphen.dictools import *
-
-# Download and install some dictionaries in the default directory using the default
-# repository, usually the OpenOffice website
-for lang in ['de_DE', 'fr_FR', 'en_UK', 'ru_RU']:
-    if not is_installed(lang): install(lang)
-
-# Create some hyphenators
-h_de = Hyphenator('de_DE', rmin = 3; compound_rmin = 3) # the left values are 2 by default.
-h_en = Hyphenator() # 'en_US' is the difault dictionary.'
-
-# Now hyphenate some words
-
-print h_en.pairs(u'beautiful')
-[[u'beau', u'tiful'], [u'beauti', u'ful']]
-
-print h_en.wrap(u'beautiful', 6)
-[u'beau-', u'tiful']
-
-print h_en.wrap(u'beautiful', 7)
-[u'beauti-', u'ful']
-
-
-4. Obtaining dictionaries
-
- Visit http://wiki.services.openoffice.org/wiki/Dictionaries for a
- complete list. If you know the language and country code of your favorite
- dictionary (e.g. 'it_IT' for Italian) and have internet access, you can take
- advantage of the install function in the hyphen.dictools module. See the code
- example above (2.) for more details, or read the module documentation.
-
+2. Code examples (see README.txt)
 '''
 
 
@@ -116,6 +88,7 @@ import hnj, config, pickle, os
 __all__ = ['dictools', 'Hyphenator']
 
 
+# Try to load meta information on downloadable dictionaries:
 if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
     dict_info = pickle.load(open(config.default_dict_path + '/dict_info.pickle'))
 else: dict_info = None
@@ -129,22 +102,28 @@ class Hyphenator:
     def __init__(self, language = 'en_US', lmin = 2, rmin = 2, compound_lmin = 2,
     compound_rmin = 2,
         directory = config.default_dict_path):
-        """
-        Return a Hyphenator object initialized with a dictionary for the
-        specified language.
+        '''
+        Return a hyphenator object initialized with a dictionary for the specified language.
 
-            'language' should by convention be a string of length 5 of the form
-            "ll_CC" where ll is the language code          and CC the country code.
+            'language' should by convention be a string of length 5 of the form "ll_CC" where ll
+            is the language code          and CC the country code.
             This is inspired by the file names of
             OpenOffice's hyphenation dictionaries.
             Example: 'en_NZ' for English / New Zealand
 
-        Each class instance has a member 'language' showing the language
-        of its dictionary.
-            lmin, compound_lmin and friends set the minimum number of characters
-            cut off at the beginning or end of the entire word
-               or compound parts thereof.
-        """
+        Each class instance has an attribute 'info' of type dict containing metadata on its dictionary.
+        If the module-level attribute dict_info is None,
+        or does not contain an entry for this dictionary, the info attribute of the Hyphenator instance is None.
+        
+        There is also a 'language' attribute of type str which is deprecated since v1.0.
+        
+        lmin, rmin, compound_lmin and compound_rmin: set minimum number of chars to be cut off by hyphenation in
+        single or compound words
+        
+        '''
+        
+        
+        
         if dict_info and language in dict_info:
             file_name = dict_info[language]['name'] + u'.dic'
         else: file_name = language
@@ -231,9 +210,16 @@ class Hyphenator:
         '''
         p = self.pairs(word)
         max_chars = width - len(hyphen)
-        while p and (len(p[-1][0]) > max_chars): p.pop()
+        while p:
+            if p[-1][0].endswith(hyphen): cur_max_chars = max_chars + 1
+            else: cur_max_chars = max_chars
+            if len(p[-1][0]) > cur_max_chars:
+                p.pop()
+            else: break
         if p:
-            p[-1][0] = ''.join((p[-1][0], hyphen))
+            # Need to append a hyphen?
+            if cur_max_chars == max_chars:
+                p[-1][0] += hyphen
             return p[-1]
         else: return []
 

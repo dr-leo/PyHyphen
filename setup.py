@@ -35,7 +35,7 @@ longdescr = open('README.txt').read()
 
 
 arg_dict = dict(
-    name = "PyHyphen", version = "0.11b1",
+    name = "PyHyphen", version = "1.0beta1",
     author = "Dr. Leo",
     author_email = "fhaxbox66@googlemail.com",
     url = "http://pyhyphen.googlecode.com",
@@ -43,7 +43,7 @@ arg_dict = dict(
     long_description = longdescr,
     classifiers = [
         'Intended Audience :: Developers',
-         'Development Status :: 5 - Production/Stable',
+         'Development Status :: 4 - Beta',
         'License :: OSI Approved',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
@@ -121,11 +121,17 @@ if 'install' in sys.argv:
             sys.stdout.write(' Done.\n')
             sys.stdout.write('Installing dictionaries... en_US ')
             install('en_US')
+            
+            # Install dict for local language if needed
             locale.setlocale(locale.LC_ALL, '')
             local_lang = locale.getlocale()[0]
-            sys.stdout.write(local_lang + ' ')
-            install(local_lang)
-            sys.stdout.write('Done.\n')
+            if local_lang != 'en_US':
+                if local_lang in hyphen.dict_info:
+                    sys.stdout.write(local_lang + ' ')
+                    install(local_lang)
+                    sys.stdout.write('Done.\n')
+            else:
+                sys.stdout.write('(No dictionary for local language found)\n')
             
     except ImportError:
         sys.stderr.write("""Warning:

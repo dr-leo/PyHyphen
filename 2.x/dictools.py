@@ -37,8 +37,14 @@ def install(language, directory = config.default_dict_path,
     directory: the installation directory. Defaults to the
     value given in config.py. After installation this is the package root of 'hyphen'
     repos: the url of the dictionary repository. (Default: as declared in config.py;
-    after installation this is the OpenOffice repository for dictionaries.).'''
-    url = ''.join((repos, hyphen.dict_info[language]['file_name']))
+    after installation this is the OpenOffice repository for dictionaries.).
+    '''
+    
+    if hyphen.dict_info and language in hyphen.dict_info:
+        fn = hyphen.dict_info[language]['file_name']
+    else:
+        fn = 'hyph_' + language + '.dic'
+    url = ''.join((repos, fn))
     s = urllib2.urlopen(url).read()
     z = ZipFile(StringIO(s))
     if z.testzip():
@@ -55,13 +61,18 @@ def uninstall(language, directory = config.default_dict_path):
     'language': is by convention a string of the form 'll_CC' whereby ll is the
         language code and CC the country code.
     'directory' (default: config.default_dict_path'. After installation of PyHyphen
-    this is the package root of 'hyphen'.'''
-    file_path = ''.join((directory, hyphen.dict_info[language]['name'], '.dic'))
+    this is the package root of 'hyphen'.
+    '''
+    
+    if hyphen.dict_info:
+        file_path = ''.join((directory, '/', hyphen.dict_info[language]['name'], '.dic'))
+    else:
+        file_path = ''.join((directory, '/', 'hyph_', language, '.dic'))
     os.remove(file_path)
 
 
 def install_dict_info(save = True, directory = config.default_dict_path):
-    '''Loads the list of available dictionaries and stores it locally.'''
+    '''download metadata on available dictionaries from the oo website and stores it locally.'''
     
     l = urllib2.urlopen('http://ftp.osuosl.org/pub/openoffice/contrib/dictionaries/hyphavail.lst').readlines()
     

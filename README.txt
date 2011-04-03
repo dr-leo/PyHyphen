@@ -243,8 +243,8 @@ Under Linux you may need root privileges, so you may want to enter something lik
  After compiling and installing the hyphen package, config.py is adjusted as follows:
  
 - the package directory becomes the local default path for hyphenation dictionaries
- - the OpenOffice website becomes the default repository from which
-   dictionaries are downloaded.
+- the OpenOffice website becomes the default repository from which
+  dictionaries are downloaded.
 
 Thereafter, the setup script tries to re-import the hyphen package to install a default
 set of dictionaries, unless the command line contains the 'no_dictionaries' command after 'install'. The script

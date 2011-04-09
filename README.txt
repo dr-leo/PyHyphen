@@ -264,7 +264,9 @@ for en_US (commonly used) and the local language, if different, are installed.
 ==============================
 
 the C extension module 'hnj' used by the hyphenator class defined in
-__init__.py contains the C library libhyphen which is used by OpenOffice.org, Mozilla
+__init__.py contains the
+`C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_
+which is used by OpenOffice.org, Mozilla
 and alike. The C sources have not been changed, let alone hnjmalloc.c which has
 been slightly modify to use pythonic memory management and error handling.
 

@@ -2,7 +2,7 @@
 PyHyphen - hyphenation for Python
 =================================
 
-(c) 2008-2011 Dr. Leo
+(c) 2008-2012 Dr. Leo
 
 Contact: fhaxbox66@googlemail.com
 
@@ -291,11 +291,10 @@ dictionary used with a given word list.
 
 Contributions, comments, bug reports, criticism and praise can be sent to the author.
 
-The sources of PyHyphen are found in a Mercurial repository at
-
-    http://pyhyphen.googlecode.com
+Browse  the Mercurial repository and submit
+bug reports at http://pyhyphen.googlecode.com_.
     
-This is also where you can submit bug reports.
+
 
 
  

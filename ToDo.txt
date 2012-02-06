@@ -5,7 +5,7 @@ To Do's for PyHyphen 1.0beta1
 
 Maybe it was a bit early to switch to v1.0, although not a single bug has been reported since.
 
-However, there is a lot to do before I would call it 1.0 final, and yet more
+However, there is a lot to do before it deserves versioned 1.0 final, and yet more
 in terms of adding useful features.
 
 I haven't got the time to do this, so helping hands are more than welcome.

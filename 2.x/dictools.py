@@ -6,7 +6,7 @@ This module contains convenience functions to handle hyphenation dictionaries.
 
 import os, urllib2, csv, pickle, config, hyphen
 from StringIO import StringIO
-from  zipfile import ZipFile
+# from  zipfile import ZipFile
 
 __all__ = ['install', 'is_installed', 'uninstall', 'list_installed', 'install_dict_info']
 
@@ -40,19 +40,25 @@ def install(language, directory = config.default_dict_path,
     after installation this is the OpenOffice repository for dictionaries.).
     '''
     
-    if hyphen.dict_info and language in hyphen.dict_info:
+    # Don't use dict_info until I found it on LibreOffice.
+    if False: # hyphen.dict_info and language in hyphen.dict_info:
         fn = hyphen.dict_info[language]['file_name']
     else:
         fn = 'hyph_' + language + '.dic'
-    url = ''.join((repos, fn))
-    s = urllib2.urlopen(url).read()
-    z = ZipFile(StringIO(s))
-    if z.testzip():
-        raise IOError('The ZIP archive containing the dictionary is corrupt.')
-    dic_filename = ''.join((hyphen.dict_info[language]['name'], '.dic'))
-    dic_str = z.read(dic_filename)
-    dest = open('/'.join((directory, dic_filename)), 'w')
-    dest.write(dic_str)
+    url = '/'.join((repos, language, fn))
+    try:
+        s = urllib2.urlopen(url).read()
+    except urllib2.URLError:
+        # OK. So try with only the language code rather than ll_CC, e.g. 'de' or 'en':
+        url = '/'.join((repos, language[:2], fn))
+        try:
+            s =         urllib2.urlopen(url).read()
+        except urllib2.URLError:
+            fn = 'hyph_' + language[:2] + '.dic'
+            url = '/'.join((repos, language[:2], fn))
+            s =         urllib2.urlopen(url).read()
+    dest = open('/'.join((directory, fn)), 'w')
+    dest.write(s)
     dest.close()
 
 def uninstall(language, directory = config.default_dict_path):

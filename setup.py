@@ -9,7 +9,7 @@ from distutils.core import setup, Extension
 # Change this if you want to download dictionaries from somewhere else by default.
 # Note that you can also specify the repository individualy
 # when calling hyphen.dictools.install.
-default_repo = 'http://ftp.services.openoffice.org/pub/OpenOffice.org/contrib/dictionaries/'
+default_repo = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/dictionaries'
 
 
 # Copy version-specific files

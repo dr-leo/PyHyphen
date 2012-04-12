@@ -9,7 +9,7 @@ from distutils.core import setup, Extension
 # Change this if you want to download dictionaries from somewhere else by default.
 # Note that you can also specify the repository individualy
 # when calling hyphen.dictools.install.
-default_repo = 'http://git.freedesktop.org/libreoffice/dictionaries/plain/dictionaries'
+default_repo = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/dictionaries/'
 
 # Country and language codes: These will be appended to the default_repos path
 languages = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',
@@ -132,12 +132,13 @@ if 'install' in sys.argv:
             locale.setlocale(locale.LC_ALL, '')
             local_lang = locale.getlocale()[0]
             if local_lang != 'en_US':
-                if local_lang in hyphen.dict_info:
-                    sys.stdout.write(local_lang + ' ')
+                sys.stdout.write(local_lang + ' ')
+                try:
                     install(local_lang)
                     sys.stdout.write('Done.\n')
-            else:
-                sys.stdout.write('(No dictionary for local language found)\n')
+                except Error:
+                    sys.stdout.write('Failed.\n')
+
             
     except ImportError:
         sys.stderr.write("""Warning:

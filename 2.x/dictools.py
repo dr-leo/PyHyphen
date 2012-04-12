@@ -14,10 +14,10 @@ __all__ = ['install', 'is_installed', 'uninstall', 'list_installed', 'install_di
 class DictInfo:
     'Contains metadata on a hyphenation dictionary'
     
-    def __init__(self, locales, path, url = None):
+    def __init__(self, locales, filepath, url = None):
         '''
         locales: a list of locales for for which the dictionary is suitable, e.g. 'en_UK'
-        path: the local path including filename of the dictionary file
+        filepath: the local path including filename of the dictionary file
         url: an  optional URL where the dictionary has been downloaded from
 '''
 
@@ -111,9 +111,8 @@ def install(language, directory = config.default_dict_path,
                             # Its only child's text is a list of strings of the form %origin%<filename>
                             # For simplicity, we only use the first filename in the list.
                             raw_dict_fn = property.getchildren()[0].text.split()[0]
-                            dict_fn = raw_dict_fn[7:] # strip the prefix '%origin%'
-                            dict_url = '/'.join((repos, language_ext_name, dict_fn))
-
+                            dict_fn = raw_dict_fn[9:] # strip the prefix '%origin%'
+                            dict_url = ''.join((repos, language_ext_name, '/', dict_fn))
                             break # skip any other values of this property
 
                         elif pv.lower() == 'locales':
@@ -122,7 +121,6 @@ def install(language, directory = config.default_dict_path,
 
                             break # skip any other values of this property
 
-                    break # skip any other property of this node
 
                 # Install the dictionary file
                 dict_str = urlopen(dict_url).read()
@@ -140,7 +138,7 @@ def install(language, directory = config.default_dict_path,
     else:
         # Download the dictionary guessing its URL
         dict_fn = ''.join(('hyph_dict_', language, '.dic'))
-        dict_url = ''.join((repos, '/', dict_fn))
+        dict_url = ''.join((repos, dict_fn))
         dict_str = urlopen(dict_url).read()
         filepath = directory + '/' + dict_fn
         with open(filepath, 'w')  as dict_file:

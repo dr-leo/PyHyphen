@@ -46,18 +46,18 @@ PyHyphen consists of the package 'hyphen' and the module 'textwrap2'.
 1.1 The hyphen package contains:
     - at top level the definition of the class 'Hyphenator' each instance of which
       can hyphenate words using a dictionary compatible with the hyphenation feature of
-      OpenOffice and Mozilla. The former class 'hyphenator' is deprecated
+      LibreOffice and Mozilla. The former class 'hyphenator' is deprecated
       as of version 0.10 as class names conventially begin with a capital letter.
     - the module dictools contains useful functions such as automatic downloading and
       installing dictionaries from a configurable repository. By default, the
-      OpenOffice repository is used.
+      LibreOffice repository is used.
      - config is a configuration file initialized at install time with default values
        for the directory where dictionaries are searched, and the repository for future
        downloads of dictionaries.
      - hyph_en_US.dic is the hyphenation dictionary for US English as found on
-       the OpenOffice.org repository.
+       the LibreOffice.org repository.
     - 'hnj' is the C extension module that does all the ground work. It
-      contains the C library libhyphen used in OpenOffice and Mozilla products.
+      contains the C library libhyphen used in LibreOffice and Mozilla products.
       It supports non-standard hyphenation and - as of version 2.4 - compound words.
       Moreover, the minimum number of characters cut off by the hyphen can be set
       both for the entire word and compound parts thereof.
@@ -92,7 +92,8 @@ __all__ = ['dictools', 'Hyphenator']
 
 # Try to load meta information on downloadable dictionaries:
 if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
-    dict_info = pickle.load(config.default_dict_path + '/dict_info.pickle')
+    with open(config.default_dict_path + '/dict_info.pickle') as f:
+        dict_info = pickle.load(f)
 else:
     dict_info = {}
     
@@ -114,7 +115,7 @@ class Hyphenator:
             'language' should by convention be a string of length 5 of the form "ll_CC" where ll
             is the language code          and CC the country code.
             This is inspired by the file names of
-            OpenOffice's hyphenation dictionaries.
+            LibreOffice's hyphenation dictionaries.
             Example: 'en_NZ' for English / New Zealand
 
         Each class instance has an attribute 'info' of type dict containing metadata on its dictionary.

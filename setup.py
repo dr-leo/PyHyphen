@@ -9,7 +9,7 @@ from distutils.core import setup, Extension
 # Change this if you want to download dictionaries from somewhere else by default.
 # Note that you can also specify the repository individualy
 # when calling hyphen.dictools.install.
-default_repo = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/dictionaries'
+default_repo = 'http://git.freedesktop.org/libreoffice/dictionaries/plain/dictionaries'
 
 # Country and language codes: These will be appended to the default_repos path
 languages = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',
@@ -124,6 +124,7 @@ if 'install' in sys.argv:
             if py3k: from imp import reload
             reload(hyphen.config)
             reload(hyphen)
+            from hyphen.dictools import install
             sys.stdout.write('Installing dictionaries... en_US ')
             install('en_US')
             

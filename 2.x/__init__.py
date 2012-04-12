@@ -83,15 +83,21 @@ hyphenation functionality to 'textwrap'.
 '''
 
 
-import hnj, config, pickle, os
+import hnj, config, os, pickle
+
+
 
 __all__ = ['dictools', 'Hyphenator']
 
 
 # Try to load meta information on downloadable dictionaries:
 if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
-    dict_info = pickle.load(open(config.default_dict_path + '/dict_info.pickle'))
-else: dict_info = None
+    dict_info = pickle.load(config.default_dict_path + '/dict_info.pickle')
+else:
+    dict_info = {}
+    
+    
+
 
 
 class Hyphenator:
@@ -125,9 +131,8 @@ class Hyphenator:
         
         
         if dict_info and language in dict_info:
-            file_name = dict_info[language]['name'] + u'.dic'
-        else: file_name = language
-        file_path = directory + u'/' + file_name
+            file_path = dict_info[language].path
+        else: file_path = directory + '/' + language
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin,
             compound_lmin, compound_rmin)
         self.language = language

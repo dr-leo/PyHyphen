@@ -11,6 +11,15 @@ from distutils.core import setup, Extension
 # when calling hyphen.dictools.install.
 default_repo = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/dictionaries'
 
+# Country and language codes: These will be appended to the default_repos path
+languages = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',
+'bn_BD', 'br_FR', 'ca', 'cs_CZ', 'da_DK', 'de',
+'el_GR', 'en', 'es_ES', 'et_EE', 'fr_FR', 'gd_GB', 'gl',
+'gu_IN', 'he_IL', 'hi_IN', 'hr_HR', 'hu_HU', 'it_IT', 'ku_TR',
+'lt_LT', 'lv_LV', 'ne_NP', 'nl_NL', 'no', 'oc_FR', 'pl_PL',
+'prj', 'pt_BR', 'pt_PT', 'ro', 'ru_RU', 'si_LK', 'sk_SK',
+'sl_SI', 'source', 'sr', 'sv_SE', 'sw_TZ', 'temp.txt', 'te_IN', 'th_TH', 'uk_UA', 'util', 'vi', 'zu_ZA']
+
 
 # Copy version-specific files
 files = {'__init__.py' : 'hyphen/',
@@ -35,7 +44,7 @@ longdescr = open('README.txt').read()
 
 
 arg_dict = dict(
-    name = "PyHyphen", version = "1.0beta1",
+    name = "PyHyphen", version = "0.20a1",
     author = "Dr. Leo",
     author_email = "fhaxbox66@googlemail.com",
     url = "http://pyhyphen.googlecode.com",
@@ -98,7 +107,7 @@ if 'install' in sys.argv:
         mod_path = hyphen.__path__[0] + '/config.py'
         content = codecs.open(mod_path, 'r', 'utf8').read()
         new_content = Template(content).substitute(path = hyphen.__path__[0],
-    repo = default_repo)
+    repo = default_repo, suff = str(languages))
     
         # Remove config.pyc to make sure the modified .py file is byte-compiled
         # when re-importing. Otherwise the new config.py might have
@@ -115,10 +124,6 @@ if 'install' in sys.argv:
             if py3k: from imp import reload
             reload(hyphen.config)
             reload(hyphen)
-            from hyphen.dictools import install, install_dict_info
-            sys.stdout.write('Installing dictionary info...')
-            hyphen.dict_info = install_dict_info()
-            sys.stdout.write(' Done.\n')
             sys.stdout.write('Installing dictionaries... en_US ')
             install('en_US')
             

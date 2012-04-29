@@ -6,10 +6,9 @@ This module contains convenience functions to handle hyphenation dictionaries.
 
 import os, pickle, config, hyphen
 from xml.etree.ElementTree import ElementTree
-from StringIO import StringIO
 from urllib2 import urlopen, URLError
 
-__all__ = ['install', 'is_installed', 'uninstall', 'list_installed', 'install_dict_info']
+__all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 
 class DictInfo:
     'Contains metadata on a hyphenation dictionary'
@@ -41,23 +40,28 @@ def is_installed(language, directory = config.default_dict_path):
     Example: 'en_US' for US English.
     '''
     return (language in hyphen.dict_info.keys())
-
     
     
-    def uninstall(language, directory = config.default_dict_path):
-        '''
-        Uninstall the dictionary of the specified language.
-        'language': is by convention a string of the form 'll_CC' whereby ll is the
-            language code and CC the country code.
-        'directory' (default: config.default_dict_path'. After installation of PyHyphen
-        this is the package root of 'hyphen'.
-        '''
+def uninstall(language, directory = config.default_dict_path):
+    '''
+    Uninstall the dictionary of the specified language.
+    'language': is by convention a string of the form 'll_CC' whereby ll is the
+        language code and CC the country code.
+    'directory' (default: config.default_dict_path'. After installation of PyHyphen
+    this is the package root of 'hyphen'.
+    '''
 
-        if hyphen.dict_info:
-            file_path = ''.join((directory, '/', hyphen.dict_info[language]['name'], '.dic'))
-        else:
-            file_path = ''.join((directory, '/', 'hyph_', language, '.dic'))
-        os.remove(file_path)
+    if hyphen.dict_info:
+        file_path = ''.join((directory, '/', hyphen.dict_info[language].name))
+    else:
+        file_path = ''.join((directory, '/', 'hyph_', language, '.dic'))
+    os.remove(file_path)
+    hyphen.dict_info.pop(language)
+    # save dict_info:
+    with open(directory + '/dict_info.pickle', 'wb') as f:
+        pickle.dump(hyphen.dict_info, f)
+
+
 
 
 def install(language, directory = config.default_dict_path,
@@ -73,7 +77,6 @@ def install(language, directory = config.default_dict_path,
 
     # Download the dictionaries.xcu file from the LibreOffice repository if needed
     if use_description:
-        # Download the metadata file of the LibreOffice dictionary extension
         # first try  full language name; it won't work in all cases...
         language_ext_name = language
         descr_url = repos + language_ext_name + '/dictionaries.xcu'
@@ -128,7 +131,7 @@ def install(language, directory = config.default_dict_path,
                 with open(filepath, 'w')  as dict_file:
                     dict_file.write(dict_str)
 
-                # Save the metadata
+                    # Save the metadata
                 # Generate a record for each locale, overwrite any existing ones
                 new_dict  = DictInfo(dict_locales, filepath, url = dict_url)
                 for l in dict_locales:

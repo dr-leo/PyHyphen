@@ -90,14 +90,18 @@ import hnj, config, os, pickle
 __all__ = ['dictools', 'Hyphenator']
 
 
-# Try to load meta information on downloadable dictionaries:
-if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
-    with open(config.default_dict_path + '/dict_info.pickle') as f:
-        dict_info = pickle.load(f)
-else:
-    dict_info = {}
+
+dict_info = {}
+
+def init_dict_info():
+    # Try to load meta information on downloadable dictionaries:
+    if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
+        with open(config.default_dict_path + '/dict_info.pickle') as f:
+           content = pickle.load(f)
+           dict_info.update(content)
+
     
-    
+init_dict_info()
 
 
 
@@ -110,19 +114,15 @@ class Hyphenator:
     compound_rmin = 2,
         directory = config.default_dict_path):
         '''
-        Return a hyphenator object initialized with a dictionary for the specified language.
+        Return a hyphenator object initialized with a dictionary for the specified language, typically a locale name.
 
-            'language' should by convention be a string of length 5 of the form "ll_CC" where ll
-            is the language code          and CC the country code.
-            This is inspired by the file names of
-            LibreOffice's hyphenation dictionaries.
             Example: 'en_NZ' for English / New Zealand
 
         Each class instance has an attribute 'info' of type dict containing metadata on its dictionary.
         If the module-level attribute dict_info is None,
         or does not contain an entry for this dictionary, the info attribute of the Hyphenator instance is None.
         
-        There is also a 'language' attribute of type str which is deprecated since v1.0.
+        There is also a 'language' attribute of type str which is deprecated since v1.0b1.
         
         lmin, rmin, compound_lmin and compound_rmin: set minimum number of chars to be cut off by hyphenation in
         single or compound words
@@ -132,8 +132,9 @@ class Hyphenator:
         
         
         if dict_info and language in dict_info:
-            file_path = dict_info[language].path
-        else: file_path = directory + '/' + language
+            file_path = dict_info[language].filepath
+        else:
+            file_path = '/'.join((directory, '/', 'hyph_' + language + '.doc'))
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin,
             compound_lmin, compound_rmin)
         self.language = language

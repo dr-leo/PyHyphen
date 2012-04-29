@@ -16,6 +16,23 @@ Mailing list: http://groups.google.com/group/pyhyphen
 Change log
 ======================
 
+New in Version 2.0
+
+The hyphen.dictools module has been completely rewritten. This was required
+by the switch from OpenOffice to LiberaOffice which does no longer support the
+old formats for dictionaries and meta data. these changes made it impossible to release a stable v1.0. The new dictionary management is much more
+flexible than the old one. There is now a registry for locally installed dictionaries. Each dictionary
+can have its own path stored in the registry. Each dictionary and hence Hyphenator can now be
+associated with multiple locales such as for 'en_US' and 'en_NZ'. Further changes are:
+
+* Hyphenator.info is now of a container type for 'url', 'locales' and 'filepath' of the dictionary.
+* the Hyphenator.language attribute is deprecated
+* install dictionaries from LiberaOffice's git repository by default
+* dictools.install('xx_YY') will install all dictionaries found for the 'xx' language and associate them with all relevant locales
+  as described in the dictionaries.xcu file in LiberaOffice's git repository.
+* upgraded the C library to v2.8.3
+
+
 New in version 1.0
 
 * Upgraded the C library libhyphen to v2.7 which brings significant improvements, most notably correct treatment of

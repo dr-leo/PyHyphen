@@ -18,7 +18,8 @@ languages = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',
 'gu_IN', 'he_IL', 'hi_IN', 'hr_HR', 'hu_HU', 'it_IT', 'ku_TR',
 'lt_LT', 'lv_LV', 'ne_NP', 'nl_NL', 'no', 'oc_FR', 'pl_PL',
 'prj', 'pt_BR', 'pt_PT', 'ro', 'ru_RU', 'si_LK', 'sk_SK',
-'sl_SI', 'source', 'sr', 'sv_SE', 'sw_TZ', 'temp.txt', 'te_IN', 'th_TH', 'uk_UA', 'util', 'vi', 'zu_ZA']
+'sl_SI', 'sr', 'sv_SE', 'sw_TZ',
+'te_IN', 'th_TH', 'uk_UA', 'zu_ZA']
 
 
 # Copy version-specific files
@@ -38,13 +39,13 @@ for file_name, dest in files.items():
     shutil.copy(ver + '.x/' + file_name, dest + file_name)
 
 
-
 longdescr = open('README.txt').read()
 
 
 
 arg_dict = dict(
-    name = "PyHyphen", version = "0.20a1",
+    name = "PyHyphen",
+    version = "2.0b1",
     author = "Dr. Leo",
     author_email = "fhaxbox66@googlemail.com",
     url = "http://pyhyphen.googlecode.com",

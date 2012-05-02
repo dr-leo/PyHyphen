@@ -127,9 +127,14 @@ if 'install' in sys.argv:
             repo = default_repo, suff = str(languages))
     
         
+        # Write the new config.py
+        codecs.open(mod_path, 'w', 'utf8').write(new_content)
+        sys.stdout.write("Done.\n")
+
+
         # Install dictionaries
         if '--no_dictionaries' not in sys.argv:
-            # install dict_info and dictionaries
+            # install dictionaries
             if py3k: from imp import reload
             reload(hyphen.config)
             reload(hyphen)

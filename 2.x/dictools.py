@@ -129,7 +129,7 @@ def install(language, directory = config.default_dict_path,
                 # Install the dictionary file
                 dict_str = urlopen(dict_url).read()
                 filepath = directory + '/' + dict_fn
-                with open(filepath, 'w')  as dict_file:
+                with open(filepath, 'wb')  as dict_file:
                     dict_file.write(dict_str)
 
                     # Save the metadata

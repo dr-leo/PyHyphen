@@ -23,20 +23,35 @@ languages = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',
 
 
 # Copy version-specific files
-files = {'__init__.py' : 'hyphen/',
-        'dictools.py' : 'hyphen/',
-        'config.py' : 'hyphen/',
-        'hnjmodule.c' : 'src/',
-        'textwrap2.py' : './'}
+# to be copied from 2.x/
+files_from_2x = {
+    '__init__.py' : './hyphen',
+    'config.py' : './hyphen',
+    'dictools.py' : './hyphen'}
+
+# from either 2.x/ or 3.x/
+files_from_any = {
+    'hnjmodule.c' : 'src/',
+    'textwrap2.py' : './'}
         
-        # create package directory:
-if not os.path.exists('hyphen'): os.mkdir('hyphen')
 
 #copy version-specific files
 ver = sys.version[0]
 py3k = (ver == '3')
-for file_name, dest in files.items():
+if not exist('hyphen'):
+    shutil.mkdir('hyphen')
+for file_name, dest in files_from_2x.items():
+    shutil.copy('2.x/' + file_name, dest + file_name)
+
+for file_name, dest in files_from_any.items():
     shutil.copy(ver + '.x/' + file_name, dest + file_name)
+
+
+# refactor 2to3
+if py3k:
+    import lib2to3
+    lib2to3main.main('lib2to3.fixes', args = '-wn -f unicode -f urllib \
+        hyphen'.split())
 
 
 longdescr = open('README.txt').read()
@@ -57,6 +72,7 @@ arg_dict = dict(
         'License :: OSI Approved',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: >= 2.6',
         'Programming Language :: C',
                 'Topic :: Text Processing',
                 'Topic :: Text Processing :: Linguistic'

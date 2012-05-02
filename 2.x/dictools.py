@@ -4,7 +4,8 @@
 This module contains convenience functions to handle hyphenation dictionaries.
 '''
 
-import os, pickle, config, hyphen
+import os, pickle, hyphen
+from hyphen import config
 from xml.etree.ElementTree import ElementTree
 from urllib2 import urlopen, URLError
 

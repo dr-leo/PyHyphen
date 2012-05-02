@@ -25,9 +25,9 @@ languages = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',
 # Copy version-specific files
 # to be copied from 2.x/
 files_from_2x = {
-    '__init__.py' : './hyphen',
-    'config.py' : './hyphen',
-    'dictools.py' : './hyphen'}
+    '__init__.py' : './hyphen/',
+    'config.py' : './hyphen/',
+    'dictools.py' : './hyphen/'}
 
 # from either 2.x/ or 3.x/
 files_from_any = {
@@ -38,8 +38,8 @@ files_from_any = {
 #copy version-specific files
 ver = sys.version[0]
 py3k = (ver == '3')
-if not exist('hyphen'):
-    shutil.mkdir('hyphen')
+if not os.path.exists('hyphen'):
+    os.mkdir('hyphen')
 for file_name, dest in files_from_2x.items():
     shutil.copy('2.x/' + file_name, dest + file_name)
 
@@ -49,8 +49,8 @@ for file_name, dest in files_from_any.items():
 
 # refactor 2to3
 if py3k:
-    import lib2to3
-    lib2to3main.main('lib2to3.fixes', args = '-wn -f unicode -f urllib \
+    import lib2to3.main
+    lib2to3.main.main('lib2to3.fixes', args = '-wn -f unicode -f urllib \
         hyphen'.split())
 
 
@@ -124,16 +124,8 @@ if 'install' in sys.argv:
         mod_path = hyphen.__path__[0] + '/config.py'
         content = codecs.open(mod_path, 'r', 'utf8').read()
         new_content = Template(content).substitute(path = hyphen.__path__[0],
-    repo = default_repo, suff = str(languages))
+            repo = default_repo, suff = str(languages))
     
-        # Remove config.pyc to make sure the modified .py file is byte-compiled
-        # when re-importing. Otherwise the new config.py might have
-        # the same time stamp as the old one
-        os.remove(mod_path + 'c')
-    
-        # Write the new config.py
-        codecs.open(mod_path, 'w', 'utf8').write(new_content)
-        sys.stdout.write("Done.\n")
         
         # Install dictionaries
         if '--no_dictionaries' not in sys.argv:

@@ -82,8 +82,8 @@ hyphenation functionality to 'textwrap'.
 2. Code examples (see README.txt)
 '''
 
-
-import hnj, config, os, pickle
+from hyphen import hnj, config
+import os, pickle
 
 
 

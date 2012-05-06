@@ -9,7 +9,7 @@ from hyphen import config
 from xml.etree.ElementTree import ElementTree
 from urllib2 import urlopen, URLError
 
-__all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
+__all__ = ['install', 'is_installed', 'uninstall', 'list_installed', 'save_dict_info']
 
 class DictInfo:
     'Contains metadata on a hyphenation dictionary'
@@ -59,8 +59,7 @@ def uninstall(language, directory = config.default_dict_path):
     os.remove(file_path)
     hyphen.dict_info.pop(language)
     # save dict_info:
-    with open(directory + '/dict_info.pickle', 'wb') as f:
-        pickle.dump(hyphen.dict_info, f)
+    save_dict_info()
 
 
 
@@ -121,7 +120,7 @@ def install(language, directory = config.default_dict_path,
 
                         elif pv.lower() == 'locales':
                             # Its only child's text is a list of locales. .
-                            dict_locales = property.getchildren()[0].text.split()
+                            dict_locales = property.getchildren()[0].text.replace('-', '_').split()
 
                             break # skip any other values of this property
 
@@ -151,12 +150,10 @@ def install(language, directory = config.default_dict_path,
         new_dict = DictInfo([language], filepath) # the URL is thus set to None.
         hyphen.dict_info[language] = new_dict
     # Save the modified metadata
+    save_dict_info()
+
+
+def save_dict_info(directory = config.default_dict_path):
     with open(directory + '/dict_info.pickle', 'wb') as f:
         pickle.dump(hyphen.dict_info, f)
-        
-        
 
-        
-        
-        
-            

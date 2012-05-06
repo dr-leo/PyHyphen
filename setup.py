@@ -1,5 +1,5 @@
 
-import sys, os, shutil, codecs, locale
+import sys, os, shutil, imp, py_compile, codecs, locale
 from string import Template
 from distutils.core import setup, Extension
 
@@ -120,24 +120,19 @@ if 'install' in sys.argv:
     # sys.path. This occurs, e.g.,
     # when creating a Debian package.
     try:
-        import hyphen
-        mod_path = hyphen.__path__[0] + '/config.py'
+        pkg_path = imp.find_module('hyphen')[1]
+        mod_path = pkg_path + '/config.py'
         content = codecs.open(mod_path, 'r', 'utf8').read()
-        new_content = Template(content).substitute(path = hyphen.__path__[0],
+        new_content = Template(content).substitute(path = pkg_path,
             repo = default_repo, suff = str(languages))
-    
         
         # Write the new config.py
         codecs.open(mod_path, 'w', 'utf8').write(new_content)
+        py_compile.compile(mod_path)
         sys.stdout.write("Done.\n")
-
 
         # Install dictionaries
         if '--no_dictionaries' not in sys.argv:
-            # install dictionaries
-            if py3k: from imp import reload
-            reload(hyphen.config)
-            reload(hyphen)
             from hyphen.dictools import install
             sys.stdout.write('Installing dictionaries... en_US ')
             install('en_US')

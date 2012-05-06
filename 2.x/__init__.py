@@ -96,7 +96,7 @@ dict_info = {}
 def init_dict_info():
     # Try to load meta information on downloadable dictionaries:
     if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
-        with open(config.default_dict_path + '/dict_info.pickle') as f:
+        with open(config.default_dict_path + '/dict_info.pickle', 'rb') as f:
            content = pickle.load(f)
            dict_info.update(content)
 

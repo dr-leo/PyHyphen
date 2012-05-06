@@ -99,7 +99,7 @@ def install(language, directory = config.default_dict_path,
 
         # Find the nodes containing meta data of hyphenation dictionaries
         # Iterate over all nodes
-        for node in descr_tree.iter('node'):
+        for node in descr_tree.getiterator('node'):
             # Check if node relates to a hyphenation dict.
             # We assume this is the case if an attribute value
             # contains the substring 'hyph'

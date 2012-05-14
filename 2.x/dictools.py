@@ -56,12 +56,13 @@ def uninstall(language, directory = config.default_dict_path):
         file_path = ''.join((directory, '/', hyphen.dict_info[language].name))
     else:
         file_path = ''.join((directory, '/', 'hyph_', language, '.dic'))
-    os.remove(file_path)
-    hyphen.dict_info.pop(language)
+        os.remove(file_path)
+        # Delete all references in dict_info to the removed file
+        file_path = hyphen.dict_info[language].path
+        for d in hyphen.dict_info:
+            if d.path == file_path: hyphen.dict_info.pop(d)
     # save dict_info:
     save_dict_info()
-
-
 
 
 def install(language, directory = config.default_dict_path,

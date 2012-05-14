@@ -3,33 +3,15 @@ To Do's for PyHyphen 1.0beta1
 ===============================
 
 
-Maybe it was a bit early to switch to v1.0, although not a single bug has been reported since.
-
-However, there is a lot to do before it deserves versioned 1.0 final, and yet more
-in terms of adding useful features.
-
-I haven't got the time to do this, so helping hands are more than welcome.
-contact the author at fhaxbox66@googlemail.com.
-
-
 1. High priority ToDo's
 =================
 
-1.1 Use the new OpenOffice extension format
---------------------------
 
-* make dictools access the new OpenOffice extension site. So far, dictionaries are downloaded from an old site
-  that is being phased out. But I haven't found any information on the OO website on how to
-  retrieve URLs for OO extensions containing dictionaries. Also, the new extension format needs to be clarified.
-  It uses XML metadata etc.
-
-
-1.2 Move to the stable C API introduced with Python 3.2
+1.1 Move to the stable C API introduced with Python 3.2
 ----------------------------------------------------------
 
 * Modify the C extension module (not the whole hnjhyphen lib) acording to the stable API
 * modify setup.py in order to check if we are on Python >= 3.2, only then use the new API to compile.
-
 
 
 2. Medium priority

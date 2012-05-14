@@ -11,16 +11,6 @@ from distutils.core import setup, Extension
 # when calling hyphen.dictools.install.
 default_repo = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/dictionaries/'
 
-# Country and language codes: These will be appended to the default_repos path
-languages = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',
-'bn_BD', 'br_FR', 'ca', 'cs_CZ', 'da_DK', 'de',
-'el_GR', 'en', 'es_ES', 'et_EE', 'fr_FR', 'gd_GB', 'gl',
-'gu_IN', 'he_IL', 'hi_IN', 'hr_HR', 'hu_HU', 'it_IT', 'ku_TR',
-'lt_LT', 'lv_LV', 'ne_NP', 'nl_NL', 'no', 'oc_FR', 'pl_PL',
-'prj', 'pt_BR', 'pt_PT', 'ro', 'ru_RU', 'si_LK', 'sk_SK',
-'sl_SI', 'sr', 'sv_SE', 'sw_TZ',
-'te_IN', 'th_TH', 'uk_UA', 'zu_ZA']
-
 
 # Copy version-specific files
 # to be copied from 2.x/
@@ -50,11 +40,11 @@ for file_name, dest in files_from_any.items():
 # refactor 2to3
 if py3k:
     import lib2to3.main
-    lib2to3.main.main('lib2to3.fixes', args = '-wn -f unicode -f urllib \
+    lib2to3.main.main('lib2to3.fixes', args = '--no-diffs -wn -f unicode -f urllib \
         hyphen'.split())
 
 
-longdescr = open('README.txt').read()
+longdescr = open('README.txt', 'r').read()
 
 
 
@@ -72,7 +62,11 @@ arg_dict = dict(
         'License :: OSI Approved',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: >= 2.6',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.1',
+        'Programming Language :: Python :: 3.2',
         'Programming Language :: C',
                 'Topic :: Text Processing',
                 'Topic :: Text Processing :: Linguistic'
@@ -124,7 +118,7 @@ if 'install' in sys.argv:
         mod_path = pkg_path + '/config.py'
         content = codecs.open(mod_path, 'r', 'utf8').read()
         new_content = Template(content).substitute(path = pkg_path,
-            repo = default_repo, suff = str(languages))
+            repo = default_repo)
         
         # Write the new config.py
         codecs.open(mod_path, 'w', 'utf8').write(new_content)

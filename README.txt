@@ -19,7 +19,7 @@ Change log
 New in Version 2.0
 
 The hyphen.dictools module has been completely rewritten. This was required
-by the switch from OpenOffice to LiberaOffice which does no longer support the
+by the switch from OpenOffice to LibreOffice which does no longer support the
 old formats for dictionaries and meta data. these changes made it impossible to release a stable v1.0. The new dictionary management is much more
 flexible than the old one. There is now a registry for locally installed dictionaries. Each dictionary
 can have its own path stored in the registry. Each dictionary and hence Hyphenator can now be
@@ -27,9 +27,9 @@ associated with multiple locales such as for 'en_US' and 'en_NZ'. Further change
 
 * Hyphenator.info is now of a container type for 'url', 'locales' and 'filepath' of the dictionary.
 * the Hyphenator.language attribute is deprecated
-* install dictionaries from LiberaOffice's git repository by default
+* install dictionaries from LibreOffice's git repository by default
 * dictools.install('xx_YY') will install all dictionaries found for the 'xx' language and associate them with all relevant locales
-  as described in the dictionaries.xcu file in LiberaOffice's git repository.
+  as described in the dictionaries.xcu file in LibreOffice's git repository.
 * upgraded the C library to v2.8.3
 
 
@@ -104,7 +104,7 @@ New in Version 0.8
 - contains the new C library hyphen-2.4 which implements an extended algorithm
   supporting:
   
-  - compound words (dictionaries are under development in the OpenOffice community))
+  - compound words (dictionaries are under development in the LibreOffice community))
   - parameters to fix the minimal number of characters to be cut off
       by hyphenation (lmin, rmin, compound_lmin and compound_rmin). )
       This may require code changes in existing apps.
@@ -127,17 +127,17 @@ The 'hyphen' module defines the following:
 
     - at top level the definition of the class 'Hyphenator' each instance of which
       can hyphenate and wrap words using a dictionary compatible with the hyphenation feature of
-      OpenOffice and Mozilla.
+      LibreOffice and Mozilla.
     - the module dictools contains useful functions such as downloading and
       installing dictionaries from a configurable repository. After installation of PyHyphen, the
-      OpenOffice repository is used by default. 'dictools.install_dict-info'
-      downloads metadata on all available hyphenation dictionaries from the OpenOffice website and
+      LibreOffice repository is used by default. 'dictools.install_dict-info'
+      downloads metadata on all available hyphenation dictionaries from the LibreOffice website and
       stores it in a pickled file.
     - hyphen.dict_info: a dict object with metadata on all hyphenation dictionaries downloadable from the
-      OpenOffice website.
+      LibreOffice website.
     - config is a configuration file initialized at install time with default values
       for the directory where dictionaries are searched, and the repository for
-      downloads of dictionaries. Initial values are the package root and the OpenOffice
+      downloads of dictionaries. Initial values are the package root and the LibreOffice
       repository for dictionaries.
     - hnj' is the C extension module that does all the ground work. It
       contains the C library libhyphen. It supports non-standard hyphenation
@@ -181,7 +181,7 @@ is as easy as writing a function call. All results are logged.
         from hyphen.dictools import *
 
         # Download and install some dictionaries in the default directory using the default
-        # repository, usually the OpenOffice website
+        # repository, usually the LibreOffice website
         for lang in ['de_DE', 'fr_FR', 'en_UK', 'ru_RU']:
             if not is_installed(lang): install(lang)
 
@@ -260,7 +260,7 @@ Under Linux you may need root privileges, so you may want to enter something lik
  After compiling and installing the hyphen package, config.py is adjusted as follows:
  
 - the package directory becomes the local default path for hyphenation dictionaries
-- the OpenOffice website becomes the default repository from which
+- the LibreOffice website becomes the default repository from which
   dictionaries are downloaded.
 
 Thereafter, the setup script tries to re-import the hyphen package to install a default
@@ -272,8 +272,8 @@ for en_US (commonly used) and the local language, if different, are installed.
 4. How to get dictionaries?
 =================================
  
- Information on all hyphenation dictionaries available on the OpenOffice website is stored in hyphen.dict_info.
- You can also visit http://wiki.services.openoffice.org/wiki/Dictionaries for a
+ Information on all hyphenation dictionaries available on the LibreOffice website is stored in hyphen.dict_info.
+ You can also visit http://wiki.services.LibreOffice.org/wiki/Dictionaries for a
  complete list. Then use the dictools.install function to download and install the dictionary locally.
 
 
@@ -283,12 +283,12 @@ for en_US (commonly used) and the local language, if different, are installed.
 the C extension module 'hnj' used by the hyphenator class defined in
 __init__.py contains the
 `C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_
-which is used by OpenOffice.org, Mozilla
+which is used by LibreOffice.org, Mozilla
 and alike. The C sources have not been changed, let alone hnjmalloc.c which has
 been slightly modify to use pythonic memory management and error handling.
 
 For further information on the hyphenation library and available dictionaries visit
-http://wiki.services.openoffice.org/wiki/Dictionaries.
+http://wiki.services.LibreOffice.org/wiki/Dictionaries.
 
 
 6. Testing
@@ -310,8 +310,3 @@ Contributions, comments, bug reports, criticism and praise can be sent to the au
 
 Browse  the Mercurial repository and submit
 bug reports at http://pyhyphen.googlecode.com_.
-    
-
-
-
- 

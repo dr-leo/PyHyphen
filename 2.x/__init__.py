@@ -93,10 +93,10 @@ __all__ = ['dictools', 'Hyphenator']
 
 dict_info = {}
 
-def init_dict_info():
+def init_dict_info(path = config.default_dict_info_path):
     # Try to load meta information on downloadable dictionaries:
-    if os.path.exists(config.default_dict_path + '/dict_info.pickle'):
-        with open(config.default_dict_path + '/dict_info.pickle', 'rb') as f:
+    if os.path.exists(path + '/hyphen_dict_info.pickle'):
+        with open(path + '/hyphen_dict_info.pickle', 'rb') as f:
            content = pickle.load(f)
            dict_info.update(content)
 

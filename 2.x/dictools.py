@@ -153,7 +153,7 @@ def install(language, directory = config.default_dict_path,
     save_dict_info()
 
 
-def save_dict_info(directory = config.default_dict_path):
-    with open(directory + '/dict_info.pickle', 'wb') as f:
+def save_dict_info(path = config.default_dict_info_path):
+    with open(path + '/hyphen_dict_info.pickle', 'wb') as f:
         pickle.dump(hyphen.dict_info, f)
 

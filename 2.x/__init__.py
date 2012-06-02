@@ -2,13 +2,13 @@
 
 # Without prejudice to the license governing the use of
 # the Python standard module textwrap on which textwrap2 is based,
-# PyHyphen is licensed under the same terms as the underlying C library hyphen-2.3.1.
+# PyHyphen is licensed under the same terms as the underlying
+# `C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_.
 # The essential parts of the license terms of libhyphen are quoted hereunder.
 #
 #
 #
-#
-# Extract from the license information of hyphen-2.4 library
+# Extract from the license information of hyphen-2.8 library
 # ============================================================
 #
 #
@@ -28,58 +28,14 @@
 '''
 hyphen - hyphenation for Python
 
-This package adds a hyphenation functionality to the Python programming language.
-You may also wish to have a look at the module 'textwrap2' distributed jointly
-with this package.
+This package contains the following items:
 
-Contents
+* class 'Hyphenator': wrapper class for libhyphen. Each instance
+  uses its own hyphenation dictionary.
+* 'dict_info': meta data on locally installed dictionaries
+* 'load_dict_info' and 'save_dict_info': convenience functions to load and save
+  meta date from and to a local file
 
-1. Overview
-2. Code examples
-
-
-
-1. Overview
-
-PyHyphen consists of the package 'hyphen' and the module 'textwrap2'.
-
-1.1 The hyphen package contains:
-    - at top level the definition of the class 'Hyphenator' each instance of which
-      can hyphenate words using a dictionary compatible with the hyphenation feature of
-      LibreOffice and Mozilla. The former class 'hyphenator' is deprecated
-      as of version 0.10 as class names conventially begin with a capital letter.
-    - the module dictools contains useful functions such as automatic downloading and
-      installing dictionaries from a configurable repository. By default, the
-      LibreOffice repository is used.
-     - config is a configuration file initialized at install time with default values
-       for the directory where dictionaries are searched, and the repository for future
-       downloads of dictionaries.
-     - hyph_en_US.dic is the hyphenation dictionary for US English as found on
-       the LibreOffice.org repository.
-    - 'hnj' is the C extension module that does all the ground work. It
-      contains the C library libhyphen used in LibreOffice and Mozilla products.
-      It supports non-standard hyphenation and - as of version 2.4 - compound words.
-      Moreover, the minimum number of characters cut off by the hyphen can be set
-      both for the entire word and compound parts thereof.
-         Note that hyphenation dictionaries are invisible to the
-      Python programmer. But each Hyphenator object has a member 'info' of type dict which
-      contains meta information on the hyphenation dictionary.
-      
-      The module-level attribute is a dictionary with meta information on all dictionaries available for download
-      at the specified location. It relies on the successful install
-      of a meta data file from the oo website.
-      If you use other repository locations, this feature will not
-      work.
-
-
-1.2 The module 'textwrap2'
-
-This module is an enhanced though backwards compatible version of the module
-'textwrap' known from the Python standard library. Not very surprisingly, it adds
-hyphenation functionality to 'textwrap'.
-
-
-2. Code examples (see README.txt)
 '''
 
 from hyphen import hnj, config
@@ -87,40 +43,66 @@ import os, pickle
 
 
 
-__all__ = ['dictools', 'Hyphenator']
+__all__ = ['dictools', 'Hyphenator', 'load_dict_info', 'save_dict_info']
 
 
-
-dict_info = {}
-
-def init_dict_info(path = config.default_dict_info_path):
-    # Try to load meta information on downloadable dictionaries:
+def load_dict_info(path = config.default_dict_info_path):
+    '''
+    load meta data on locally installed hyphenation dictionaries and
+    store it in hyphen.dict_info.
+    
+    'path': the path of the meta data file. It defaults to the value found in
+    'hyphen.config'. The file name is hard-coded as 'hyphen_info.pickle'.
+    
+    return True if the meta data file has been loaded successfully, False otherwise (no IOError is raised).
+    '''
+    
     if os.path.exists(path + '/hyphen_dict_info.pickle'):
         with open(path + '/hyphen_dict_info.pickle', 'rb') as f:
            content = pickle.load(f)
+           # Remove any pre-existing entries and ad the new ones
+           while dict_info:
+               e = dict_info.keys()[0]
+               dict_info.pop(e)
            dict_info.update(content)
+           return True
+    # Meta data file does not exist
+    else:
+        return False
 
+
+
+def save_dict_info(path = config.default_dict_info_path):
+    '''
+    save meta data from hyphen.dict_info to a file named 'hyphen_dict_info.pickle'
     
-init_dict_info()
-
+    'path': the path of the saved file; defaults to the value in 'hyphen.config'
+    '''
+    
+    with open(path + '/hyphen_dict_info.pickle', 'wb') as f:
+        pickle.dump(dict_info, f)
 
 
 class Hyphenator:
     """
-    Wrapper class around the class 'hnj.hyphenator_'.
-    It provides convenient access to the C library hyphen-2.4'.
+    Wrapper class around the class 'hnj.hyphenator_' from the C extension.
+    It provides convenient access to the C library libhyphen.
     """
+    
     def __init__(self, language = 'en_US', lmin = 2, rmin = 2, compound_lmin = 2,
     compound_rmin = 2,
-        directory = config.default_dict_path):
+        directory = ''):
         '''
         Return a hyphenator object initialized with a dictionary for the specified language, typically a locale name.
 
             Example: 'en_NZ' for English / New Zealand
 
-        Each class instance has an attribute 'info' of type dict containing metadata on its dictionary.
-        If the module-level attribute dict_info is None,
-        or does not contain an entry for this dictionary, the info attribute of the Hyphenator instance is None.
+        Each class instance has an attribute 'info' of type dict containing metadata on its dictionary including
+        its local file path.
+        If the module-level attribute dict_info
+        does not contain an item for this dictionary, the info attribute of the Hyphenator instance is None.
+        In this case the 'directory' argument must be set to the local
+        path of the hyphenation dictionary.
         
         There is also a 'language' attribute of type str which is deprecated since v1.0b1.
         
@@ -130,15 +112,14 @@ class Hyphenator:
         '''
         
         
-        
-        if dict_info and language in dict_info:
+        if language in dict_info:
             file_path = dict_info[language].filepath
         else:
-            file_path = '/'.join((directory, '/', 'hyph_' + language + '.doc'))
+            file_path = '/'.join((directory, '/', 'hyph_' + language + '.dic'))
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin,
             compound_lmin, compound_rmin)
         self.language = language
-        if dict_info:
+        if language in dict_info:
             self.info = dict_info[language]
         else: self.info = None
 
@@ -151,7 +132,7 @@ class Hyphenator:
         Return [], if len(word) < 4 or if word could not be hyphenated because
         
         * it is not encodable to the dictionary's encoding, or
-        ** the hyphenator could not find any hyphenation point
+        * the hyphenator could not find any hyphenation point
         '''
         if not isinstance(word, unicode): raise TypeError('Unicode object expected.')
         mode = 1
@@ -180,7 +161,7 @@ class Hyphenator:
         Return [], if len(word) < 4 or if word could not be hyphenated because
 
         * it is not encodable to the dictionary's encoding, or
-        ** the hyphenator could not find any hyphenation point
+        * the hyphenator could not find any hyphenation point
 
         Results are not consistent in case of non-standard hyphenation as a join of the syllables
         would not yield the original word.
@@ -215,6 +196,7 @@ class Hyphenator:
         into 'width' as well. If no hyphenation was found such that the
         shortest prefix (plus 'hyphen') fits into 'width', [] is returned.
         '''
+        
         p = self.pairs(word)
         max_chars = width - len(hyphen)
         while p:
@@ -231,6 +213,7 @@ class Hyphenator:
         else: return []
 
 
-# The following ensures backward compatibility with version 0.9.3
-class hyphenator(Hyphenator):
-    '''This class is deprecated. Use 'Hyphenator' instead.'''
+
+dict_info = {}
+load_dict_info()
+

@@ -124,6 +124,11 @@ if 'install' in sys.argv:
         codecs.open(mod_path, 'w', 'utf8').write(new_content)
         py_compile.compile(mod_path)
         sys.stdout.write("Done.\n")
+        
+        # Delete any existing dict registry file
+        reg_file = pkg_path + '/hyphen_dict_info.pickle'
+        if os.path.exists(reg_file):
+            os.remove(reg_file)
 
         # Install dictionaries
         if '--no_dictionaries' not in sys.argv:

@@ -12,7 +12,6 @@ default_dict_info_path = u'$path'
 # URL of the repository for dictionaries
 default_repository = u'$repo'
 
-
 # Country and language codes: These will be appended to the default_repos path
 languages = {'af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',
 'bn_BD', 'br_FR', 'ca', 'cs_CZ', 'da_DK', 'de',

@@ -20,22 +20,30 @@ New in Version 2.0
 
 The hyphen.dictools module has been completely rewritten. This was required
 by the switch from OpenOffice to LibreOffice which does no longer support the
-old formats for dictionaries and meta data. these changes made it impossible to release a stable v1.0. The new dictionary management is much more
-flexible than the old one. There is now a registry for locally installed dictionaries. Each dictionary
-can have its own path stored in the registry. Each dictionary and hence Hyphenator can now be
-associated with multiple locales such as for 'en_US' and 'en_NZ'. Further changes are:
+old formats for dictionaries and meta data. these changes made it impossible to release a stable v1.0.
+The new dictionary management is more
+flexible and powerful. There is now a registry for locally installed hyphenation dictionaries. Each dictionary
+can have its own file path. It is thus possible to add persistent metadata on pre-existing hyphenation
+dictionaries, e.g. from a LibreOffice installation.
+Each dictionary and hence Hyphenator can now be
+associated with multiple locales such as for 'en_US' and 'en_NZ'. These changes cause some backwards-incompatible API changes.
+Further changes are:
 
-* Hyphenator.info is now of a container type for 'url', 'locales' and 'filepath' of the dictionary.
+* Hyphenator.info is of a container type for 'url', 'locales' and 'filepath' of the dictionary.
 * the Hyphenator.language attribute is deprecated
-* install dictionaries from LibreOffice's git repository by default
+* download and install dictionaries from LibreOffice's git repository by default
 * dictools.install('xx_YY') will install all dictionaries found for the 'xx' language and associate them with all relevant locales
   as described in the dictionaries.xcu file in LibreOffice's git repository.
-* upgraded the C library to v2.8.3
+* upgraded the `C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_
+  to v2.8.3
+* use lib2to3 instead of separate code bases
+* dropped support for Python 2.4 and 2.5
 
 
 New in version 1.0
 
-* Upgraded the C library libhyphen to v2.7 which brings significant improvements, most notably correct treatment of
+* Upgraded the `C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_
+  to v2.7 which brings significant improvements, most notably correct treatment of
 *  already hyphenated words such as 'Python-powered'
 * use a CSV file from the oo website with meta information
   on dictionaries for installation of dictionaries and
@@ -63,127 +71,96 @@ New in version 0.10
 * added win32 binary for Python 2.7
 * renamed 'hyphenator' class to to more conventional 'Hyphenator'. 'hyphenator' is deprecated.
 
-New in version 0.9.3:
-
-* added win32 binary of the C extension for Python 3.1
-* added 'syllables' method to the hyphenator (can yield inconsistent results
-  in languages with non-standard hyphenation)
-
-
-New in version 0.9.2
-
-* make it compile with Python 3.0.1
-* add win32 binary of the C extension for Python 3.0
-
-New in version 0.9.1
-
-* full support for Python 3.0
-* merged 3.0 sources with the 2.x distribution.
-
-
-
-
-New in Version 0.9:
-
-* removed the 'inserted' method from the hyphenator class as it is not used in practice
-  the word to be hyphenated must now be unicode (utf-8 encoded strings raise
-  TypeError). The restriction to unicode is safer and more 3.0-compliant.
-* fixed important bug in 'pairs' method that could cause a unicode error if 'word'
-  was not encodable to the dictionary's encoding. In the latter case, the new
-  version returns an empty list (consistent with other cases where the word
-  is not hyphenable).
-* the configuration script has been simplified and improved: it does not
-  raise ImportError even if the package cannot be imported. This tolerance is
-  needed to create a Debian package.
-
-
-
-New in Version 0.8
-
-- supports Python 2.x and 3.0 (in 2 separate distributions))
-- contains the new C library hyphen-2.4 which implements an extended algorithm
-  supporting:
-  
-  - compound words (dictionaries are under development in the LibreOffice community))
-  - parameters to fix the minimal number of characters to be cut off
-      by hyphenation (lmin, rmin, compound_lmin and compound_rmin). )
-      This may require code changes in existing apps.
-      
-- new en_US dictionary.
-- many minor improvements under the hood
-        
 
 1. Overview
 ================
 
-The gole of the PyHyphen project is to provide Python with a high quality hyphenation facility.
+PyHyphen is a pythonic interface to the hyphenation C library used in software such as LibreOffice and the Mozilla suite.
+It comes with tools to download, install and uninstall hyphenation dictionaries from LibreOffice's Git repository.
 PyHyphen consists of the package 'hyphen' and the module 'textwrap2'. 
-The source distribution supports Python 2.4 or higher, including Python 3.2.
+The source distribution supports Python 2.6 or higher, including Python 3.2. If you depend on python 2.4 or 2.5, use PyHyphen-1.0b1
+instead. In this case you may have to download hyphenation dictionaries manually.
 
 1.1 Content of the hyphen package
 ------------------------------------------
 
-The 'hyphen' module defines the following:
+The 'hyphen' package contains the following:
 
-    - at top level the definition of the class 'Hyphenator' each instance of which
+    - the class hyphen.Hyphenator: each instance of it
       can hyphenate and wrap words using a dictionary compatible with the hyphenation feature of
       LibreOffice and Mozilla.
-    - the module dictools contains useful functions such as downloading and
+    - the module dictools contains useful functions such as for downloading and
       installing dictionaries from a configurable repository. After installation of PyHyphen, the
-      LibreOffice repository is used by default. 'dictools.install_dict-info'
-      downloads metadata on all available hyphenation dictionaries from the LibreOffice website and
-      stores it in a pickled file.
-    - hyphen.dict_info: a dict object with metadata on all hyphenation dictionaries downloadable from the
-      LibreOffice website.
-    - config is a configuration file initialized at install time with default values
-      for the directory where dictionaries are searched, and the repository for
-      downloads of dictionaries. Initial values are the package root and the LibreOffice
+      LibreOffice repository is used by default.
+    - hyphen.dict_info: a dict object with metadata on all hyphenation dictionaries installed locally. In previous
+      versions, dict_info contained meta data on all downloadable dictionaries. This feature
+      is no longer supported as LibreOffice's GIT repository
+      does not provide such a list anymore. Instead, Use
+      hyphen.config.languages which is an incomplete set of
+      language codes of hyphenation dictionaries available from LibreOffice's GIT repository. These codes
+      can be passed to hyphen.dictools.install() to download and install
+      the respective dictionary and update the local registry.
+    - hyphen.config is a configuration file initialized at install time with default values
+      for paths of dictionaries and the registry file, as well as the default URL of
+      the repository for
+      downloadable dictionaries. Initial values for the local paths are set to
+      the package root, the URL is set to the LibreOffice
       repository for dictionaries.
-    - hnj' is the C extension module that does all the ground work. It
-      contains the C library libhyphen. It supports non-standard hyphenation
-      with replacements as well as compound word hyphenation.
+    - hyphen.DictInfo: dict-like container type for meta data on dictionaries. It has the following attributes:
+      'locales': a list of locales for which the dictionary is suitable;
+      'url': the URL from which the dictionary was downloaded, or None; 'filepath': the
+      local path including the file name of the dictionary.
+    - hyphen.hnj' is the C extension module that does all the ground work. It
+      contains the high quality
+      `C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_.
+      It supports hyphenation with replacements as well as compound words.
       Note that hyphenation dictionaries are invisible to the
       Python programmer. But each hyphenator object has an attribute 'info' which is a
-      dict object containing metadata on the hyphenation dictionary of this Hyphenator instance.
-      The former 'language' attribute, a string of the form 'll_CC'
-      is deprecated as from v1.0.
+      DictInfo object containing meta data on the hyphenation dictionary of this Hyphenator instance.
+      The 'language' attribute containing a locale for which the dictionary is suitable,
+      is deprecated as from v1.0. Use my_hyphenator.info.locales instead to access
+      a list of locales for which the dictionary is suitable.
 
 
 1.2 The module 'textwrap2'
 ------------------------------
 
 This module is an enhanced though backwards compatible version of the module
-'textwrap' from the Python standard library. Not very surprisingly, it adds
+'textwrap' from the Python standard library. Unsurprisingly, it adds
 hyphenation functionality to 'textwrap'. To this end, a new key word parameter
 'use_hyphenator' has been added to the __init__ method of the TextWrapper class which
 defaults to None. It can be initialized with any hyphenator object. Note that until version 0.7
 this keyword parameter was named 'use_hyphens'. So older code may need to be changed.'
 
-1.3 hyphen_test
--------------------------------
 
-(no longer part of the distribution as of version 0.9.1; please
-    clone the hg repository to get it)
-
-This Python script is a framework for running large tests of the hyphen package.
-A test is a list of 3 elements: a text file (typically a word list), its encoding and a
-list of strings specifying a dictionary to be applied to the word list. Adding a test
-is as easy as writing a function call. All results are logged.
-
-
-2. Code example
+2. Code examples
 ======================
 
 
 ::
 
-        >>>from hyphen import Hyphenator
+        >>>from hyphen import Hyphenator, dict_info
         from hyphen.dictools import *
 
         # Download and install some dictionaries in the default directory using the default
         # repository, usually the LibreOffice website
-        for lang in ['de_DE', 'fr_FR', 'en_UK', 'ru_RU']:
+        >>>for lang in ['de_DE', 'en_US']:
             if not is_installed(lang): install(lang)
+            
+        # Show locales of installed dictionaries
+        >>>dict_info.keys()
+        ['de_CH', 'en_CA', 'en_PH', 'de', 'de_DE', 'en_TT', 'en_NA', 'en_MW',
+        'en_ZA', 'en_AU', 'en_NZ', 'en_JM', 'en_BS', 'en_US', 'de_AT',
+        'en_IE', 'en_ZW', 'en_GH', 'en_IN', 'en_BZ', 'en_GB']
+
+        >>>print(dict_info['en_GB'])
+        Hyphenation dictionary:
+        Locales: ['en_GB', 'en_ZA', 'en_NA', 'en_ZW', 'en_AU', 'en_CA', 'en_IE', 'en_IN'
+        , 'en_BZ', 'en_BS', 'en_GH', 'en_JM', 'en_MW', 'en_NZ', 'en_TT']
+        filepath: c:\python27\lib\site-packages\hyphen/hyph_en_GB.dic
+        URL: http://cgit.freedesktop.org/libreoffice/dictionaries/plain/dictionaries/en/
+        hyph_en_GB.dic
+
 
         # Create some hyphenators
         h_de = Hyphenator('de_DE')
@@ -191,7 +168,7 @@ is as easy as writing a function call. All results are logged.
 
         # Now hyphenate some words
         # Note: the following examples are written in Python 3.x syntax.
-        # If you use Python 2.x, you must add the 'u' prefixes as Hyphenator methods expect unicode objects.
+        # If you use Python 2.x, you must add the 'u' prefixes as Hyphenator methods expect unicode strings.
 
         h_en.pairs('beautiful'
         [['beau', 'tiful'], [u'beauti', 'ful']]
@@ -221,15 +198,15 @@ is as easy as writing a function call. All results are logged.
 3.1 General requirements
 ---------------------------
 
-PyHyphen works with Python 2.4 or higher, including 3.2.
-There are pre-compiled binaries of the hnj module for win32 and Python 2.6 to 3.2.
+PyHyphen works with Python 2.6 or higher, including Python3.
+There are pre-compiled binaries of the hnj module for win32 and Python 2.6, 2.7 and 3.2.
 On other platforms you will need a build environment such as gcc, make
 
 
 3.2 Compiling and installing from source
 ----------------------------------------------
 
-Choose and download the source distribution from
+Download the source distribution from
 
     http://cheeseshop.python.org/pypi/PyHyphen
 
@@ -240,12 +217,13 @@ as well as the module textwrap2 by entering at the command line somethin like:
 
 $python setup.py install
 
-The setup script will first check the Python version and copy the required
-version-specific files. 
+The setup script will first check the Python version, create a 'hyphen' subdir and copy
+the required files from the 2.x and src subdirs. If needed, lib2to3 will
+be used.
 
 Second, setup.py searches in ./bin for a pre-compiled binary
 of hnj for your platform. If there is a binary that looks ok, this version is installed. Otherwise,
-hnj is compiled from source. On Windows you will need MSVC 2003 (Python 2.4 and 2.5) or MSVC 2008 (for Python2.6 or higher), mingw
+hnj is compiled from source. On Windows you will need MSVC, mingw
 or whatever fits to your Python distribution.
 If the distribution comes with a binary of 'hnj'
 that fits to your platform and python version, you can still force a compilation from
@@ -259,54 +237,21 @@ Under Linux you may need root privileges, so you may want to enter something lik
 
  After compiling and installing the hyphen package, config.py is adjusted as follows:
  
-- the package directory becomes the local default path for hyphenation dictionaries
-- the LibreOffice website becomes the default repository from which
-  dictionaries are downloaded.
+- the local default path for hyphenation dictionaries is set to  the package directory
+- the base URL from which
+  dictionaries are downloaded is set to LibreOffice's GIT repository
 
-Thereafter, the setup script tries to re-import the hyphen package to install a default
-set of dictionaries, unless the command line contains the 'no_dictionaries' command after 'install'. The script
-then tries to install the metadata file by calling hyphen.dictools.install_dict_info. Then, the hyphenation dictionaries
-for en_US (commonly used) and the local language, if different, are installed.
-
- 
-4. How to get dictionaries?
-=================================
- 
- Information on all hyphenation dictionaries available on the LibreOffice website is stored in hyphen.dict_info.
- You can also visit http://wiki.services.LibreOffice.org/wiki/Dictionaries for a
- complete list. Then use the dictools.install function to download and install the dictionary locally.
+Thereafter the setup script imports the hyphen package to install a default
+set of dictionaries, unless the command line contains 'no_dictionaries' after the 'install' command.
+The dictionaries installed by default are those for English and the locale, if different.
 
 
-5. What's under the hood?
-==============================
-
-the C extension module 'hnj' used by the hyphenator class defined in
-__init__.py contains the
-`C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_
-which is used by LibreOffice.org, Mozilla
-and alike. The C sources have not been changed, let alone hnjmalloc.c which has
-been slightly modify to use pythonic memory management and error handling.
-
-For further information on the hyphenation library and available dictionaries visit
-http://wiki.services.LibreOffice.org/wiki/Dictionaries.
-
-
-6. Testing
-==============
-
-This requires cloning the hg repository, as the test.py module is no longer part
-of the source distribution. Please see the instructions in Demo/hyphen_test.py. All you need is a text file,
-and its encoding. Copy the text file into the Demo/input directory, add a new function
-call to hyphen_test.py, run it and read the .log file and the files created in the
-output directory. There you will see the results for each word. You can specify a list
-of dictionaries to be used. Then, hyphen_test will create an output file for each
-dictionary used with a given word list.
-
-
-7. Contributing and reporting bugs
+4. Contributing and reporting bugs
 =====================================
 
 Contributions, comments, bug reports, criticism and praise can be sent to the author.
 
 Browse  the Mercurial repository and submit
-bug reports at http://pyhyphen.googlecode.com_.
+bug reports at http://pyhyphen.googlecode.com.
+
+

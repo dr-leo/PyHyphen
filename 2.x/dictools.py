@@ -1,18 +1,20 @@
 # PyHyphen - hyphenation for Python
 # module: dictools
 '''
-This module contains convenience functions to handle hyphenation dictionaries.
+This module contains convenience functions to manage hyphenation dictionaries.
 '''
 
-import os, pickle, hyphen
-from hyphen import config
+import os, hyphen
+from hyphen import config, save_dict_info
 from xml.etree.ElementTree import ElementTree
 from urllib2 import urlopen, URLError
 
-__all__ = ['install', 'is_installed', 'uninstall', 'list_installed', 'save_dict_info']
+__all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 
 class DictInfo:
-    'Contains metadata on a hyphenation dictionary'
+    '''
+    Contains metadata on a hyphenation dictionary.
+    '''
     
     def __init__(self, locales, filepath, url = None):
         '''
@@ -24,12 +26,18 @@ class DictInfo:
         self.filepath = filepath
         self.locales = locales
         self.url = url
+        
+    def __str__(self):
+        return ''.join(('Hyphenation dictionary:\n', 'Locales: ', str(self.locales), '\n',
+            'filepath: ', self.filepath, '\n',
+            'URL: ', self.url))
 
 
 def list_installed(directory = config.default_dict_path):
     '''
     Return a list of locales for which dictionaries are installed.
     Deprecated since version 2.0. Use hyphen.dict_info.keys() instead.
+    'directory' is ignored since version 2.0 as 'hyphen.dict_info' can be accessed.
     '''
     return hyphen.dict_info.keys()
 
@@ -39,28 +47,22 @@ def is_installed(language, directory = config.default_dict_path):
     False otherwise.
     By convention, 'language' should have the form 'll_CC'.
     Example: 'en_US' for US English.
+    Since version 2.0, 'directory' is ignored as the relevant information is in found 'hyphen.dict_info'.
     '''
     return (language in hyphen.dict_info.keys())
     
     
-def uninstall(language, directory = config.default_dict_path):
+def uninstall(language):
     '''
     Uninstall the dictionary of the specified language.
     'language': is by convention a string of the form 'll_CC' whereby ll is the
         language code and CC the country code.
-    'directory' (default: config.default_dict_path'. After installation of PyHyphen
-    this is the package root of 'hyphen'.
     '''
-
-    if hyphen.dict_info:
-        file_path = hyphen.dict_info[language].filepath
-    else:
-        file_path = ''.join((directory, '/', 'hyph_', language, '.dic'))
-        os.remove(file_path)
+    file_path = hyphen.dict_info[language].filepath
+    os.remove(file_path)
     # Delete all references in dict_info to the removed file
     for d in hyphen.dict_info.keys():
-            if hyphen.dict_info[d].filepath == file_path: hyphen.dict_info.pop(d)
-    # save dict_info:
+        if hyphen.dict_info[d].filepath == file_path: hyphen.dict_info.pop(d)
     save_dict_info()
 
 
@@ -72,7 +74,7 @@ def install(language, directory = config.default_dict_path,
     directory: the installation directory. Defaults to the
     value given in config.py. After installation this is the package root of 'hyphen'
     repos: the url of the dictionary repository. (Default: as declared in config.py;
-    after installation this is the LibreOffice repository for dictionaries.).
+    after installation of PyHyphen this is LibreOffice's GIT repository .).
     '''
 
     # Download the dictionaries.xcu file from the LibreOffice repository if needed
@@ -151,9 +153,4 @@ def install(language, directory = config.default_dict_path,
         hyphen.dict_info[language] = new_dict
     # Save the modified metadata
     save_dict_info()
-
-
-def save_dict_info(path = config.default_dict_info_path):
-    with open(path + '/hyphen_dict_info.pickle', 'wb') as f:
-        pickle.dump(hyphen.dict_info, f)
 

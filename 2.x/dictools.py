@@ -6,7 +6,11 @@ This module contains convenience functions to manage hyphenation dictionaries.
 
 import os, hyphen
 from hyphen import config, save_dict_info
-from xml.etree.ElementTree import ElementTree
+try:
+    from xml.etree.cElementTree import ElementTree
+except ImportError:
+    from xml.etree.ElementTree import ElementTree
+    
 from urllib2 import urlopen, URLError
 
 __all__ = ['install', 'is_installed', 'uninstall', 'list_installed']

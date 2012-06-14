@@ -24,5 +24,8 @@ Reimplement the C library in pure Python to make it compatible with
 Iron Python etc. Wilbert Berendsen's
 `hyphenator <http://pypi.python.org/pypi/hyphenator/0.5.1>`_ looks like a good starting point.
 
+Wrap the C library with ctypes
+
+
 
 

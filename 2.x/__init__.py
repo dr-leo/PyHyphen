@@ -39,7 +39,11 @@ This package contains the following items:
 '''
 
 from hyphen import hnj, config
-import os, pickle
+import os
+try:
+    import cPickle as pickle
+except ImportError:
+    import pickle
 
 
 

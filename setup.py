@@ -54,7 +54,7 @@ arg_dict = dict(
     author = "Dr. Leo",
     author_email = "fhaxbox66@googlemail.com",
     url = "http://pyhyphen.googlecode.com",
-    description = "The hyphenation library of OpenOffice and FireFox wrapped for Python",
+    description = "The hyphenation library of LibreOffice and FireFox wrapped for Python",
     long_description = longdescr,
     classifiers = [
         'Intended Audience :: Developers',

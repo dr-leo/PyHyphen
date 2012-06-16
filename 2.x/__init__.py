@@ -50,6 +50,30 @@ except ImportError:
 __all__ = ['dictools', 'Hyphenator', 'load_dict_info', 'save_dict_info']
 
 
+
+class DictInfo:
+    '''
+    Contains metadata on a hyphenation dictionary.
+    '''
+
+    def __init__(self, locales, filepath, url = None):
+        '''
+        locales: a list of locales for for which the dictionary is suitable, e.g. 'en_UK'
+        filepath: the local path including filename of the dictionary file
+        url: an  optional URL where the dictionary has been downloaded from
+'''
+
+        self.filepath = filepath
+        self.locales = locales
+        self.url = url
+
+    def __str__(self):
+        return ''.join(('Hyphenation dictionary:\n', 'Locales: ', str(self.locales), '\n',
+            'filepath: ', self.filepath, '\n',
+            'URL: ', self.url))
+
+
+
 def load_dict_info(path = config.default_dict_info_path):
     '''
     load meta data on locally installed hyphenation dictionaries and
@@ -108,8 +132,6 @@ class Hyphenator:
         In this case the 'directory' argument must be set to the local
         path of the hyphenation dictionary.
         
-        There is also a 'language' attribute of type str which is deprecated since v1.0b1.
-        
         lmin, rmin, compound_lmin and compound_rmin: set minimum number of chars to be cut off by hyphenation in
         single or compound words
         
@@ -122,10 +144,9 @@ class Hyphenator:
             file_path = '/'.join((directory, '/', 'hyph_' + language + '.dic'))
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin,
             compound_lmin, compound_rmin)
-        self.language = language
         if language in dict_info:
             self.info = dict_info[language]
-        else: self.info = None
+        else: self.info = DictInfo([language], file_path)
 
 
     def pairs(self, word):

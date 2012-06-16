@@ -15,27 +15,6 @@ from urllib2 import urlopen, URLError
 
 __all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 
-class DictInfo:
-    '''
-    Contains metadata on a hyphenation dictionary.
-    '''
-    
-    def __init__(self, locales, filepath, url = None):
-        '''
-        locales: a list of locales for for which the dictionary is suitable, e.g. 'en_UK'
-        filepath: the local path including filename of the dictionary file
-        url: an  optional URL where the dictionary has been downloaded from
-'''
-
-        self.filepath = filepath
-        self.locales = locales
-        self.url = url
-        
-    def __str__(self):
-        return ''.join(('Hyphenation dictionary:\n', 'Locales: ', str(self.locales), '\n',
-            'filepath: ', self.filepath, '\n',
-            'URL: ', self.url))
-
 
 def list_installed(directory = config.default_dict_path):
     '''
@@ -139,7 +118,7 @@ def install(language, directory = config.default_dict_path,
 
                     # Save the metadata
                 # Generate a record for each locale, overwrite any existing ones
-                new_dict  = DictInfo(dict_locales, filepath, url = dict_url)
+                new_dict = hyphen.DictInfo(dict_locales, filepath, url = dict_url)
                 for l in dict_locales:
                     hyphen.dict_info[l] = new_dict
 
@@ -153,7 +132,7 @@ def install(language, directory = config.default_dict_path,
         with open(filepath, 'w')  as dict_file:
             dict_file.write(dict_str)
         # Store the metadata
-        new_dict = DictInfo([language], filepath) # the URL is thus set to None.
+        new_dict = hyphen.DictInfo([language], filepath) # the URL is thus set to None.
         hyphen.dict_info[language] = new_dict
     # Save the modified metadata
     save_dict_info()

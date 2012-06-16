@@ -30,7 +30,7 @@ associated with multiple locales such as for 'en_US' and 'en_NZ'. These changes 
 Further changes are:
 
 * Hyphenator.info is of a container type for 'url', 'locales' and 'filepath' of the dictionary.
-* the Hyphenator.language attribute is deprecated
+* the Hyphenator.language attribute deprecated in v1.0 has been removed
 * download and install dictionaries from LibreOffice's git repository by default
 * dictools.install('xx_YY') will install all dictionaries found for the 'xx' language and associate them with all relevant locales
   as described in the dictionaries.xcu file in LibreOffice's git repository.
@@ -44,7 +44,7 @@ New in version 1.0
 
 * Upgraded the `C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_
   to v2.7 which brings significant improvements, most notably correct treatment of
-*  already hyphenated words such as 'Python-powered'
+  already hyphenated words such as 'Python-powered'
 * use a CSV file from the oo website with meta information
   on dictionaries for installation of dictionaries and
   instantiation of hyphenators. Apps can access the metadata

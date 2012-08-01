@@ -188,7 +188,7 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
         
 
         from textwrap2 import fill
-        print fill('very long text...', width = 40, use_hyphens = h_en)
+        print fill('very long text...', width = 40, use_hyphenator = h_en)
 
 
 

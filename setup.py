@@ -50,7 +50,7 @@ longdescr = open('README.txt', 'r').read()
 
 arg_dict = dict(
     name = "PyHyphen",
-    version = "2.0b1",
+    version = "2.0",
     author = "Dr. Leo",
     author_email = "fhaxbox66@googlemail.com",
     url = "http://pyhyphen.googlecode.com",
@@ -67,6 +67,7 @@ arg_dict = dict(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.1',
         'Programming Language :: Python :: 3.2',
+'Programming Language :: Python :: 3.3',
         'Programming Language :: C',
                 'Topic :: Text Processing',
                 'Topic :: Text Processing :: Linguistic'

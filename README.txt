@@ -38,6 +38,7 @@ Further changes are:
   to v2.8.3
 * use lib2to3 instead of separate code bases
 * dropped support for Python 2.4 and 2.5
+* support Python 3.3
 
 
 New in version 1.0
@@ -78,7 +79,7 @@ New in version 0.10
 PyHyphen is a pythonic interface to the hyphenation C library used in software such as LibreOffice and the Mozilla suite.
 It comes with tools to download, install and uninstall hyphenation dictionaries from LibreOffice's Git repository.
 PyHyphen consists of the package 'hyphen' and the module 'textwrap2'. 
-The source distribution supports Python 2.6 or higher, including Python 3.2. If you depend on python 2.4 or 2.5, use PyHyphen-1.0b1
+The source distribution supports Python 2.6 or higher, including Python 3.3. If you depend on python 2.4 or 2.5, use PyHyphen-1.0b1
 instead. In this case you may have to download hyphenation dictionaries manually.
 
 1.1 Content of the hyphen package
@@ -199,7 +200,7 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
 ---------------------------
 
 PyHyphen works with Python 2.6 or higher, including Python3.
-There are pre-compiled binaries of the hnj module for win32 and Python 2.6, 2.7 and 3.2.
+There are pre-compiled binaries of the hnj module for win32 and Python 2.6, 2.7, 3.2 and 3.3.
 On other platforms you will need a build environment such as gcc, make
 
 

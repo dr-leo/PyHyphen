@@ -81,7 +81,10 @@ def install(language, directory = config.default_dict_path,
     if   use_description and descr_file: 
         descr_tree = ElementTree(file = descr_file)
 
-
+        # Flag to catch the case that xcu file
+        # does not refer to a hyphenation dict
+        found_dict = False
+        
         # Find the nodes containing meta data of hyphenation dictionaries
         # Iterate over all nodes
         for node in descr_tree.getiterator('node'):
@@ -89,9 +92,12 @@ def install(language, directory = config.default_dict_path,
             # We assume this is the case if an attribute value
             # contains the substring 'hyph'
             node_values = [i[1] for i in node.items()]
-            iter_values = (i for i in node_values if ('hyph' in i.lower()))
+            iter_values = [i for i in node_values if ('hyph' in i.lower())]
+            
+            # Install all available hyphen dictionairies
             for v in iter_values:
-                # Found one! So extract the data and construct the local record
+                # Found a hyphenation dict! So extract the data and construct the local record
+                found_dict = True
                 for property in node.getchildren():
                     prop_values = [j[1] for j in property.items()]
                     for pv in prop_values:
@@ -104,7 +110,7 @@ def install(language, directory = config.default_dict_path,
                             break # skip any other values of this property
 
                         elif pv.lower() == 'locales':
-                            # Its only child's text is a list of locales. .
+                            # Its only child's text is a list of locales.
                             dict_locales = property.getchildren()[0].text.replace('-', '_').split()
 
                             break # skip any other values of this property
@@ -116,11 +122,17 @@ def install(language, directory = config.default_dict_path,
                 with open(filepath, 'wb')  as dict_file:
                     dict_file.write(dict_str)
 
-                    # Save the metadata
+                # Save the metadata
                 # Generate a record for each locale, overwrite any existing ones
                 new_dict = hyphen.DictInfo(dict_locales, filepath, url = dict_url)
                 for l in dict_locales:
                     hyphen.dict_info[l] = new_dict
+                    
+        # Catch the case that there is no hyphenation dict
+        # for this language:
+        if not found_dict:
+            raise IOError('Cannot find hyphenation dictionary for language ' + language + '.')
+
 
     # handle the case that there is no xml metadata
     else:

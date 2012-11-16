@@ -160,17 +160,11 @@ class Hyphenator:
         * the hyphenator could not find any hyphenation point
         '''
         if not isinstance(word, unicode): raise TypeError('Unicode object expected.')
-        mode = 1
+        # Discard very short words
         if (len(word) < 4) or ('=' in word): return []
-        if not word.islower():
-            if (word.isupper()):
-                mode += 4
-                word = word.lower()
-            else:
-                if (word[1:].islower()):
-                    mode += 2
-                    word = word.lower()
-                else: return []
+        
+        # Adjust the mode parameter for the C function call
+        mode = 1
         # Now call the hyphenator catching the case that 'word' is not encodable
         # to the dictionary's encoding.'
         try:
@@ -193,17 +187,9 @@ class Hyphenator:
         '''
         if not isinstance(word, unicode): raise TypeError('Unicode object expected.')
         mode = 0
+        # discard too short words
         if (len(word) < 4) or ('=' in word): return []
-        if not word.islower():
-            if (word.isupper()):
-                mode += 4
-                word = word.lower()
-            else:
-                if (word[1:].islower()):
-                    mode += 2
-                    word = word.lower()
-                else: return []
-        # Now call the hyphenator catching the case that 'word' is not encodable
+ # Now call the hyphenator catching the case that 'word' is not encodable
         # to the dictionary's encoding.'
         try:
             return self.__hyphenate__.apply(word, mode).split('=')

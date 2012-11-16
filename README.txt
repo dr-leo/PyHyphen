@@ -16,6 +16,17 @@ Mailing list: http://groups.google.com/group/pyhyphen
 Change log
 ======================
 
+New in Version 2.1
+
+* updated URL for LibreOffice's dictionaries
+* no longer attempt to hyphenate uppercased words such as 'LONDON'. This
+  feature had to be dropped to work around a likely bug in the C extension which,
+  under Python 3.3, caused
+  the hyphenator to return words starting with a capital letter as lowercase.
+
+
+
+
 New in Version 2.0
 
 The hyphen.dictools module has been completely rewritten. This was required

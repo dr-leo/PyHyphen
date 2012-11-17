@@ -144,6 +144,7 @@ class Hyphenator:
             file_path = '/'.join((directory, '/', 'hyph_' + language + '.dic'))
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin,
             compound_lmin, compound_rmin)
+        self.apply = self.__hyphenate__.apply
         if language in dict_info:
             self.info = dict_info[language]
         else: self.info = DictInfo([language], file_path)
@@ -160,15 +161,14 @@ class Hyphenator:
         * the hyphenator could not find any hyphenation point
         '''
         if not isinstance(word, unicode): raise TypeError('Unicode object expected.')
+        
         # Discard very short words
         if (len(word) < 4) or ('=' in word): return []
         
-        # Adjust the mode parameter for the C function call
-        mode = 1
         # Now call the hyphenator catching the case that 'word' is not encodable
         # to the dictionary's encoding.'
         try:
-            return self.__hyphenate__.apply(word, mode)
+            return self.apply(word, 1)
         except UnicodeError:
             return []
 
@@ -186,13 +186,13 @@ class Hyphenator:
         would not yield the original word.
         '''
         if not isinstance(word, unicode): raise TypeError('Unicode object expected.')
-        mode = 0
-        # discard too short words
+        # discard very short words
         if (len(word) < 4) or ('=' in word): return []
+        
  # Now call the hyphenator catching the case that 'word' is not encodable
         # to the dictionary's encoding.'
         try:
-            return self.__hyphenate__.apply(word, mode).split('=')
+            return self.apply(word, 0).split('=')
         except UnicodeError:
             return []
 

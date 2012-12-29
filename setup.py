@@ -140,7 +140,8 @@ if 'install' in sys.argv:
             # Install dict for local language if needed
             locale.setlocale(locale.LC_ALL, '')
             local_lang = locale.getlocale()[0]
-            if local_lang != 'en_US':
+            # Install local dict only if locale has been read and local_lang is not en_US.
+            if local_lang and local_lang != 'en_US':
                 sys.stdout.write(local_lang + ' ')
                 try:
                     install(local_lang)

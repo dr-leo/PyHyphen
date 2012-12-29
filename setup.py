@@ -138,16 +138,16 @@ if 'install' in sys.argv:
             install('en_US')
             
             # Install dict for local language if needed
-            locale.setlocale(locale.LC_ALL, '')
-            local_lang = locale.getlocale()[0]
-            # Install local dict only if locale has been read and local_lang is not en_US.
-            if local_lang and local_lang != 'en_US':
-                sys.stdout.write(local_lang + ' ')
-                try:
+            try:
+                locale.setlocale(locale.LC_ALL, '')
+                local_lang = locale.getlocale()[0]
+                # Install local dict only if locale has been read and local_lang is not en_US.
+                if local_lang and local_lang != 'en_US':
+                    sys.stdout.write(local_lang + ' ')
                     install(local_lang)
                     sys.stdout.write('Done.\n')
-                except Error:
-                    sys.stdout.write('Failed.\n')
+            except Error:
+                sys.stdout.write('... Could not install dictionary for local language.\n')
 
             
     except ImportError:

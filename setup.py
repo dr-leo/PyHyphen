@@ -1,8 +1,10 @@
+# setup.py for the PyHyphen hyphenation package
+# (c) Dr. Leo (fhaxbox66 <at> gmail >dot< com)
 
 import sys, os, shutil, imp, py_compile, codecs, locale
 from string import Template
 from distutils.core import setup, Extension
-
+from warnings import warn
 
 
 # URL of the default repository. It goes into config.py.
@@ -50,7 +52,7 @@ longdescr = open('README.txt', 'r').read()
 
 arg_dict = dict(
     name = "PyHyphen",
-    version = "2.0.1",
+    version = "2.0.2",
     author = "Dr. Leo",
     author_email = "fhaxbox66@googlemail.com",
     url = "http://pyhyphen.googlecode.com",
@@ -94,8 +96,9 @@ if len(set(('install', 'bdist_wininst', 'bdist')) - set(sys.argv)) < 3:
             shutil.copy(bin_file, './hyphen/hnj.pyd')
             arg_dict['package_data'] = {'hyphen' : ['hnj.pyd']}
             arg_dict.pop('ext_modules')
-            sys.stdout.write("Found a suitable binary version of the C extension module. This binary will be installed rather than building it from source.\n\
-            However, if you prefer compiling, reenter 'python setup.py <command> --force_build_ext'.")
+            print("""Found a suitable binary version of the C extension module.
+            This binary will be installed rather than building it from source.
+            However, if you prefer compiling, reenter 'python setup.py <command> --force_build_ext'.""")
 
 
 setup(**arg_dict)
@@ -108,7 +111,7 @@ os.remove('src/hnjmodule.c')
 
 # Configure the path for dictionaries in config.py
 if 'install' in sys.argv:
-    sys.stdout.write("Adjusting /.../hyphen/config.py... ")
+    print("Adjusting /.../hyphen/config.py... ")
     # We catch ImportErrors to handle situations where the
     # hyphen package has been
     # installed in a directory that is not listed in
@@ -124,7 +127,7 @@ if 'install' in sys.argv:
         # Write the new config.py
         codecs.open(mod_path, 'w', 'utf8').write(new_content)
         py_compile.compile(mod_path)
-        sys.stdout.write("Done.\n")
+        print("Done.")
         
         # Delete any existing dict registry file
         reg_file = pkg_path + '/hyphen_dict_info.pickle'
@@ -134,27 +137,27 @@ if 'install' in sys.argv:
         # Install dictionaries
         if '--no_dictionaries' not in sys.argv:
             from hyphen.dictools import install
-            sys.stdout.write('Installing dictionaries... en_US ')
+            print('Installing dictionaries... en_US ...')
             install('en_US')
             
             # Install dict for local language if needed
             try:
                 locale.setlocale(locale.LC_ALL, '')
                 local_lang = locale.getlocale()[0]
-                # Install local dict only if locale has been read and local_lang is not en_US.
+                # Install local dict only if locale has been read (= is not None)
+                # and local_lang is not en_US.
                 if local_lang and local_lang != 'en_US':
-                    sys.stdout.write(local_lang + ' ')
+                    print(local_lang + ' ')
                     install(local_lang)
-                    sys.stdout.write('Done.\n')
-            except Error:
-                sys.stdout.write('... Could not install dictionary for local language.\n')
+                    print('Done.')
+            except Exception:
+                warn('Could not install dictionary for local language.')
 
             
     except ImportError:
-        sys.stderr.write("""Warning:
-        Could not import hyphen package.
+        warn("""Could not import hyphen package.
         You may wish to adjust config.py
             manually or run setup.py with different options.
-            No dictionary has been installed.\n""")
+            No dictionary has been installed.""")
 
     

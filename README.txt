@@ -16,7 +16,12 @@ Mailing list: http://groups.google.com/group/pyhyphen
 Change log
 ======================
 
-New in Version 2.0.1
+New in Version 2.0.2:
+
+* minor bugfixes and refactorings
+
+
+New in Version 2.0.1:
 
 * updated URL for LibreOffice's dictionaries
 * no longer attempt to hyphenate uppercased words such as 'LONDON'. This

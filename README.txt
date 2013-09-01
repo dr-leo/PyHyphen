@@ -16,7 +16,7 @@ Mailing list: http://groups.google.com/group/pyhyphen
 Change log
 ======================
 
-New in Version 2.0.3:
+New in Version 2.0.4:
 
 * Update C library to v2.8.6
  

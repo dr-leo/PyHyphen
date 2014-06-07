@@ -213,32 +213,21 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
 
 
 
-3. Compiling and installing
+3. Installation
 ================================
 
-3.1 General requirements
----------------------------
-
-PyHyphen works with Python 2.6 or higher, including Python3.
-There are pre-compiled binaries of the hnj module for win32 and Python 2.6, 2.7, 3.2 and 3.3.
+PyHyphen works with Python 2.6 or higher, including Python 3.x.
+The package includes pre-compiled binaries of the hnj module for win32 and Python 2.6, 2.7, 3.2 and 3.3.
 On other platforms you will need a build environment such as gcc, make
 
+PyHyphen is pip-installable. In most scenarios the easiest way to install PyHyphen is to type from the shell prompt: 
 
-3.2 Compiling and installing from source
-----------------------------------------------
+$ pip install pyhyphen
 
-Download the source distribution from
+Manual download and installation will be your preferred option if you want to compile the C library
+from source on Windows rather than using the pre-compiled binary, or if you do not want to download dictionaries upon install.
 
-    http://cheeseshop.python.org/pypi/PyHyphen
-
-and unpack it in a temporary directory. Then cd to this directory.
-
-You can compile and install the hyphen package
-as well as the module textwrap2 by entering at the command line somethin like:
-
-$python setup.py install
-
-The setup script will first check the Python version, create a 'hyphen' subdir and copy
+The setup script first checks the Python version, creates a 'hyphen' subdir, and copies
 the required files from the 2.x and src subdirs. If needed, lib2to3 will
 be used.
 
@@ -252,9 +241,7 @@ source by entering
 
     $python setup.py install --force_build_ext
 
-Under Linux you may need root privileges, so you may want to enter something like
-
-    $sudo python setup.py install
+Under Linux you may need root privileges.
 
  After compiling and installing the hyphen package, config.py is adjusted as follows:
  

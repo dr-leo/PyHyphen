@@ -4,10 +4,10 @@
 
 
 # Local path for dictionaries
-default_dict_path = u'$path'
+default_dict_path = r'$path'
 
 # path for the metadata file
-default_dict_info_path = u'$path'
+default_dict_info_path = ur'$path'
 
 # URL of the repository for dictionaries
 default_repository = u'$repo'

@@ -1,7 +1,7 @@
 # setup.py for the PyHyphen hyphenation package
 # (c) Dr. Leo (fhaxbox66 <at> gmail >dot< com)
 
-import sys, os, shutil, imp, py_compile, codecs, locale
+import sys, os, shutil, imp, py_compile, codecs, locale, platform
 from string import Template
 from distutils.core import setup, Extension
 from warnings import warn
@@ -91,7 +91,13 @@ if len(set(('install', 'bdist_wininst', 'bdist')) - set(sys.argv)) < 3:
     if  '--force_build_ext' in sys.argv:
         sys.argv.remove('--force_build_ext')
     else:
-        bin_file = ''.join(('bin/hnj', '.', sys.platform, '-', sys.version[:3], '.pyd'))
+        # construct string describing platform
+        if platform.system() == 'Windows':
+            if sys.maxsize > 2**32: platform_descr = 'amd64'
+            else: platform_descr = 'win32'
+        else: platform_descr = platform.system()
+        
+        bin_file = ''.join(('bin/hnj', '.', platform_descr, '-', sys.version[:3], '.pyd'))
         if os.path.exists(bin_file):
             shutil.copy(bin_file, './hyphen/hnj.pyd')
             arg_dict['package_data'] = {'hyphen' : ['hnj.pyd']}
@@ -118,8 +124,13 @@ if 'install' in sys.argv:
     # sys.path. This occurs, e.g.,
     # when creating a Debian package.
     try:
-        pkg_path = imp.find_module('hyphen')[1]
-        mod_path = pkg_path + '/config.py'
+        raw_pkg_path = imp.find_module('hyphen')[1]
+        pkg_path = raw_pkg_path.decode(sys.getfilesystemencoding())
+        mod_path = os.path.join(pkg_path, 'config.py')
+        sep = os.path.sep
+        if sep != '/':
+            pkg_path = pkg_path.replace(sep, '/')
+            mod_path = mod_path.replace(sep, '/')
         content = codecs.open(mod_path, 'r', 'utf8').read()
         new_content = Template(content).substitute(path = pkg_path,
             repo = default_repo)

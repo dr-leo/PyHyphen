@@ -124,8 +124,9 @@ if 'install' in sys.argv:
     # sys.path. This occurs, e.g.,
     # when creating a Debian package.
     try:
-        raw_pkg_path = imp.find_module('hyphen')[1]
-        pkg_path = raw_pkg_path.decode(sys.getfilesystemencoding())
+        pkg_path = imp.find_module('hyphen')[1]
+        if ver == '2':
+            pkg_path = pkg_path.decode(sys.getfilesystemencoding())
         mod_path = os.path.join(pkg_path, 'config.py')
         sep = os.path.sep
         if sep != '/':

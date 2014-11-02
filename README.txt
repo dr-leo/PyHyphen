@@ -6,7 +6,7 @@ PyHyphen - hyphenation for Python
 
 Contact: fhaxbox66@googlemail.com
 
-Project home: http://pyhyphen.googlecode.com
+Project home: https://bitbucket.org/fhaxbox66/pyhyphen
 
 Mailing list: http://groups.google.com/group/pyhyphen
 
@@ -221,7 +221,8 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
 3. Installation
 ================================
 
-PyHyphen works with Python 2.6 or higher, including Python 3.x.
+PyHyphen is tested with Python 2.7 and Python 3.3 and 3.4, but  should
+word on older versions as well.
 The package includes pre-compiled binaries of the hnj module for win32 and Python 2.6, 2.7, 3.2 and 3.3.
 On other platforms you will need a build environment such as gcc, make
 
@@ -264,7 +265,7 @@ The dictionaries installed by default are those for English and the locale, if d
 
 Contributions, comments, bug reports, criticism and praise can be sent to the author.
 
-Browse  the Mercurial repository and submit
-bug reports at http://pyhyphen.googlecode.com.
+Browse  or fork the Mercurial repository and report 
+bugs at `bitbucket <https://bitbucket.org/fhaxbox66/pyhyphen/issues?status=new&status=open>`_.
 
 

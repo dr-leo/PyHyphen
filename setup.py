@@ -66,7 +66,7 @@ arg_dict = dict(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.1',
         'Programming Language :: Python :: 3.2',
-'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.3',
         'Programming Language :: C',
                 'Topic :: Text Processing',
                 'Topic :: Text Processing :: Linguistic'
@@ -88,7 +88,7 @@ if len(set(('install', 'bdist_wininst', 'bdist')) - set(sys.argv)) < 3:
     if  '--force_build_ext' in sys.argv:
         sys.argv.remove('--force_build_ext')
     else:
-        bin_file = ''.join(('bin/hnj', '.', sys.platform, '-', sys.version[:3], '.pyd'))
+        bin_file = os.path.join(current_dir, 'bin', 'hnj' + '.' + sys.platform + '-' + sys.version[:3] + '.pyd')
         if os.path.exists(bin_file):
             shutil.copy(bin_file, './hyphen/hnj.pyd')
             arg_dict['package_data'] = {'hyphen' : ['hnj.pyd']}
@@ -111,12 +111,19 @@ os.remove(os.path.join(current_dir, 'src', 'hnjmodule.c'))
 # installed in a directory that is not listed in
 # sys.path. This occurs, e.g.,
 # when creating a Debian package.
-try:
-    # Install dictionaries
-    if '--no_dictionaries' not in sys.argv:
-        from hyphen.dictools import install
-        print('Installing dictionaries... en_US ...')
-        install('en_US')
+# Install dictionaries
+if '--no_dictionaries' not in sys.argv:
+    try:
+        from hyphen.dictools import is_installed, install
+    except ImportError:
+        warn(
+"""Could not import hyphen package. You may wish to adjust config.py manually
+or run setup.py with different options. No dictionary has been installed."""
+        )
+    else:
+        if not is_installed('en_US'):
+            print('Installing dictionary en_US')
+            install('en_US')
 
         # Install dict for local language if needed
         try:
@@ -124,16 +131,8 @@ try:
             local_lang = locale.getlocale()[0]
             # Install local dict only if locale has been read (= is not None)
             # and local_lang is not en_US.
-            if local_lang and local_lang != 'en_US':
-                print(local_lang + ' ')
+            if local_lang and local_lang != 'en_US' and not is_installed(local_lang):
+                print('Installing dictionary', local_lang)
                 install(local_lang)
-                print('Done.')
         except Exception:
             warn('Could not install dictionary for local language.')
-
-
-except ImportError:
-    warn("""Could not import hyphen package.
-    You may wish to adjust config.py
-        manually or run setup.py with different options.
-        No dictionary has been installed.""")

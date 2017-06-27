@@ -1,17 +1,13 @@
 # setup.py for the PyHyphen hyphenation package
 # (c) Dr. Leo (fhaxbox66 <at> gmail >dot< com)
 
-import sys, os, shutil, imp, py_compile, codecs, locale
-from string import Template
+import locale
+import os
+import shutil
+import sys
 from distutils.core import setup, Extension
 from warnings import warn
 
-
-# URL of the default repository. It goes into config.py.
-# Change this if you want to download dictionaries from somewhere else by default.
-# Note that you can also specify the repository individualy
-# when calling hyphen.dictools.install.
-default_repo = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
 
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -110,53 +106,34 @@ os.remove(os.path.join(current_dir, 'textwrap2.py'))
 os.remove(os.path.join(current_dir, 'src', 'hnjmodule.c'))
 
 
-# Configure the path for dictionaries in config.py
-if 'install' in sys.argv:
-    print("Adjusting /.../hyphen/config.py... ")
-    # We catch ImportErrors to handle situations where the
-    # hyphen package has been
-    # installed in a directory that is not listed in
-    # sys.path. This occurs, e.g.,
-    # when creating a Debian package.
-    try:
-        pkg_path = imp.find_module('hyphen')[1]
-        mod_path = os.path.join(pkg_path, 'config.py')
-        content = codecs.open(mod_path, 'r', 'utf8').read()
-        new_content = Template(content).substitute(path=pkg_path,
-            repo=default_repo)
+# We catch ImportErrors to handle situations where the
+# hyphen package has been
+# installed in a directory that is not listed in
+# sys.path. This occurs, e.g.,
+# when creating a Debian package.
+try:
+    # Install dictionaries
+    if '--no_dictionaries' not in sys.argv:
+        from hyphen.dictools import install
+        print('Installing dictionaries... en_US ...')
+        install('en_US')
 
-        # Write the new config.py
-        codecs.open(mod_path, 'w', 'utf8').write(new_content)
-        py_compile.compile(mod_path)
-        print("Done.")
-
-        # Delete any existing dict registry file
-        reg_file = os.path.join(pkg_path, 'hyphen_dict_info.pickle')
-        if os.path.exists(reg_file):
-            os.remove(reg_file)
-
-        # Install dictionaries
-        if '--no_dictionaries' not in sys.argv:
-            from hyphen.dictools import install
-            print('Installing dictionaries... en_US ...')
-            install('en_US')
-
-            # Install dict for local language if needed
-            try:
-                locale.setlocale(locale.LC_ALL, '')
-                local_lang = locale.getlocale()[0]
-                # Install local dict only if locale has been read (= is not None)
-                # and local_lang is not en_US.
-                if local_lang and local_lang != 'en_US':
-                    print(local_lang + ' ')
-                    install(local_lang)
-                    print('Done.')
-            except Exception:
-                warn('Could not install dictionary for local language.')
+        # Install dict for local language if needed
+        try:
+            locale.setlocale(locale.LC_ALL, '')
+            local_lang = locale.getlocale()[0]
+            # Install local dict only if locale has been read (= is not None)
+            # and local_lang is not en_US.
+            if local_lang and local_lang != 'en_US':
+                print(local_lang + ' ')
+                install(local_lang)
+                print('Done.')
+        except Exception:
+            warn('Could not install dictionary for local language.')
 
 
-    except ImportError:
-        warn("""Could not import hyphen package.
-        You may wish to adjust config.py
-            manually or run setup.py with different options.
-            No dictionary has been installed.""")
+except ImportError:
+    warn("""Could not import hyphen package.
+    You may wish to adjust config.py
+        manually or run setup.py with different options.
+        No dictionary has been installed.""")

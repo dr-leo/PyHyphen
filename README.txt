@@ -252,15 +252,10 @@ Under Linux you may need root privileges, so you may want to enter something lik
 
     $sudo python setup.py install
 
- After compiling and installing the hyphen package, config.py is adjusted as follows:
- 
-- the local default path for hyphenation dictionaries is set to  the package directory
-- the base URL from which
-  dictionaries are downloaded is set to LibreOffice's GIT repository
-
-Thereafter the setup script imports the hyphen package to install a default
-set of dictionaries, unless the command line contains 'no_dictionaries' after the 'install' command.
-The dictionaries installed by default are those for English and the locale, if different.
+The setup script imports the hyphen package to install a default set of
+dictionaries, unless the command line contains 'no_dictionaries' after the
+'install' command. The dictionaries installed by default are those for English
+and the locale, if different.
 
 
 4. Contributing and reporting bugs

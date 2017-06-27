@@ -13,7 +13,7 @@ from hyphen.dictools import *
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s %(levelname)s %(message)s',
-    filename ='hyphen_test.log')
+    filename='hyphen_test.log')
 
 console = logging.StreamHandler()
 formatter = logging.Formatter('%(message)s')
@@ -52,10 +52,11 @@ class wordlist:
     def hyphenate(self):
         for lang in self.languages:
             logging.info('Hyphenating %s with dictionary %s', self.filename, lang)
-            if is_installed(lang): h = hyphenator(lang)
+            if is_installed(lang):
+                h = hyphenator(lang)
             else:
                 h = hyphenator(lang, '.')
-            output_filename = ''.join(('output/', lang, '.',  self.filename))
+            output_filename = ''.join(('output/', lang, '.', self.filename))
             f = codecs.open(output_filename, 'w', self.encoding)
             logging.info('Writing to output file %s...', output_filename)
             f.writelines('Output file created by hyphen_test.\n\
@@ -95,5 +96,3 @@ for d in list_installed('.'):
     logging.info('Uninstalling dictionary %s.', d)
     uninstall(d, '.')
 logging.info('Test suite completed.')
-
-

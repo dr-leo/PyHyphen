@@ -7,7 +7,7 @@
 
 __revision__ = "$Id: textwrap.py 63335 2008-05-16 00:03:33Z alexandre.vassalotti $"
 
-import string, re
+import re
 
 __all__ = ['TextWrapper', 'wrap', 'fill']
 

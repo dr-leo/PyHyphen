@@ -25,7 +25,7 @@ files_from_2x = {
 files_from_any = {
     'hnjmodule.c' : 'src/',
     'textwrap2.py' : './'}
-        
+
 
 #copy version-specific files
 ver = sys.version[0]
@@ -42,7 +42,7 @@ for file_name, dest in files_from_any.items():
 # refactor 2to3
 if py3k:
     import lib2to3.main
-    lib2to3.main.main('lib2to3.fixes', args = '--no-diffs -wn -f unicode -f urllib \
+    lib2to3.main.main('lib2to3.fixes', args='--no-diffs -wn -f unicode -f urllib \
         hyphen'.split())
 
 
@@ -51,14 +51,14 @@ longdescr = open('README.txt', 'r').read()
 
 
 arg_dict = dict(
-    name = "PyHyphen",
-    version = "2.0.2",
-    author = "Dr. Leo",
-    author_email = "fhaxbox66@googlemail.com",
-    url = "http://pyhyphen.googlecode.com",
-    description = "The hyphenation library of LibreOffice and FireFox wrapped for Python",
-    long_description = longdescr,
-    classifiers = [
+    name="PyHyphen",
+    version="2.0.2",
+    author="Dr. Leo",
+    author_email="fhaxbox66@googlemail.com",
+    url="http://pyhyphen.googlecode.com",
+    description="The hyphenation library of LibreOffice and FireFox wrapped for Python",
+    long_description=longdescr,
+    classifiers=[
         'Intended Audience :: Developers',
          'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved',
@@ -74,14 +74,14 @@ arg_dict = dict(
                 'Topic :: Text Processing',
                 'Topic :: Text Processing :: Linguistic'
     ],
-    packages = ['hyphen'],
-    ext_modules = [
+    packages=['hyphen'],
+    ext_modules=[
       Extension('hyphen.hnj', ['src/hnjmodule.c',
                                   'src/hyphen.c',
-                                   'src/hnjalloc.c' ],
-                                   include_dirs = ['include'])],
-    py_modules = ['textwrap2'],
-    provides = ['hyphen', 'textwrap2']
+                                   'src/hnjalloc.c'],
+                                   include_dirs=['include'])],
+    py_modules=['textwrap2'],
+    provides=['hyphen', 'textwrap2']
 )
 
 
@@ -121,14 +121,14 @@ if 'install' in sys.argv:
         pkg_path = imp.find_module('hyphen')[1]
         mod_path = pkg_path + '/config.py'
         content = codecs.open(mod_path, 'r', 'utf8').read()
-        new_content = Template(content).substitute(path = pkg_path,
-            repo = default_repo)
-        
+        new_content = Template(content).substitute(path=pkg_path,
+            repo=default_repo)
+
         # Write the new config.py
         codecs.open(mod_path, 'w', 'utf8').write(new_content)
         py_compile.compile(mod_path)
         print("Done.")
-        
+
         # Delete any existing dict registry file
         reg_file = pkg_path + '/hyphen_dict_info.pickle'
         if os.path.exists(reg_file):
@@ -139,7 +139,7 @@ if 'install' in sys.argv:
             from hyphen.dictools import install
             print('Installing dictionaries... en_US ...')
             install('en_US')
-            
+
             # Install dict for local language if needed
             try:
                 locale.setlocale(locale.LC_ALL, '')
@@ -153,11 +153,9 @@ if 'install' in sys.argv:
             except Exception:
                 warn('Could not install dictionary for local language.')
 
-            
+
     except ImportError:
         warn("""Could not import hyphen package.
         You may wish to adjust config.py
             manually or run setup.py with different options.
             No dictionary has been installed.""")
-
-    

@@ -9,7 +9,8 @@
 
 __revision__ = "$Id: textwrap.py 46863 2006-06-11 19:42:51Z tim.peters $"
 
-import string, re
+import re
+import string
 
 # Do the right thing with boolean values for all known Python versions
 # (so this module can be copied to projects that don't depend on Python
@@ -103,7 +104,7 @@ class TextWrapper:
                  replace_whitespace=True,
                  fix_sentence_endings=False,
                  break_long_words=True,
-                 use_hyphenator = None):
+                 use_hyphenator=None):
         self.width = width
         self.initial_indent = initial_indent
         self.subsequent_indent = subsequent_indent

@@ -13,30 +13,31 @@ from warnings import warn
 # when calling hyphen.dictools.install.
 default_repo = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
 
+current_dir = os.path.abspath(os.path.dirname(__file__))
 
 # Copy version-specific files
 # to be copied from 2.x/
 files_from_2x = {
-    '__init__.py' : './hyphen/',
-    'config.py' : './hyphen/',
-    'dictools.py' : './hyphen/'}
+    '__init__.py' : 'hyphen',
+    'config.py' : 'hyphen',
+    'dictools.py' : 'hyphen'}
 
 # from either 2.x/ or 3.x/
 files_from_any = {
-    'hnjmodule.c' : 'src/',
-    'textwrap2.py' : './'}
+    'hnjmodule.c' : 'src',
+    'textwrap2.py' : ''}
 
 
 #copy version-specific files
 ver = sys.version[0]
 py3k = (ver == '3')
-if not os.path.exists('hyphen'):
-    os.mkdir('hyphen')
+if not os.path.exists(os.path.join(current_dir, 'hyphen')):
+    os.mkdir(os.path.join(current_dir, 'hyphen'))
 for file_name, dest in files_from_2x.items():
-    shutil.copy('2.x/' + file_name, dest + file_name)
+    shutil.copy(os.path.join(current_dir, '2.x', file_name), os.path.join(current_dir, dest, file_name))
 
 for file_name, dest in files_from_any.items():
-    shutil.copy(ver + '.x/' + file_name, dest + file_name)
+    shutil.copy(os.path.join(current_dir, ver + '.x/', file_name), os.path.join(current_dir, dest, file_name))
 
 
 # refactor 2to3
@@ -104,9 +105,9 @@ if len(set(('install', 'bdist_wininst', 'bdist')) - set(sys.argv)) < 3:
 setup(**arg_dict)
 
 # clean up
-shutil.rmtree('hyphen') # it would disturb the following import of hyphen
-os.remove('textwrap2.py')
-os.remove('src/hnjmodule.c')
+shutil.rmtree(os.path.join(current_dir, 'hyphen')) # it would disturb the following import of hyphen
+os.remove(os.path.join(current_dir, 'textwrap2.py'))
+os.remove(os.path.join(current_dir, 'src', 'hnjmodule.c'))
 
 
 # Configure the path for dictionaries in config.py
@@ -119,7 +120,7 @@ if 'install' in sys.argv:
     # when creating a Debian package.
     try:
         pkg_path = imp.find_module('hyphen')[1]
-        mod_path = pkg_path + '/config.py'
+        mod_path = os.path.join(pkg_path, 'config.py')
         content = codecs.open(mod_path, 'r', 'utf8').read()
         new_content = Template(content).substitute(path=pkg_path,
             repo=default_repo)
@@ -130,7 +131,7 @@ if 'install' in sys.argv:
         print("Done.")
 
         # Delete any existing dict registry file
-        reg_file = pkg_path + '/hyphen_dict_info.pickle'
+        reg_file = os.path.join(pkg_path, 'hyphen_dict_info.pickle')
         if os.path.exists(reg_file):
             os.remove(reg_file)
 

@@ -80,7 +80,7 @@ def install(language, directory=config.default_dict_path,
                 descr_file = None
 
     # Parse the xml file if it is present, and extract the data.
-    if   use_description and descr_file:
+    if use_description and descr_file:
         descr_tree = ElementTree(file=descr_file)
 
         # Flag to catch the case that xcu file
@@ -119,7 +119,7 @@ def install(language, directory=config.default_dict_path,
 
                 # Install the dictionary file
                 dict_str = urlopen(dict_url).read()
-                filepath = directory + '/' + dict_fn
+                filepath = os.path.join(directory, dict_fn)
                 with open(filepath, 'wb')  as dict_file:
                     dict_file.write(dict_str)
 
@@ -141,7 +141,7 @@ def install(language, directory=config.default_dict_path,
         dict_fn = ''.join(('hyph_dict_', language, '.dic'))
         dict_url = ''.join((repos, dict_fn))
         dict_str = urlopen(dict_url).read()
-        filepath = directory + '/' + dict_fn
+        filepath = os.path.join(directory, dict_fn)
         with open(filepath, 'w')  as dict_file:
             dict_file.write(dict_str)
         # Store the metadata

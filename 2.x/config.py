@@ -1,16 +1,21 @@
 # This file contains default config info for downloading and installing dictionaries
 # The template placeholders are filled by setup.py.
+import os
 
+current_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 # Local path for dictionaries
-default_dict_path = r'$path'
+default_dict_path = current_dir.decode('utf8')
 
 # path for the metadata file
-default_dict_info_path = ur'$path'
+default_dict_info_path = current_dir.decode('utf8')
 
 # URL of the repository for dictionaries
-default_repository = u'$repo'
+# Change this if you want to download dictionaries from somewhere else by default.
+# Note that you can also specify the repository individually
+# when calling hyphen.dictools.install.
+default_repository = u'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
 
 # Country and language codes: These will be appended to the default_repos path
 languages = set(('af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG',

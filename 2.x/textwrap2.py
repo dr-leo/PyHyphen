@@ -9,8 +9,8 @@
 
 __revision__ = "$Id: textwrap.py 46863 2006-06-11 19:42:51Z tim.peters $"
 
-import string
 import re
+import string
 
 # Do the right thing with boolean values for all known Python versions
 # (so this module can be copied to projects that don't depend on Python
@@ -31,7 +31,6 @@ __all__ = ['TextWrapper', 'wrap', 'fill']
 # *non-breaking* space), 2) possibly cause problems with Unicode,
 # since 0xa0 is not in range(128).
 _whitespace = '\t\n\x0b\x0c\r '
-
 
 class TextWrapper:
     """
@@ -96,6 +95,7 @@ class TextWrapper:
                                  r'[\"\']?'           # optional end-of-quote
                                  % string.lowercase)
 
+
     def __init__(self,
                  width=70,
                  initial_indent="",
@@ -113,6 +113,7 @@ class TextWrapper:
         self.fix_sentence_endings = fix_sentence_endings
         self.break_long_words = break_long_words
         self.use_hyphenator = use_hyphenator
+
 
     # -- Private methods -----------------------------------------------
     # (possibly useful for subclasses to override)
@@ -132,6 +133,7 @@ class TextWrapper:
             elif isinstance(text, unicode):
                 text = text.translate(self.unicode_whitespace_trans)
         return text
+
 
     def _split(self, text):
         """_split(text : string) -> [string]
@@ -159,9 +161,9 @@ class TextWrapper:
         """
         i = 0
         pat = self.sentence_end_re
-        while i < len(chunks) - 1:
-            if chunks[i + 1] == " " and pat.search(chunks[i]):
-                chunks[i + 1] = "  "
+        while i < len(chunks)-1:
+            if chunks[i+1] == " " and pat.search(chunks[i]):
+                chunks[i+1] = "  "
                 i += 2
             else:
                 i += 1
@@ -247,17 +249,9 @@ class TextWrapper:
                 # Nope, this line is full. But try hyphenation.
                 else:
                     if self.use_hyphenator and (width - cur_len >= 2):
-                        # Prepare chunk for hyphenation by removing any leading
-                        # "'"
-                        apostrophies = ''
-                        c = chunks[-1]
-                        while c.startswith("'"):
-                            apostrophies += "'"
-                            c = c[1:]
-                        hyphenated_chunk = self.use_hyphenator.wrap(
-                            c, width - cur_len - len(apostrophies))
+                        hyphenated_chunk = self.use_hyphenator.wrap(chunks[-1], width - cur_len)
                         if hyphenated_chunk:
-                            cur_line.append(apostrophies + hyphenated_chunk[0])
+                            cur_line.append(hyphenated_chunk[0])
                             chunks[-1] = hyphenated_chunk[1]
                     break
 
@@ -276,6 +270,7 @@ class TextWrapper:
                 lines.append(indent + ''.join(cur_line))
 
         return lines
+
 
     # -- Public interface ----------------------------------------------
 
@@ -319,7 +314,6 @@ def wrap(text, width=70, **kwargs):
     w = TextWrapper(width=width, **kwargs)
     return w.wrap(text)
 
-
 def fill(text, width=70, **kwargs):
     """Fill a single paragraph of text, returning a new string.
 
@@ -337,7 +331,6 @@ def fill(text, width=70, **kwargs):
 
 _whitespace_only_re = re.compile('^[ \t]+$', re.MULTILINE)
 _leading_whitespace_re = re.compile('(^[ \t]*)(?:[^ \t\n])', re.MULTILINE)
-
 
 def dedent(text):
     """Remove any common leading whitespace from every line in `text`.
@@ -381,13 +374,13 @@ def dedent(text):
     if 0 and margin:
         for line in text.split("\n"):
             assert not line or line.startswith(margin), \
-                "line = %r, margin = %r" % (line, margin)
+                   "line = %r, margin = %r" % (line, margin)
 
     if margin:
         text = re.sub(r'(?m)^' + margin, '', text)
     return text
 
 if __name__ == "__main__":
-    # print dedent("\tfoo\n\tbar")
-    # print dedent("  \thello there\n  \t  how are you?")
+    #print dedent("\tfoo\n\tbar")
+    #print dedent("  \thello there\n  \t  how are you?")
     print dedent("Hello there.\n  This is indented.")

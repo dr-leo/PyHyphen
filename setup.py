@@ -1,48 +1,45 @@
 # setup.py for the PyHyphen hyphenation package
 # (c) Dr. Leo (fhaxbox66 <at> gmail >dot< com)
 
-import sys, os, shutil, imp, py_compile, codecs, locale, platform
-from string import Template
+import locale
+import os
+import shutil
+import sys
 from distutils.core import setup, Extension
 from warnings import warn
 
 
-# URL of the default repository. It goes into config.py.
-# Change this if you want to download dictionaries from somewhere else by default.
-# Note that you can also specify the repository individualy
-# when calling hyphen.dictools.install.
-default_repo = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
-
+current_dir = os.path.abspath(os.path.dirname(__file__))
 
 # Copy version-specific files
 # to be copied from 2.x/
 files_from_2x = {
-    '__init__.py' : './hyphen/',
-    'config.py' : './hyphen/',
-    'dictools.py' : './hyphen/'}
+    '__init__.py' : 'hyphen',
+    'config.py' : 'hyphen',
+    'dictools.py' : 'hyphen'}
 
 # from either 2.x/ or 3.x/
 files_from_any = {
-    'hnjmodule.c' : 'src/',
-    'textwrap2.py' : './'}
-        
+    'hnjmodule.c' : 'src',
+    'textwrap2.py' : ''}
+
 
 #copy version-specific files
 ver = sys.version[0]
 py3k = (ver == '3')
-if not os.path.exists('hyphen'):
-    os.mkdir('hyphen')
+if not os.path.exists(os.path.join(current_dir, 'hyphen')):
+    os.mkdir(os.path.join(current_dir, 'hyphen'))
 for file_name, dest in files_from_2x.items():
-    shutil.copy('2.x/' + file_name, dest + file_name)
+    shutil.copy(os.path.join(current_dir, '2.x', file_name), os.path.join(current_dir, dest, file_name))
 
 for file_name, dest in files_from_any.items():
-    shutil.copy(ver + '.x/' + file_name, dest + file_name)
+    shutil.copy(os.path.join(current_dir, ver + '.x/', file_name), os.path.join(current_dir, dest, file_name))
 
 
 # refactor 2to3
 if py3k:
     import lib2to3.main
-    lib2to3.main.main('lib2to3.fixes', args = '--no-diffs -wn -f unicode -f urllib \
+    lib2to3.main.main('lib2to3.fixes', args='--no-diffs -wn -f unicode -f urllib \
         hyphen'.split())
 
 
@@ -73,14 +70,14 @@ arg_dict = dict(
                 'Topic :: Text Processing',
                 'Topic :: Text Processing :: Linguistic'
     ],
-    packages = ['hyphen'],
-    ext_modules = [
+    packages=['hyphen'],
+    ext_modules=[
       Extension('hyphen.hnj', ['src/hnjmodule.c',
                                   'src/hyphen.c',
-                                   'src/hnjalloc.c' ],
-                                   include_dirs = ['include'])],
-    py_modules = ['textwrap2'],
-    provides = ['hyphen', 'textwrap2']
+                                   'src/hnjalloc.c'],
+                                   include_dirs=['include'])],
+    py_modules=['textwrap2'],
+    provides=['hyphen', 'textwrap2']
 )
 
 
@@ -96,7 +93,7 @@ if len(set(('install', 'bdist_wininst', 'bdist')) - set(sys.argv)) < 3:
             else: platform_descr = 'win32'
         else: platform_descr = platform.system()
         
-        bin_file = ''.join(('bin/hnj', '.', platform_descr, '-', sys.version[:3], '.pyd'))
+        bin_file = os.path.join(current_dir, 'bin', 'hnj' + '.' + platform_descr + '-' + sys.version[:3] + '.pyd')
         if os.path.exists(bin_file):
             shutil.copy(bin_file, './hyphen/hnj.pyd')
             arg_dict['package_data'] = {'hyphen' : ['hnj.pyd']}
@@ -109,66 +106,38 @@ if len(set(('install', 'bdist_wininst', 'bdist')) - set(sys.argv)) < 3:
 setup(**arg_dict)
 
 # clean up
-shutil.rmtree('hyphen') # it would disturb the following import of hyphen
-os.remove('textwrap2.py')
-os.remove('src/hnjmodule.c')
+shutil.rmtree(os.path.join(current_dir, 'hyphen')) # it would disturb the following import of hyphen
+os.remove(os.path.join(current_dir, 'textwrap2.py'))
+os.remove(os.path.join(current_dir, 'src', 'hnjmodule.c'))
 
 
-# Configure the path for dictionaries in config.py
-if 'install' in sys.argv:
-    print("Adjusting /.../hyphen/config.py... ")
-    # We catch ImportErrors to handle situations where the
-    # hyphen package has been
-    # installed in a directory that is not listed in
-    # sys.path. This occurs, e.g.,
-    # when creating a Debian package.
+# We catch ImportErrors to handle situations where the
+# hyphen package has been
+# installed in a directory that is not listed in
+# sys.path. This occurs, e.g.,
+# when creating a Debian package.
+# Install dictionaries
+if '--no_dictionaries' not in sys.argv:
     try:
-        pkg_path = imp.find_module('hyphen')[1]
-        if ver == '2':
-            pkg_path = pkg_path.decode(sys.getfilesystemencoding())
-        mod_path = os.path.join(pkg_path, 'config.py')
-        sep = os.path.sep
-        if sep != '/':
-            pkg_path = pkg_path.replace(sep, '/')
-            mod_path = mod_path.replace(sep, '/')
-        content = codecs.open(mod_path, 'r', 'utf8').read()
-        new_content = Template(content).substitute(path = pkg_path,
-            repo = default_repo)
-        
-        # Write the new config.py
-        codecs.open(mod_path, 'w', 'utf8').write(new_content)
-        py_compile.compile(mod_path)
-        print("Done.")
-        
-        # Delete any existing dict registry file
-        reg_file = pkg_path + '/hyphen_dict_info.pickle'
-        if os.path.exists(reg_file):
-            os.remove(reg_file)
-
-        # Install dictionaries
-        if '--no_dictionaries' not in sys.argv:
-            from hyphen.dictools import install
-            print('Installing dictionaries... en_US ...')
-            install('en_US')
-            
-            # Install dict for local language if needed
-            try:
-                locale.setlocale(locale.LC_ALL, '')
-                local_lang = locale.getlocale()[0]
-                # Install local dict only if locale has been read (= is not None)
-                # and local_lang is not en_US.
-                if local_lang and local_lang != 'en_US':
-                    print(local_lang + ' ')
-                    install(local_lang)
-                    print('Done.')
-            except Exception:
-                warn('Could not install dictionary for local language.')
-
-            
+        from hyphen.dictools import is_installed, install
     except ImportError:
-        warn("""Could not import hyphen package.
-        You may wish to adjust config.py
-            manually or run setup.py with different options.
-            No dictionary has been installed.""")
+        warn(
+"""Could not import hyphen package. You may wish to adjust config.py manually
+or run setup.py with different options. No dictionary has been installed."""
+        )
+    else:
+        if not is_installed('en_US'):
+            print('Installing dictionary en_US')
+            install('en_US')
 
-    
+        # Install dict for local language if needed
+        try:
+            locale.setlocale(locale.LC_ALL, '')
+            local_lang = locale.getlocale()[0]
+            # Install local dict only if locale has been read (= is not None)
+            # and local_lang is not en_US.
+            if local_lang and local_lang != 'en_US' and not is_installed(local_lang):
+                print('Installing dictionary', local_lang)
+                install(local_lang)
+        except Exception:
+            warn('Could not install dictionary for local language.')

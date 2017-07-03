@@ -2,7 +2,7 @@
 PyHyphen - hyphenation for Python
 =================================
 
-(c) 2008-2014 Dr. Leo
+(c) 2008-2017 Dr. Leo
 
 Contact: fhaxbox66@googlemail.com
 
@@ -15,6 +15,13 @@ Mailing list: http://groups.google.com/group/pyhyphen
 
 Change log
 ======================
+
+New in Version 2.0.7:
+
+* add win binary for AMD64, win27
+* make it pip-installable (PR1)
+* minor fixes
+ 
 
 New in Version 2.0.5:
 

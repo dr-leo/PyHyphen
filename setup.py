@@ -3,6 +3,7 @@
 
 import locale
 import os
+import platform
 import shutil
 import sys
 from distutils.core import setup, Extension
@@ -16,12 +17,14 @@ current_dir = os.path.abspath(os.path.dirname(__file__))
 files_from_2x = {
     '__init__.py': 'hyphen',
     'config.py': 'hyphen',
-    'dictools.py': 'hyphen'}
+    'dictools.py': 'hyphen'
+}
 
 # from either 2.x/ or 3.x/
 files_from_any = {
     'hnjmodule.c': 'src',
-    'textwrap2.py': ''}
+    'textwrap2.py': ''
+}
 
 
 # copy version-specific files
@@ -50,7 +53,7 @@ longdescr = open('README.txt', 'r').read()
 
 arg_dict = dict(
     name="PyHyphen",
-    version="2.0.7",
+    version="2.0.8",
     author="Dr. Leo",
     author_email="fhaxbox66@googlemail.com",
     url="https://bitbucket.org/fhaxbox66/pyhyphen",

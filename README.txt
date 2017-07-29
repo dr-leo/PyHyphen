@@ -16,6 +16,11 @@ Mailing list: http://groups.google.com/group/pyhyphen
 Change log
 ======================
 
+New in Version 2.0.8:
+
+* fix python 3 install
+* fix install from source
+
 New in Version 2.0.7:
 
 * add win binary for AMD64, win27

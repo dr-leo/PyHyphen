@@ -6,10 +6,10 @@ current_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 # Local path for dictionaries
-default_dict_path = current_dir.decode('utf8')
+default_dict_path = current_dir
 
 # path for the metadata file
-default_dict_info_path = current_dir.decode('utf8')
+default_dict_info_path = current_dir
 
 # URL of the repository for dictionaries
 # Change this if you want to download dictionaries from somewhere else by default.

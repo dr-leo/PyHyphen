@@ -16,10 +16,16 @@ Mailing list: http://groups.google.com/group/pyhyphen
 Change log
 ======================
 
+New in Version 2.0.9:
+
+* add support for Python 3.6
+
+
 New in Version 2.0.8:
 
 * fix python 3 install
 * fix install from source
+
 
 New in Version 2.0.7:
 
@@ -33,9 +39,11 @@ New in Version 2.0.5:
 * remove pre-compiled win32 C extension for Python 2.6, add one for Python 3.4
 * avoid unicode error in config.py while installing on some Windows systems
 
+
 New in Version 2.0.4:
 
 * Update C library to v2.8.6
+
  
 New in Version 2.0.2:
 

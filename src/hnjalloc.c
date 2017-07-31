@@ -35,31 +35,38 @@
  */
 /* wrappers for malloc */
 
-#include "Python.h"
-
+#include <stdlib.h>
+#include <stdio.h>
 
 void *
 hnj_malloc (int size)
 {
   void *p;
 
-  p = PyMem_Malloc (size);
-  if (p == NULL)  PyErr_NoMemory();
-  return p;  
+  p = malloc (size);
+  if (p == NULL)
+    {
+      fprintf (stderr, "can't allocate %d bytes\n", size);
+      exit (1);
+    }
+  return p;
 }
 
 void *
 hnj_realloc (void *p, int size)
 {
-  void* p2;
-  p2 = PyMem_Realloc (p, size);
-  if (p2 == NULL)  PyErr_NoMemory();
-  return p2;
+  p = realloc (p, size);
+  if (p == NULL)
+    {
+      fprintf (stderr, "can't allocate %d bytes\n", size);
+      exit (1);
+    }
+  return p;
 }
 
 void
 hnj_free (void *p)
 {
-  PyMem_Free(p);
+  free (p);
 }
 

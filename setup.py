@@ -53,7 +53,7 @@ longdescr = open('README.txt', 'r').read()
 
 arg_dict = dict(
     name="PyHyphen",
-    version="2.0.8",
+    version="2.0.9",
     author="Dr. Leo",
     author_email="fhaxbox66@googlemail.com",
     url="https://bitbucket.org/fhaxbox66/pyhyphen",

@@ -22,7 +22,6 @@ files_from_2x = {
 
 # from either 2.x/ or 3.x/
 files_from_any = {
-    'hnjmodule.c': 'src',
     'textwrap2.py': ''
 }
 
@@ -119,7 +118,6 @@ setup(**arg_dict)
 # it would disturb the following import of hyphen
 shutil.rmtree(os.path.join(current_dir, 'hyphen'))
 os.remove(os.path.join(current_dir, 'textwrap2.py'))
-os.remove(os.path.join(current_dir, 'src', 'hnjmodule.c'))
 
 
 # We catch ImportErrors to handle situations where the

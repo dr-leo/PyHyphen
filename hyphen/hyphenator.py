@@ -33,82 +33,17 @@ This package contains the following items:
 * class 'Hyphenator': wrapper class for libhyphen. Each instance
   uses its own hyphenation dictionary.
 * 'dict_info': meta data on locally installed dictionaries
-* 'load_dict_info' and 'save_dict_info': convenience functions to load and save
-  meta date from and to a local file
 
 '''
 
-import os
-from hyphen import hnj, config
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import six
+
+from . import dictools
+from . import hnj
 
 
+__all__ = ['Hyphenator']
 
-__all__ = ['Hyphenator', 'load_dict_info', 'save_dict_info']
-
-
-
-class DictInfo:
-    '''
-    Contains metadata on a hyphenation dictionary.
-    '''
-
-    def __init__(self, locales, filepath, url=None):
-        '''
-        locales: a list of locales for for which the dictionary is suitable, e.g. 'en_UK'
-        filepath: the local path including filename of the dictionary file
-        url: an  optional URL where the dictionary has been downloaded from
-'''
-
-        self.filepath = filepath
-        self.locales = locales
-        self.url = url
-
-    def __str__(self):
-        return ''.join(('Hyphenation dictionary:\n', 'Locales: ', str(self.locales), '\n',
-            'filepath: ', self.filepath, '\n',
-            'URL: ', self.url))
-
-
-
-def load_dict_info(path=config.default_dict_info_path):
-    '''
-    load meta data on locally installed hyphenation dictionaries and
-    store it in hyphen.dict_info.
-
-    'path': the path of the meta data file. It defaults to the value found in
-    'hyphen.config'. The file name is hard-coded as 'hyphen_info.pickle'.
-
-    return True if the meta data file has been loaded successfully, False otherwise (no IOError is raised).
-    '''
-
-    if os.path.exists(path + '/hyphen_dict_info.pickle'):
-        with open(path + '/hyphen_dict_info.pickle', 'rb') as f:
-            content = pickle.load(f)
-            # Remove any pre-existing entries and ad the new ones
-            while dict_info:
-                e = dict_info.keys()[0]
-                dict_info.pop(e)
-            dict_info.update(content)
-            return True
-    # Meta data file does not exist
-    else:
-        return False
-
-
-
-def save_dict_info(path=config.default_dict_info_path):
-    '''
-    save meta data from hyphen.dict_info to a file named 'hyphen_dict_info.pickle'
-
-    'path': the path of the saved file; defaults to the value in 'hyphen.config'
-    '''
-
-    with open(path + '/hyphen_dict_info.pickle', 'wb') as f:
-        pickle.dump(dict_info, f)
 
 
 class Hyphenator:
@@ -118,33 +53,22 @@ class Hyphenator:
     """
 
     def __init__(self, language='en_US', lmin=2, rmin=2, compound_lmin=2,
-                 compound_rmin=2, directory=''):
+                 compound_rmin=2, directory=None):
         '''
         Return a hyphenator object initialized with a dictionary for the specified language, typically a locale name.
 
             Example: 'en_NZ' for English / New Zealand
 
-        Each class instance has an attribute 'info' of type dict containing metadata on its dictionary including
-        its local file path.
-        If the module-level attribute dict_info
-        does not contain an item for this dictionary, the info attribute of the Hyphenator instance is None.
-        In this case the 'directory' argument must be set to the local
-        path of the hyphenation dictionary.
+        If the corresponding dictionary was not installed, it will be
+        downloaded automatically to `directory`, which defaults to the user
+        data directory.
 
         lmin, rmin, compound_lmin and compound_rmin: set minimum number of chars to be cut off by hyphenation in
         single or compound words
         '''
-
-        if language in dict_info:
-            file_path = dict_info[language].filepath
-        else:
-            file_path = '/'.join((directory, '/', 'hyph_' + language + '.dic'))
-        self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin,
-            compound_lmin, compound_rmin)
+        file_path = dictools.install_if_necessary(language, directory=directory)
+        self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin, compound_lmin, compound_rmin)
         self.apply = self.__hyphenate__.apply
-        if language in dict_info:
-            self.info = dict_info[language]
-        else: self.info = DictInfo([language], file_path)
 
 
     def pairs(self, word):
@@ -157,7 +81,7 @@ class Hyphenator:
         * it is not encodable to the dictionary's encoding, or
         * the hyphenator could not find any hyphenation point
         '''
-        if not isinstance(word, unicode):
+        if not isinstance(word, six.text_type):
             raise TypeError('Unicode object expected.')
 
         # Discard very short words
@@ -184,7 +108,7 @@ class Hyphenator:
         Results are not consistent in case of non-standard hyphenation as a join of the syllables
         would not yield the original word.
         '''
-        if not isinstance(word, unicode):
+        if not isinstance(word, six.text_type):
             raise TypeError('Unicode object expected.')
         # discard very short words
         if (len(word) < 4) or ('=' in word):
@@ -217,15 +141,12 @@ class Hyphenator:
             else: cur_max_chars = max_chars
             if len(p[-1][0]) > cur_max_chars:
                 p.pop()
-            else: break
+            else:
+                break
         if p:
             # Need to append a hyphen?
             if cur_max_chars == max_chars:
                 p[-1][0] += hyphen
             return p[-1]
-        else: return []
-
-
-
-dict_info = {}
-load_dict_info()
+        else:
+            return []

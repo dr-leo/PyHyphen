@@ -17,7 +17,12 @@ from hyphenator.py
 
 5. License: Apache 2.0?
 
-7. The old config.py contained a non-exhaustive list of language
+6. remove Windows binaries from the sdist. Provide wheels for Windows and macOS instead (see below). 
+
+7.Build and deploy wheels with binary support for Windows and MacOS and Py27, 34, 35 and 36
+ using https://github.com/joerick/cibuildwheel 
+
+8. The old config.py contained a non-exhaustive list of language
 strings as an Inspiration. I think this is useful if Imperfect and
 should go back into the hyphen or dictools module and be documented as
 an Inspiration. Otherwise there is no easy way to find out which
@@ -28,5 +33,3 @@ LibreOffice might Change their dir structure or xcu file Format and
 the whole Thing blows up... But maybe there is already such a Service
 offered by some NLP folks...
 
-8.Build and deploy wheels with binary support for Windows and MacOS and Py27, 34, 35 and 36
- using https://github.com/joerick/cibuildwheel 

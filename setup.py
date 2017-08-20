@@ -33,6 +33,7 @@ arg_dict = dict(
         'Topic :: Text Processing :: Linguistic'
     ],
     packages=['hyphen', 'textwrap2'],
+    zip_safe=False,
     ext_modules=[
         Extension('hyphen.hnj', ['src/hnjmodule.c',
                                  'src/hyphen.c',
@@ -57,13 +58,14 @@ else:
         # TODO this does not work on Linux: binary is recompiled from scratch
         platform_descr = platform.system()
 
-    bin_file = os.path.join('bin', 'hnj' + '.' + platform_descr + '-' + sys.version[:3] + '.pyd')
+    bin_file = os.path.join(
+        'bin', 'hnj' + '.' + platform_descr + '-' + sys.version[:3] + '.pyd')
     print(bin_file)
     if os.path.exists(bin_file):
         print("""Found a suitable binary version of the C extension module.
         This binary will be installed rather than building it from source.
         However, if you prefer compiling, reenter 'python setup.py <command> --force_build_ext'.""")
         arg_dict['package_data'] = {'hyphen': [bin_file]}
-        arg_dict.pop('ext_modules') # don't try to build ext modules
+        arg_dict.pop('ext_modules')  # don't try to build ext modules
 
 setup(**arg_dict)

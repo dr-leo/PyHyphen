@@ -17,10 +17,9 @@ from hyphenator.py
 
 5. License: Apache 2.0?
 
-6. remove Windows binaries from the sdist. Provide wheels for Windows and macOS instead (see below). 
-
-7.Build and deploy wheels with binary support for Windows and MacOS and Py27, 34, 35 and 36
- using https://github.com/joerick/cibuildwheel 
+7.Perhaps build wheels for MacOS with Travis-CI using https://github.com/joerick/cibuildwheel.
+It looks like this must be done from a github repo as Travis-CI does not support
+bitbucket. 
 
 8. The old config.py contained a non-exhaustive list of language
 strings as an Inspiration. I think this is useful if Imperfect and

@@ -57,17 +57,6 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
 
 ::
 
-        >>> from hyphen.dictools import *
-
-        # Download and install some dictionaries in the default directory using the default
-        # repository, usually the LibreOffice website
-        >>> for lang in ['de_DE', 'en_US']:
-            install_if_necessary(lang)
-            
-        # Show locales of installed dictionaries
-        >>> list_installed()
-        ['de', 'de_DE', 'en_PH', 'en_US']
-
         >>> from hyphen import Hyphenator
         # Create some hyphenators
         h_de = Hyphenator('de_DE')
@@ -92,6 +81,20 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
         >>> from textwrap2 import fill
         print fill('very long text...', width=40, use_hyphenator=h_en)
 
+Just by creating ``Hyphenator`` objects for a language, the corresponding
+dictionaries will be automatically downloaded. Dictionaries may be manually
+installed and listed with the ``dictools`` module::
+
+        >>> from hyphen.dictools import *
+
+        # Download and install some dictionaries in the default directory using the default
+        # repository, usually the LibreOffice website
+        >>> for lang in ['de_DE', 'en_US']:
+            install_if_necessary(lang)
+            
+        # Show locales of installed dictionaries
+        >>> list_installed()
+        ['de', 'de_DE', 'en_PH', 'en_US']
 
 
 3. Installation
@@ -102,7 +105,7 @@ word on older versions as well.
 The package includes pre-compiled binaries of the hnj module for win32 and Python 2.6, 2.7, 3.2 and 3.3.
 On other platforms you will need a build environment such as gcc, make
 
-PyHyphen is pip-installable. In most scenarios the easiest way to install PyHyphen is to type from the shell prompt: 
+PyHyphen is pip-installable. In most scenarios the easiest way to install PyHyphen is to type from the shell prompt::
 
     $ pip install pyhyphen
 
@@ -114,7 +117,7 @@ platform. If there is a binary that looks ok, this version is installed.
 Otherwise, hnj is compiled from source. On Windows you will need MSVC, mingw or
 whatever fits to your Python distribution. If the distribution comes with a
 binary of 'hnj' that fits to your platform and python version, you can still
-force a compilation from source by entering
+force a compilation from source by entering::
 
     $ python setup.py install --force_build_ext
 
@@ -123,9 +126,9 @@ Under Linux you may need root privileges.
 4. Development
 ===============
 
-When making changes to PyHyphen, be sure to write and run the unit tests:
+When making changes to PyHyphen, be sure to write and run the unit tests::
 
-    ./runtests.py
+    python -m unittest discover
 
 Don't forget to run tests both with Python 3 and Python 2!
 

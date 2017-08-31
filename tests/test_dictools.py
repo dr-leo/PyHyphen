@@ -15,7 +15,7 @@ class TestDictools(unittest.TestCase):
         if os.path.exists(self.directory):
             shutil.rmtree(self.directory)
 
-    def test_dict_directory_is_created(self):
+    def test_dict_directory_is_created_on_save(self):
         directory = os.path.join(self.directory, "mydir")
         self.assertFalse(os.path.exists(directory))
         dictionaries = hyphen.dictools.Dictionaries(directory)
@@ -24,10 +24,19 @@ class TestDictools(unittest.TestCase):
         self.assertTrue(os.path.exists(directory))
         self.assertTrue(os.path.exists(dictionaries.path))
 
+    def test_dict_directory_is_created_on_add(self):
+        directory = os.path.join(self.directory, "mydir")
+        self.assertFalse(os.path.exists(directory))
+        dictionaries = hyphen.dictools.Dictionaries(directory)
+        dictionaries.add("en", "content", ["en_US", "en_GB"], "http://source.com")
+
+        self.assertTrue(os.path.exists(directory))
+        self.assertTrue(os.path.exists(dictionaries.path))
+
     def test_list_installed(self):
         dictionaries = hyphen.dictools.Dictionaries(self.directory)
         dictionaries.add("fr_FR", b"content", ['fr_BE', 'fr_FR'], "http://pouac.com")
-        
+
         self.assertTrue(hyphen.dictools.is_installed('fr_FR', directory=self.directory))
         self.assertEqual(['fr_BE', 'fr_FR'], hyphen.dictools.list_installed(self.directory))
 

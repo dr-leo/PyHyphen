@@ -24,18 +24,6 @@
 # the GNU Lesser General Public License Version 2.1 or later (the "LGPL",
 
 
-
-'''
-hyphen - hyphenation for Python
-
-This package contains the following items:
-
-* class 'Hyphenator': wrapper class for libhyphen. Each instance
-  uses its own hyphenation dictionary.
-* 'dict_info': meta data on locally installed dictionaries
-
-'''
-
 import six
 
 from . import dictools
@@ -43,7 +31,6 @@ from . import hnj
 
 
 __all__ = ['Hyphenator']
-
 
 
 class Hyphenator:

@@ -14,8 +14,8 @@ arg_dict = dict(
     long_description=open('README.rst', 'r').read(),
     classifiers=[
         'Intended Audience :: Developers',
+        'License :: OSI Approved :: Apache Software License',
         'Development Status :: 5 - Production/Stable',
-        'License :: OSI Approved',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',

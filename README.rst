@@ -8,6 +8,8 @@ Contact: fhaxbox66@googlemail.com
 
 Project home: https://bitbucket.org/fhaxbox66/pyhyphen
 
+License: Apache 2.0
+
 Mailing list: http://groups.google.com/group/pyhyphen
 
 
@@ -19,7 +21,7 @@ Mailing list: http://groups.google.com/group/pyhyphen
 PyHyphen is a pythonic interface to the hyphenation C library used in software such as LibreOffice and the Mozilla suite.
 It comes with tools to download, install and uninstall hyphenation dictionaries from LibreOffice's Git repository.
 PyHyphen consists of the 'hyphen' and 'textwrap2' packages. 
-The source distribution supports Python 2.6 or higher, including Python 3.6. If you depend on python 2.4 or 2.5, use PyHyphen-1.0b1
+The source distribution supports Python 2.7 or higher, including Python 3.6. If you depend on python 2.4 or 2.5, use PyHyphen-1.0b1
 instead. In this case you may have to download hyphenation dictionaries manually.
 
 1.1 Content of the hyphen package
@@ -100,28 +102,14 @@ installed and listed with the ``dictools`` module::
 3. Installation
 ================================
 
-PyHyphen is tested with Python 2.7 and Python 3.3 and 3.4, but  should
-word on older versions as well.
-The package includes pre-compiled binaries of the hnj module for win32 and Python 2.6, 2.7, 3.2 and 3.3.
-On other platforms you will need a build environment such as gcc, make
-
 PyHyphen is pip-installable. In most scenarios the easiest way to install PyHyphen is to type from the shell prompt::
 
     $ pip install pyhyphen
 
-Manual download and installation will be your preferred option if you want to compile the C library
-from source on Windows rather than using the pre-compiled binary, or if you do not want to download dictionaries upon install.
+Besides the source distribution, there are wheels on PyPI for common Windows-based environments. So most Windows users
+can install PyHyphen without a C compiler. 
 
-Setup will search in ./bin for a pre-compiled binary of hnj for your
-platform. If there is a binary that looks ok, this version is installed.
-Otherwise, hnj is compiled from source. On Windows you will need MSVC, mingw or
-whatever fits to your Python distribution. If the distribution comes with a
-binary of 'hnj' that fits to your platform and python version, you can still
-force a compilation from source by entering::
-
-    $ python setup.py install --force_build_ext
-
-Under Linux you may need root privileges.
+Building PyHyphen from source under Linux may require root privileges.
 
 4. Development
 ===============
@@ -153,7 +141,8 @@ New in Version 3.0.0:
 * get rid of config module and config scripts
 * upgrade textwrap2 to latest python2 and python3 versions
 * improve detection of dictionary location
-
+* Remove Windows binaries from the source distribution. Provide wheels instead 
+  thanks to the awesome `cibuildwheel tool <https://github.com/joerick/cibuildwheel>`_.
 
 New in Version 2.0.9:
 

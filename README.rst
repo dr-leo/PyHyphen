@@ -100,7 +100,7 @@ installed and listed with the ``dictools`` module::
 
 
 3. Installation
-================================
+===============
 
 PyHyphen is pip-installable. In most scenarios the easiest way to install PyHyphen is to type from the shell prompt::
 
@@ -111,7 +111,41 @@ can install PyHyphen without a C compiler.
 
 Building PyHyphen from source under Linux may require root privileges.
 
-4. Development
+4. Managing dictionaries
+========================
+
+The downloaded dictionary files are stored in a local data folder, along with a
+``dictionaries.json`` file that lists the downloaded files and the associated
+locales::
+
+
+    $ ls ~/.local/share/pyhyphen
+    dictionaries.json  hyph_de_DE.dic  hyph_en_US.dic
+
+    $ cat ~/.local/share/pyhyphen/dictionaries.json
+    {
+      "de": {
+        "file": "hyph_de_DE.dic", 
+        "url": "http://cgit.freedesktop.org/libreoffice/dictionaries/plain/de/hyph_de_DE.dic"
+      }, 
+      "de_DE": {
+        "file": "hyph_de_DE.dic", 
+        "url": "http://cgit.freedesktop.org/libreoffice/dictionaries/plain/de/hyph_de_DE.dic"
+      }, 
+      "en_PH": {
+        "file": "hyph_en_US.dic", 
+        "url": "http://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/hyph_en_US.dic"
+      }, 
+      "en_US": {
+        "file": "hyph_en_US.dic", 
+        "url": "http://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/hyph_en_US.dic"
+      }
+    }
+
+Each entry of the ``dictionaries.json`` file contains both the path to the
+dictionary file and the url from which it was downloaded.
+
+5. Development
 ===============
 
 When making changes to PyHyphen, be sure to write and run the unit tests::
@@ -120,7 +154,7 @@ When making changes to PyHyphen, be sure to write and run the unit tests::
 
 Don't forget to run tests both with Python 3 and Python 2!
 
-5. Contributing and reporting bugs
+6. Contributing and reporting bugs
 =====================================
 
 Contributions, comments, bug reports, criticism and praise can be sent to the author.
@@ -129,7 +163,7 @@ Browse  or fork the Mercurial repository and report
 bugs at `bitbucket <https://bitbucket.org/fhaxbox66/pyhyphen/issues?status=new&status=open>`_.
 
 
-Change log
+7. Changelog
 ======================
 
 New in Version 3.0.0:

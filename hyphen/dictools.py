@@ -184,7 +184,7 @@ def find_dictionary_location(repos, language):
         descr_file = _download_dictionaries_xcu(origin_url)
 
     if not descr_file:
-        return None
+        return None, []
 
     # Parse the xml file if it is present, and extract the data.
     dict_url, locales = parse_dictionary_location(descr_file, origin_url, language)

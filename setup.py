@@ -28,6 +28,9 @@ arg_dict = dict(
         'Topic :: Text Processing :: Linguistic'
     ],
     packages=['hyphen', 'textwrap2'],
+    entry_points={
+        'console_scripts': ["wraptext = hyphen.cli:wraptext"]
+    },
     ext_modules=[
         Extension('hyphen.hnj', ['src/hnjmodule.c',
                                  'src/hyphen.c',

@@ -15,6 +15,22 @@ Mailing list: http://groups.google.com/group/pyhyphen
 
 .. contents::
 
+0. Quickstart
+=============
+
+::
+
+    $ pip install pyhyphen
+    $ echo "long sentences and complicated words are flabbergasting" | wraptext -w 10 -
+    long sen-
+    tences and
+    compli-
+    cated
+    words are 
+    flabber-
+    gasting
+
+
 1. Overview
 ================
 

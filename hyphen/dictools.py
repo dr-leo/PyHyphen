@@ -12,7 +12,7 @@ import appdirs
 from six.moves import urllib
 
 
-__all__ = ['install_if_necessary', 'install', 'is_installed', 'uninstall', 'list_installed']
+__all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 
 
 DEFAULT_DICT_PATH = appdirs.user_data_dir("pyhyphen")
@@ -109,17 +109,6 @@ class Dictionaries(object):
         self._data = None
 
 
-def install_if_necessary(language, directory=None):
-    '''
-    Install a language dictionary if it was not already installed.
-    Return the path to the downloaded file.
-    '''
-    dictionaries = Dictionaries(directory)
-    if not dictionaries.is_installed(language):
-        install(language, directory=directory)
-        dictionaries.reload()
-    return dictionaries.filepath(language)
-
 def list_installed(directory=None):
     '''
     Return a list of locales for which dictionaries are installed.
@@ -144,18 +133,25 @@ def uninstall(language, directory=None):
     '''
     Dictionaries(directory).remove(language)
 
-def install(language, directory=None, repos=None, use_description=True):
+def install(language, directory=None, repos=None, use_description=True, overwrite=False):
     '''
     Download  and install a dictionary file.
 
-    language: a string of the form 'll_CC'. Example: 'en_US' for English, USA
-    directory: the installation directory. (Default: user data directory)
-    repos: the url of the dictionary repository. (Default: the libreoffice dictionary repo)
-    use_description: if True, parse dictionaries.xcu file to automatically find
-    the appropriate dictionary.
+    language (str): code of the form 'll_CC'. Example: 'en_US' for English, USA
+    directory (str): the installation directory. (Default: user data directory)
+    repos (str): the url of the dictionary repository. (Default: the
+        libreoffice dictionary repo)
+    use_description (bool): if True, parse dictionaries.xcu file to
+        automatically find the appropriate dictionary.
+    overwrite (bool): if True, overwrite any existing dictionary.
 
     Return the path to the file that was downloaded.
     '''
+    if not overwrite:
+        dictionaries = Dictionaries(directory)
+        if dictionaries.is_installed(language):
+            return dictionaries.filepath(language)
+
     if not repos:
         repos = DEFAULT_REPOSITORY
 

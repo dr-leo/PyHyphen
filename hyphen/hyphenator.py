@@ -53,7 +53,7 @@ class Hyphenator:
         lmin, rmin, compound_lmin and compound_rmin: set minimum number of chars to be cut off by hyphenation in
         single or compound words
         '''
-        file_path = dictools.install_if_necessary(language, directory=directory)
+        file_path = dictools.install(language, directory=directory)
         self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin, compound_lmin, compound_rmin)
         self.apply = self.__hyphenate__.apply
 

@@ -28,7 +28,7 @@ class TestDictools(unittest.TestCase):
         directory = os.path.join(self.directory, "mydir")
         self.assertFalse(os.path.exists(directory))
         dictionaries = hyphen.dictools.Dictionaries(directory)
-        dictionaries.add("en", "content", ["en_US", "en_GB"], "http://source.com")
+        dictionaries.add("en", b"content", ["en_US", "en_GB"], "http://source.com")
 
         self.assertTrue(os.path.exists(directory))
         self.assertTrue(os.path.exists(dictionaries.path))

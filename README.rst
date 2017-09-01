@@ -92,7 +92,7 @@ installed and listed with the ``dictools`` module::
         # Download and install some dictionaries in the default directory using the default
         # repository, usually the LibreOffice website
         >>> for lang in ['de_DE', 'en_US']:
-            install_if_necessary(lang)
+            install(lang)
             
         # Show locales of installed dictionaries
         >>> list_installed()

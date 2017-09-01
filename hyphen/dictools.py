@@ -89,7 +89,8 @@ class Dictionaries(object):
 
         # Remove languages from file
         filename = self.data[language]["file"]
-        languages = [language for language, props in self.data.items() if props["file"] == filename]
+        languages = [language for language,
+                     props in self.data.items() if props["file"] == filename]
         for locale in languages:
             self.data.pop(locale)
         self.save()
@@ -115,6 +116,7 @@ def list_installed(directory=None):
     '''
     return Dictionaries(directory).installed_languages()
 
+
 def is_installed(language, directory=None):
     '''Return True if the dictionary was already installed in the 'directory'.
     False otherwise.
@@ -124,6 +126,7 @@ def is_installed(language, directory=None):
     '''
     return Dictionaries(directory).is_installed(language)
 
+
 def uninstall(language, directory=None):
     '''
     Uninstall the dictionary of the specified language from the directory.
@@ -132,6 +135,7 @@ def uninstall(language, directory=None):
         language code and CC the country code.
     '''
     Dictionaries(directory).remove(language)
+
 
 def install(language, directory=None, repos=None, use_description=True, overwrite=False):
     '''
@@ -143,9 +147,9 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
         libreoffice dictionary repo)
     use_description (bool): if True, parse dictionaries.xcu file to
         automatically find the appropriate dictionary.
-    overwrite (bool): if True, overwrite any existing dictionary.
+    overwrite (bool): if True, overwrite any existing dictionary. Default: False
 
-    Return the path to the file that was downloaded.
+    Return the path to the file that was downloaded or is already installed.
     '''
     if not overwrite:
         dictionaries = Dictionaries(directory)
@@ -168,9 +172,10 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
     dict_content = urllib.request.urlopen(dict_url).read()
     return Dictionaries(directory).add(language, dict_content, locales, dict_url)
 
+
 def find_dictionary_location(repos, language):
     '''
-    Find the location of a language dictionary from an xcu dictionary.
+    Find the location of a language dictionary from an xcu file from the LibreOffice repo.
     Raise an IOError if the dictionary location could not be found in the xcu file.
     '''
     # Download the dictionaries.xcu file from the LibreOffice repository if needed
@@ -187,14 +192,17 @@ def find_dictionary_location(repos, language):
         return None, []
 
     # Parse the xml file if it is present, and extract the data.
-    dict_url, locales = parse_dictionary_location(descr_file, origin_url, language)
+    dict_url, locales = parse_dictionary_location(
+        descr_file, origin_url, language)
 
     if not dict_url:
         # Catch the case that there is no hyphenation dict
         # for this language:
-        raise IOError('Cannot find hyphenation dictionary for language ' + language + '.')
+        raise IOError(
+            'Cannot find hyphenation dictionary for language ' + language + '.')
 
     return dict_url, locales
+
 
 def parse_dictionary_location(descr_file, origin_url, language):
     '''
@@ -222,23 +230,27 @@ def parse_dictionary_location(descr_file, origin_url, language):
         # Check if node relates to a hyphenation dict.
         # We assume this is the case if an attribute value
         # contains the substring 'hyphdic'
-        node_is_hyphen = any([name for name, value in node.items() if 'hyphdic' in value.lower()])
+        node_is_hyphen = any(
+            [name for name, value in node.items() if 'hyphdic' in value.lower()])
 
         if not node_is_hyphen:
             continue
 
-        # Found a hyphenation dict! So extract the data and construct the local record
+        # Found a hyphenation dict! So extract the data and construct the local
+        # record
         locales = []
         dict_location = None
         for prop in node.getchildren():
             for _pk, pv in prop.items():
                 if pv.lower() == 'locations':
                     # Its only child's text is a list of strings of the form %origin%<filename>
-                    # For simplicity, we only use the first filename in the list.
+                    # For simplicity, we only use the first filename in the
+                    # list.
                     dict_location = prop.getchildren()[0].text.split()[0]
                 elif pv.lower() == 'locales':
                     # Its only child's text is a list of locales.
-                    locales = prop.getchildren()[0].text.replace('-', '_').split()
+                    locales = prop.getchildren()[0].text.replace(
+                        '-', '_').split()
                     # break # skip any other values of this property
         if language in locales and dict_location:
             # strip the prefix '%origin%'
@@ -246,6 +258,7 @@ def parse_dictionary_location(descr_file, origin_url, language):
             return dict_url, locales
 
     return None, []
+
 
 def _download_dictionaries_xcu(origin_url):
     '''

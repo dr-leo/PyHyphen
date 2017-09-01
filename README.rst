@@ -36,8 +36,11 @@ Mailing list: http://groups.google.com/group/pyhyphen
 
 PyHyphen is a pythonic interface to the hyphenation C library used in software such as LibreOffice and the Mozilla suite.
 It comes with tools to download, install and uninstall hyphenation dictionaries from LibreOffice's Git repository.
-PyHyphen consists of the 'hyphen' and 'textwrap2' packages. 
-The source distribution supports Python 2.7 or higher, including Python 3.6. If you depend on python 2.4 or 2.5, use PyHyphen-1.0b1
+PyHyphen consists of the 'hyphen' and 'textwrap2' packages.
+The source distribution also contains ``./demo/wrap.py``, a script which wraps 
+a text-file with hyphenation given a specified width. 
+ 
+The source distribution supports Python 2.7+ or 3.4+. If you depend on python 2.4 or 2.5, use PyHyphen-1.0b1
 instead. In this case you may have to download hyphenation dictionaries manually.
 
 1.1 Content of the hyphen package

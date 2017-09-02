@@ -7,7 +7,7 @@ from setuptools import setup, Extension
 arg_dict = dict(
     name="PyHyphen",
     version="3.0.0",
-    author="Dr. Leo",
+    author="Dr. Leo & Regis Behmo",
     author_email="fhaxbox66@googlemail.com",
     url="https://bitbucket.org/fhaxbox66/pyhyphen",
     description="The hyphenation library of LibreOffice and FireFox wrapped for Python",

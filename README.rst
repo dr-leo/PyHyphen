@@ -8,8 +8,6 @@ Contact: fhaxbox66@googlemail.com
 
 Project home: https://bitbucket.org/fhaxbox66/pyhyphen
 
-License: Apache 2.0
-
 Mailing list: http://groups.google.com/group/pyhyphen
 
 
@@ -182,8 +180,14 @@ Contributions, comments, bug reports, criticism and praise can be sent to the au
 Browse  or fork the Mercurial repository and report 
 bugs at `bitbucket <https://bitbucket.org/fhaxbox66/pyhyphen/issues?status=new&status=open>`_.
 
+7. License
+============
 
-7. Changelog
+Without prejudice to third party licenses, PyHyphen is distributed under the Apache 2.0 license. PyHyphen ships with third party code including the hyphenation library
+hyphen.c and a patched version of the Python standard module textwrap.    
+   
+
+8. Changelog
 ======================
 
 New in Version 3.0.0:

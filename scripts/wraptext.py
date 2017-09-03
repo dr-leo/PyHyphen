@@ -2,13 +2,10 @@ import argparse
 import sys
 
 import textwrap2
-from . import Hyphenator
+from hyphen import Hyphenator
 
 
-__all__ = ['wraptext']
-
-
-def wraptext():
+def main():
     parser = argparse.ArgumentParser(
         description="Wrap text file to given width, with hyphenation"
     )

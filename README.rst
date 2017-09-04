@@ -132,6 +132,17 @@ Building PyHyphen from source under Linux may require root privileges.
 4. Managing dictionaries
 ========================
 
+The ``dictools`` module contains a non-exhaustive list of available language strings that can be used to instautiate ``Hyphenator`` objects as shown above::
+
+    >>>from hyphen import dictools
+    >>>dictools.LANGUAGES
+    ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG', 'bn_BD', 'br_FR', 'ca', 'cs_C
+    Z', 'da_DK', 'de', 'el_GR', 'en', 'es_ES', 'et_EE', 'fr_FR', 'gd_GB', 'gl', 'gu_
+    IN', 'he_IL', 'hi_IN', 'hr_HR', 'hu_HU', 'it_IT', 'ku_TR', 'lt_LT', 'lv_LV', 'ne
+    _NP', 'nl_NL', 'no', 'oc_FR', 'pl_PL', 'prj', 'pt_BR', 'pt_PT', 'ro', 'ru_RU', '
+    si_LK', 'sk_SK', 'sl_SI', 'sr', 'sv_SE', 'sw_TZ', 'te_IN', 'th_TH', 'uk_UA', 'zu
+    _ZA']
+    
 The downloaded dictionary files are stored in a local data folder, along with a
 ``dictionaries.json`` file that lists the downloaded files and the associated
 locales::

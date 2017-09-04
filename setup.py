@@ -29,7 +29,7 @@ arg_dict = dict(
     ],
     packages=['hyphen', 'textwrap2'],
     entry_points={
-        'console_scripts': ["textwrap2-cli = textwrap2.cli:main"]
+        'console_scripts': ["wraptext = textwrap2.cli:main"]
     },
     ext_modules=[
         Extension('hyphen.hnj', ['src/hnjmodule.c',

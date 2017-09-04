@@ -208,7 +208,8 @@ New in Version 3.0.0:
 * unit tests
 * migration from distutils to setuptools and simplified setup
 * get rid of config module and config scripts
-* upgrade textwrap2 to latest python2 and python3 versions
+* upgrade textwrap2 to latest python2 and python3 versions; 
+  add CLI script to wrap text files with hyphenation
 * improve detection of dictionary location
 * Remove Windows binaries from the source distribution. Provide wheels instead 
   thanks to the awesome `cibuildwheel tool <https://github.com/joerick/cibuildwheel>`_.

@@ -177,16 +177,17 @@ dictionary file and the url from which it was downloaded.
 5. Development
 ===============
 
-When making changes to PyHyphen, be sure to write and run the unit tests::
+Feel free to submit issues or PRs on bitbucket or join the mailing-list (see above).
+When making changes, run the unit tests with pytest.
 
-    python -m unittest discover
 
-Don't forget to run tests both with Python 3 and Python 2!
 
 6. Contributing and reporting bugs
 =====================================
 
-Contributions, comments, bug reports, criticism and praise can be sent to the author.
+PRs and bug reports can be submitted on bitbucket, questions are welcome in the Google group 
+(http://groups.google.com/group/pyhyphen). Or just send
+an e-mail to the authors.
 
 Browse  or fork the Mercurial repository and report 
 bugs at `bitbucket <https://bitbucket.org/fhaxbox66/pyhyphen/issues?status=new&status=open>`_.

@@ -1,6 +1,8 @@
 environment:
     global:
-        CIBW_TEST_COMMAND: "python -m unittest discover pyhyphen\\tests"
+        CIBW_SKIP: cp33*
+        CIBW_TEST_REQUIRES: pytest
+        CIBW_TEST_COMMAND: "py.test {project}"
 build_script:
     - pip install cibuildwheel==0.4.1
     - cibuildwheel --output-dir wheelhouse

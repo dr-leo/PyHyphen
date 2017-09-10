@@ -1,2 +1,1 @@
-include MANIFEST *.txt setup.py setup.cfg wraptext.py       
-graft include src textwrap2 hyphen
+graft include

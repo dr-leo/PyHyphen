@@ -34,11 +34,11 @@ Mailing list: http://groups.google.com/group/pyhyphen
 
 PyHyphen is a pythonic interface to the hyphenation C library used in software such as LibreOffice and the Mozilla suite.
 It comes with tools to download, install and uninstall hyphenation dictionaries from LibreOffice's Git repository.
-PyHyphen consists of the 'hyphen' and 'textwrap2' packages.
-The source distribution also contains ``wraptext.py``, a script which wraps 
+PyHyphen provides the 'hyphen' and 'textwrap2' packages as well as
+``wraptext.py``, a script which wraps 
 a text-file with hyphenation given a specified width. See the code example under "Quick start" above. 
  
-The source distribution supports Python 2.7 and 3.4 or higher, perhaps Python 3.3 works as well. 
+PyHyphen supports Python 2.7 and 3.4 or higher, perhaps Python 3.3 works as well. 
 If you depend on earlier 2.x versions, use PyHyphen-1.0b1
 instead. In this case you may have to download hyphenation dictionaries manually.
 
@@ -174,33 +174,33 @@ locales::
 Each entry of the ``dictionaries.json`` file contains both the path to the
 dictionary file and the url from which it was downloaded.
 
-5. Development
-===============
-
-Feel free to submit issues or PRs on bitbucket or join the mailing-list (see above).
-When making changes, run the unit tests with pytest.
 
 
-
-6. Contributing and reporting bugs
+5. Contributing and reporting bugs
 =====================================
 
-PRs and bug reports can be submitted on bitbucket, questions are welcome in the Google group 
+Questions can be asked in the Google group 
 (http://groups.google.com/group/pyhyphen). Or just send
 an e-mail to the authors.
 
 Browse  or fork the Mercurial repository and report 
-bugs at `bitbucket <https://bitbucket.org/fhaxbox66/pyhyphen/issues?status=new&status=open>`_.
+bugs at PyHyphen's `project site on bitbucket <https://bitbucket.org/fhaxbox66/pyhyphen/>`_.
 
-7. License
+Before submitting a PR, , run the unit tests on Python 2 and 3, e.g., with pytest.
+
+6. License
 ============
 
 Without prejudice to third party licenses, PyHyphen is distributed under the Apache 2.0 license. PyHyphen ships with third party code including the hyphenation library
 hyphen.c and a patched version of the Python standard module textwrap.    
    
 
-8. Changelog
+7. Changelog
 ======================
+
+New in Version 3.0.1:
+
+Fix source distribution which did not include C header files.
 
 New in Version 3.0.0:
 

@@ -371,6 +371,23 @@ void hnj_hyphen_load_line(char * buf, HyphenDict * dict, HashTab * hashtab) {
 	    }
 }
 
+#if defined(_WIN32) && (PY_MAJOR_VERSION != 2)
+HyphenDict *
+hnj_hyphen_load (const wchar_t *fn)
+{
+  HyphenDict *dict[2];
+  HashTab *hashtab;
+  FILE *f;
+  char buf[MAX_CHARS];
+  int nextlevel = 0;
+  int i, j, k;
+  HashEntry *e;
+  int state_num = 0;
+
+  f = _wfopen (fn, "r");
+  if (f == NULL)
+    return NULL;
+#else
 HyphenDict *
 hnj_hyphen_load (const char *fn)
 {
@@ -386,6 +403,7 @@ hnj_hyphen_load (const char *fn)
   f = fopen (fn, "r");
   if (f == NULL)
     return NULL;
+#endif
 
 // loading one or two dictionaries (separated by NEXTLEVEL keyword)
 for (k = 0; k < 2; k++) { 

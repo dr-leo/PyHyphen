@@ -276,10 +276,13 @@ HyDict_dealloc(HyDictobject *self)
 
 static int
 HyDict_init(HyDictobject *self, PyObject *args) {
+
     char* fn;
+
     if (!PyArg_ParseTuple(args, "siiii", &fn, &self->lmin, &self->rmin,
         &self->compound_lmin, &self->compound_rmin))
-  		return -1;
+		return -1;
+
     if (!(self->dict = hnj_hyphen_load(fn)))
     {
         if (!PyErr_Occurred()) PyErr_SetString(PyExc_IOError, "Cannot load hyphen dictionary.");
@@ -578,10 +581,20 @@ HyDict_dealloc(HyDictobject *self)
 
 static int
 HyDict_init(HyDictobject *self, PyObject *args) {
+
+#if defined(_WIN32)
+    wchar_t* fn;
+
+    if (!PyArg_ParseTuple(args, "uiiii", &fn,
+        &self->lmin, &self->rmin, &self->compound_lmin, &self->compound_rmin))
+        return -1;
+#else
     char* fn;
     if (!PyArg_ParseTuple(args, "siiii", &fn,
     &self->lmin, &self->rmin, &self->compound_lmin, &self->compound_rmin))
-  		return -1;
+	return -1;
+#endif
+
     if (!(self->dict = hnj_hyphen_load(fn)))
     {
         if (!PyErr_Occurred()) PyErr_SetString(PyExc_IOError, "Cannot load hyphen dictionary.");

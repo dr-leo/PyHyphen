@@ -6,7 +6,7 @@ from setuptools import setup, Extension
 
 arg_dict = dict(
     name="PyHyphen",
-    version="3.0.2",
+    version="3.1",
     author="Dr. Leo & Regis Behmo",
     author_email="fhaxbox66@googlemail.com",
     url="https://bitbucket.org/fhaxbox66/pyhyphen",
@@ -23,6 +23,7 @@ arg_dict = dict(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Programming Language :: C',
         'Topic :: Text Processing',
         'Topic :: Text Processing :: Linguistic'

@@ -198,9 +198,17 @@ hyphen.c and a patched version of the Python standard module textwrap.
 7. Changelog
 ======================
 
+New in Version 3.1:
+
+* add support for Python 3.7
+
+New in Version 3.0.2:
+
+* Fix user names with special characters under Windows and Python 3 (thanks @rupor!)
+
 New in Version 3.0.1:
 
-Fix source distribution which did not include C header files.
+* Fix source distribution which did not include C header files.
 
 New in Version 3.0.0:
 

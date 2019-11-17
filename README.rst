@@ -132,7 +132,7 @@ Building PyHyphen from source under Linux may require root privileges.
 4. Managing dictionaries
 ========================
 
-The ``dictools`` module contains a non-exhaustive list of available language strings that can be used to instautiate ``Hyphenator`` objects as shown above::
+The ``dictools`` module contains a non-exhaustive list of available language strings that can be used to instantiate ``Hyphenator`` objects as shown above::
 
     >>>from hyphen import dictools
     >>>dictools.LANGUAGES

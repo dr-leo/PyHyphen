@@ -186,7 +186,10 @@ an e-mail to the authors.
 Browse  or fork the Mercurial repository and report 
 bugs at PyHyphen's `project site on Github <https://github.com/dr-leo/PyHyphen>`_.
 
-Before submitting a PR, , run the unit tests on Python 2 and 3, e.g., with pytest.
+Before submitting a PR, run the unit tests on Python 2 and 3 with pytest::
+    
+    $ pip install pytest
+    $ pytest
 
 6. License
 ============

@@ -6,7 +6,7 @@ PyHyphen - hyphenation for Python
 
 Contact: fhaxbox66@googlemail.com
 
-Project home: https://bitbucket.org/fhaxbox66/pyhyphen
+Project home: https://github.com/dr-leo/PyHyphen
 
 Mailing list: http://groups.google.com/group/pyhyphen
 
@@ -184,7 +184,7 @@ Questions can be asked in the Google group
 an e-mail to the authors.
 
 Browse  or fork the Mercurial repository and report 
-bugs at PyHyphen's `project site on bitbucket <https://bitbucket.org/fhaxbox66/pyhyphen/>`_.
+bugs at PyHyphen's `project site on Github <https://github.com/dr-leo/PyHyphen>`_.
 
 Before submitting a PR, , run the unit tests on Python 2 and 3, e.g., with pytest.
 

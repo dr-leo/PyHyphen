@@ -5,6 +5,7 @@
 /htmlcov/
 /hyphen/*.so
 /PyHyphen.egg-info/
+/.tox/
 *.coverage
 *.out
 *.pyc

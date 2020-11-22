@@ -240,16 +240,16 @@ def parse_dictionary_location(descr_file, origin_url, language):
         # record
         locales = []
         dict_location = None
-        for prop in node.getchildren():
+        for prop in list(node):
             for _pk, pv in prop.items():
                 if pv.lower() == 'locations':
                     # Its only child's text is a list of strings of the form %origin%<filename>
                     # For simplicity, we only use the first filename in the
                     # list.
-                    dict_location = prop.getchildren()[0].text.split()[0]
+                    dict_location = list(prop)[0].text.split()[0]
                 elif pv.lower() == 'locales':
                     # Its only child's text is a list of locales.
-                    locales = prop.getchildren()[0].text.replace(
+                    locales = list(prop)[0].text.replace(
                         '-', '_').split()
                     # break # skip any other values of this property
         if language in locales and dict_location:

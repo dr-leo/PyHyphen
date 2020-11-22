@@ -16,7 +16,7 @@ __all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 
 
 DEFAULT_DICT_PATH = appdirs.user_data_dir("pyhyphen", appauthor=False)
-DEFAULT_REPOSITORY = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
+DEFAULT_REPOSITORY = 'https://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
 # This is a list of languages supported by PyHyphen. In the following, language
 # codes are assumed to be in this list.
 LANGUAGES = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG', 'bn_BD', 'br_FR', 'ca',

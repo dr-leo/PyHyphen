@@ -1,9 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 #include "Python.h"
-<<<<<<< Updated upstream
-=======
 #define Py_LIMITED_API /* = 0x03070000 */
->>>>>>> Stashed changes
 #include "structmember.h"
 #include "hyphen.h"
 #include "string.h"
@@ -88,10 +85,6 @@ static PyObject * prepare_result(char *word, char *encoding, int mode)
                 return NULL;
         };
         }
-<<<<<<< Updated upstream
-    }
-    /* return a unicode object */
-=======
         else
         { 
         /* return the word unchanged as unicode obj */
@@ -101,7 +94,6 @@ static PyObject * prepare_result(char *word, char *encoding, int mode)
     /* Delete temp when it is not returned (see above */
     Py_DECREF(temp);
     /* return the uppercased or titlecased result as unicode obj */
->>>>>>> Stashed changes
     return result;
 }
 

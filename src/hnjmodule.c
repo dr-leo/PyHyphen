@@ -1,5 +1,9 @@
 #define PY_SSIZE_T_CLEAN
 #include "Python.h"
+<<<<<<< Updated upstream
+=======
+#define Py_LIMITED_API /* = 0x03070000 */
+>>>>>>> Stashed changes
 #include "structmember.h"
 #include "hyphen.h"
 #include "string.h"
@@ -23,9 +27,6 @@ typedef struct {
     HyphenDict *dict;
     int lmin, rmin, compound_lmin, compound_rmin;
 } HyDictobject;
-
-static PyTypeObject HyDict_type;
-
 
 
 /* ---------------------------------------------------------------- */
@@ -59,35 +60,48 @@ static char * hindex(char * word, int n, int utf8) {
 }
 
 
-/* Depending on the value of 'mode', convert a utf8 C string to PyUnicode or PyString (utf8), handle also
+/* Depending on the value of 'mode', convert a  C string to PyUnicode, handle also
     capitalization and upper case words. */
 static PyObject * prepare_result(char *word, char *encoding, int mode)
 {
-    Py_UNICODE * ch_u;
-    PyObject *result;
-    int len_s, i;
-
+    PyObject *result, *temp;
+    
     /* first convert the C string to unicode. */
-
-    if (!(result = PyUnicode_Decode(word, strlen(word), encoding, unicode_errors)))
+    if (!(temp = PyUnicode_Decode(word, strlen(word), encoding, unicode_errors)))
         return NULL;
     if (mode & 4) { /* capitalize entire word */
-        ch_u = PyUnicode_AS_UNICODE(result);
-        len_s = PyUnicode_GetSize(result);
-        for (i=0; i <= len_s; i++)
+    printf("calling upper on %s", word);
+        if (!(result = PyObject_CallMethod(temp, "upper", NULL)))
         {
-            *ch_u = Py_UNICODE_TOUPPER(*ch_u);
-            ch_u++;
+            printf("error in upper");
+            Py_DECREF(temp);
+            return NULL;
+      };
         }
-    }
     else
     {
         if (mode & 2) { /* capitalize first letter */
-            ch_u = PyUnicode_AS_UNICODE(result);
-            *ch_u = Py_UNICODE_TOUPPER(*ch_u);
+        printf("calling title");
+            if (!(result = PyObject_CallMethod(temp, "title", NULL)))
+            {
+                Py_DECREF(temp);
+                return NULL;
+        };
         }
+<<<<<<< Updated upstream
     }
     /* return a unicode object */
+=======
+        else
+        { 
+        /* return the word unchanged as unicode obj */
+            return temp;
+        }
+    }
+    /* Delete temp when it is not returned (see above */
+    Py_DECREF(temp);
+    /* return the uppercased or titlecased result as unicode obj */
+>>>>>>> Stashed changes
     return result;
 }
 
@@ -102,7 +116,8 @@ HyDict_apply(HyDictobject *self, PyObject *args)
     char r;
     int * pos = NULL;
     int * cut = NULL;
-    unsigned int wd_size, hyph_count, i, j, k, mode;
+    unsigned int wd_size, i, j, k, mode;
+    Py_ssize_t hyph_count;
     PyObject *result, *s1, *s2, *separator_u = NULL;
 /* mode:
    bit0 === 1: return a tuple, otherwise a word with '=' inserted at the positions of possible hyphenations.
@@ -124,7 +139,6 @@ HyDict_apply(HyDictobject *self, PyObject *args)
     /* allocate memory for the return values of the core function hnj_hyphenate3*/
     hyphens = (char *) PyMem_Malloc(wd_size + 5);
     hyphenated_word = (char *) PyMem_Malloc(wd_size * 3);
-
     /* now actually try the hyphenation*/
     if (hnj_hyphen_hyphenate3(self->dict, word_str, wd_size, hyphens,
         hyphenated_word, &rep, &pos, &cut,
@@ -179,16 +193,15 @@ HyDict_apply(HyDictobject *self, PyObject *args)
             PyMem_Free(hyphens);
             PyMem_Free(word_str);
             return NULL;
-        }
+        };
         /* now fill the resulting list from left to right with the pairs */
         j=0; hyph_count = 0;
         /* The following is needed to split the word (in which an '=' indicates the */
         /* hyphen position) */
         separator_u = PyUnicode_Decode(separator, 1, self->dict->cset, unicode_errors);
-
         for (i = 0; (i + 1) < strlen(word_str); i++)
         {
-            /* j-th character utf8? Then just increment j */
+            /* i-th character utf8? Then just increment i */
             if (self->dict->utf8 && ((((unsigned char) word_str[i]) >> 6) == 2)) continue;
 
             /* Is here a hyphen? */
@@ -230,7 +243,6 @@ HyDict_apply(HyDictobject *self, PyObject *args)
                     return NULL;
                 }
                 PyMem_Free(hyphenated_word);
-
                 /* split it into two parts at the position of the '=' */
                 /* and write the resulting list into the tuple */
                 if (!((s2 = PyUnicode_Split(s1, separator_u, 1)) &&
@@ -257,7 +269,7 @@ HyDict_apply(HyDictobject *self, PyObject *args)
 static struct PyMethodDef HyDict_methods[] = {
 	{"apply",	(PyCFunction)HyDict_apply,	METH_VARARGS,	HyDict_apply__doc__},
 
-	{NULL,		NULL}		/* sentinel */
+	{NULL}		/* sentinel */
 };
 
 /* ---------- */
@@ -276,7 +288,7 @@ HyDict_init(HyDictobject *self, PyObject *args) {
 
 #if defined(_WIN32)
     wchar_t* fn;
-
+printf("hyphenator: entered init...");
     if (!PyArg_ParseTuple(args, "uiiii", &fn,
         &self->lmin, &self->rmin, &self->compound_lmin, &self->compound_rmin))
         return -1;
@@ -301,160 +313,29 @@ static char HyDict_type__doc__[] =
 Usage: hyphenator_(dict_file_name: string)\n\
 The init method will try to load a hyphenation dictionary with the filename passed.\n\
 If an error occurs when trying to load the dictionary, IOError is raised.\n\
-Dictionary files compatible with hnjmodule can be downloaded at the OpenOffice website.\n\n\
+Dictionary files compatible with hnjmodule can be downloaded at the LibreOffice website.\n\n\
 This class should normally be instantiated only by the convenience interface provided by\n\
 the hyphen.hyphenator class.\n"
 ;
 
 
 
-static PyTypeObject HyDict_type = {
-	PyObject_HEAD_INIT(NULL)
-	"hnjmodule.hyphenator_",			/*tp_name*/
-	sizeof(HyDictobject),		/*tp_basicsize*/
-	0,				/*tp_itemsize*/
-	/* methods */
-	(destructor)HyDict_dealloc,	/*tp_dealloc*/
-	(printfunc)0,		/*tp_print*/
-	0,	/*tp_getattr*/
-	(setattrfunc)0,	/*tp_setattr*/
-	0,		/*tp_reserved*/
-	(reprfunc)0,		/*tp_repr*/
-	0,			/*tp_as_number*/
-	0,		/*tp_as_sequence*/
-	0,		/*tp_as_mapping*/
-	(hashfunc)0,		/*tp_hash*/
-	(ternaryfunc)0,		/*tp_call*/
-	(reprfunc)0,		/*tp_str*/
-
-	0,                         /*tp_getattro*/
-    0,                         /*tp_setattro*/
-    0,                         /*tp_as_buffer*/
-    Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-    HyDict_type__doc__, /* Documentation string */
-    0,		               /* tp_traverse */
-    0,		               /* tp_clear */
-    0,		               /* tp_richcompare */
-    0,		               /* tp_weaklistoffset */
-    0,		               /* tp_iter */
-    0,		               /* tp_iternext */
-    HyDict_methods,             /* tp_methods */
-    0,             /* tp_members */
-    0,                         /* tp_getset */
-    0,                         /* tp_base */
-    0,                         /* tp_dict */
-    0,                         /* tp_descr_get */
-    0,                         /* tp_descr_set */
-    0,                         /* tp_dictoffset */
-    (initproc)HyDict_init,      /* tp_init */
-    0,                         /* tp_alloc */
-    0,                 /* tp_new */
+static PyType_Slot HyDict_type_slots[] = {
+    {Py_tp_doc, HyDict_type__doc__},
+    {Py_tp_dealloc, (destructor)HyDict_dealloc},
+    {Py_tp_methods, HyDict_methods},
+    {Py_tp_init, (initproc)HyDict_init},
+    {Py_tp_free, },
 };
-
-
-
-static PyTypeObject Str_Type = {
-	/* The ob_type field must be initialized in the module init function
-	 * to be portable to Windows without using C++. */
-	PyVarObject_HEAD_INIT(NULL, 0)
-	"hnjmodule.Str",		/*tp_name*/
-	0,			/*tp_basicsize*/
-	0,			/*tp_itemsize*/
-	/* methods */
-	0,			/*tp_dealloc*/
-	0,			/*tp_print*/
-	0,			/*tp_getattr*/
-	0,			/*tp_setattr*/
-	0,			/*tp_compare*/
-	0,			/*tp_repr*/
-	0,			/*tp_as_number*/
-	0,			/*tp_as_sequence*/
-	0,			/*tp_as_mapping*/
-	0,			/*tp_hash*/
-	0,			/*tp_call*/
-	0,			/*tp_str*/
-	0,			/*tp_getattro*/
-	0,			/*tp_setattro*/
-	0,			/*tp_as_buffer*/
-	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-	0,			/*tp_doc*/
-	0,			/*tp_traverse*/
-	0,			/*tp_clear*/
-	0,			/*tp_richcompare*/
-	0,			/*tp_weaklistoffset*/
-	0,			/*tp_iter*/
-	0,			/*tp_iternext*/
-	0,			/*tp_methods*/
-	0,			/*tp_members*/
-	0,			/*tp_getset*/
-	0, /* see PyInit_xx */	/*tp_base*/
-	0,			/*tp_dict*/
-	0,			/*tp_descr_get*/
-	0,			/*tp_descr_set*/
-	0,			/*tp_dictoffset*/
-	0,			/*tp_init*/
-	0,			/*tp_alloc*/
-	0,			/*tp_new*/
-	0,			/*tp_free*/
-	0,			/*tp_is_gc*/
+static PyType_Spec HyDict_type_spec = {
+    "hnjmodule.hyphenator_",
+    sizeof(HyDictobject),
+    0,
+     Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE,
+    HyDict_type_slots,
 };
 
 /* ---------- */
-
-static PyObject *
-null_richcompare(PyObject *self, PyObject *other, int op)
-{
-	Py_INCREF(Py_NotImplemented);
-	return Py_NotImplemented;
-}
-
-static PyTypeObject Null_Type = {
-	/* The ob_type field must be initialized in the module init function
-	 * to be portable to Windows without using C++. */
-	PyVarObject_HEAD_INIT(NULL, 0)
-	"hnjmodule.Null",	/*tp_name*/
-	0,			/*tp_basicsize*/
-	0,			/*tp_itemsize*/
-	/* methods */
-	0,			/*tp_dealloc*/
-	0,			/*tp_print*/
-	0,			/*tp_getattr*/
-	0,			/*tp_setattr*/
-	0,			/*tp_compare*/
-	0,			/*tp_repr*/
-	0,			/*tp_as_number*/
-	0,			/*tp_as_sequence*/
-	0,			/*tp_as_mapping*/
-	0,			/*tp_hash*/
-	0,			/*tp_call*/
-	0,			/*tp_str*/
-	0,			/*tp_getattro*/
-	0,			/*tp_setattro*/
-	0,			/*tp_as_buffer*/
-	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE, /*tp_flags*/
-	0,			/*tp_doc*/
-	0,			/*tp_traverse*/
-	0,			/*tp_clear*/
-	null_richcompare,	/*tp_richcompare*/
-	0,			/*tp_weaklistoffset*/
-	0,			/*tp_iter*/
-	0,			/*tp_iternext*/
-	0,			/*tp_methods*/
-	0,			/*tp_members*/
-	0,			/*tp_getset*/
-	0, /* see PyInit_xx */	/*tp_base*/
-	0,			/*tp_dict*/
-	0,			/*tp_descr_get*/
-	0,			/*tp_descr_set*/
-	0,			/*tp_dictoffset*/
-	0,			/*tp_init*/
-	0,			/*tp_alloc*/
-	0, /* see PyInit_xx */	/*tp_new*/
-	0,			/*tp_free*/
-	0,			/*tp_is_gc*/
-};
-
-
 /* ---------- */
 
 
@@ -463,13 +344,6 @@ static PyTypeObject Null_Type = {
 /* End of code for hyphenator_ objects */
 /* -------------------------------------------------------- */
 
-
-/* List of methods defined in the module */
-
-static struct PyMethodDef hnj_methods[] = {
-
-	{NULL,	 (PyCFunction)NULL, 0, NULL}		/* sentinel */
-};
 
 
 
@@ -482,29 +356,17 @@ by the hyphen.hyphenator class.\n"
 
 static struct PyModuleDef hnjmodule = {
 	PyModuleDef_HEAD_INIT,
-	"hnj",
-	module_doc,
-	-1,
-	hnj_methods,
-	NULL,
-	NULL,
-	NULL,
-	NULL
+	.m_name = "hnj",
+	.m_doc = module_doc,
+	.m_size = -1,
 };
 
 PyMODINIT_FUNC
 PyInit_hnj(void)
 {
-	PyObject *m = NULL;
+	PyObject *m, *HyDict_type = NULL;
 
-	/* Due to cross platform compiler issues the slots must be filled
-	 * here. It's required for portability to Windows without requiring
-	 * C++. */
-	Null_Type.tp_base = &PyBaseObject_Type;
-	Null_Type.tp_new = PyType_GenericNew;
-	Str_Type.tp_base = &PyUnicode_Type;
-	HyDict_type.tp_new = PyType_GenericNew;
-
+	
 
 	/* Create the module and add the functions */
 	m = PyModule_Create(&hnjmodule);
@@ -520,24 +382,23 @@ PyInit_hnj(void)
 	Py_INCREF(ErrorObject);
 	PyModule_AddObject(m, "error", ErrorObject);
 
-	/* Add Str */
-	if (PyType_Ready(&Str_Type) < 0)
-		goto fail;
-	PyModule_AddObject(m, "Str", (PyObject *)&Str_Type);
-
-	/* Add Null */
-	if (PyType_Ready(&Null_Type) < 0)
-		goto fail;
-	PyModule_AddObject(m, "Null", (PyObject *)&Null_Type);
-
+/* create HyDict_type */
+if (!(HyDict_type = PyType_FromSpec(&HyDict_type_spec))) {
+printf("hidttype could not be created.\n");
+    goto fail;
+};
+Py_INCREF(HyDict_type);
     /* Add HiDict_type */
-    if (PyType_Ready(&HyDict_type) < 0)
-		goto fail;
-	PyModule_AddObject(m, "hyphenator_", (PyObject *)&HyDict_type);
+	if (PyModule_AddObject(m, "hyphenator_", HyDict_type) < 0) {
+        printf("hidttype could not be added to module.\n");
+        Py_DECREF(HyDict_type);
+        goto fail;
+    }
 
 
 	return m;
  fail:
+ Py_DECREF(ErrorObject);
 	Py_XDECREF(m);
 	return NULL;
 }

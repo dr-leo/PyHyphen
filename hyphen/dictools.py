@@ -28,7 +28,7 @@ LANGUAGES = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG', 'bn_BD', 'br_FR', 'ca',
              'uk_UA', 'zu_ZA']
 
 
-class Dictionaries(object):
+class Dictionaries:
 
     def __init__(self, directory=None):
         self.directory = directory or DEFAULT_DICT_PATH

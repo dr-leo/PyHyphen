@@ -278,24 +278,22 @@ HyDict_dealloc(HyDictobject *self)
 static int
 HyDict_init(HyDictobject *self, PyObject *args) {
 
-#if defined(_WIN32)
-    wchar_t* fn;
-printf("hyphenator: entered init...");
-    if (!PyArg_ParseTuple(args, "uiiii", &fn,
-        &self->lmin, &self->rmin, &self->compound_lmin, &self->compound_rmin))
-        return -1;
-#else
-    char* fn;
-    if (!PyArg_ParseTuple(args, "siiii", &fn,
+    /* Pointer to file-path of  dict */
+    PyBytesObject * fn;
+    char * fn_ch;
+    
+    if (!PyArg_ParseTuple(args, "O&iiii", PyUnicode_FSConverter, &fn,
     &self->lmin, &self->rmin, &self->compound_lmin, &self->compound_rmin))
 	return -1;
-#endif
-
-    if (!(self->dict = hnj_hyphen_load(fn)))
+    
+      fn_ch = PyBytes_AsString((PyObject *)fn);
+      if (!(self->dict = hnj_hyphen_load(fn_ch)))
     {
-        if (!PyErr_Occurred()) PyErr_SetString(PyExc_IOError, "Cannot load hyphen dictionary.");
+          if (!PyErr_Occurred()) PyErr_SetString(PyExc_IOError, "Cannot load hyphen dictionary.");
+          Py_DECREF(fn);
         return -1;
     }
+    Py_DECREF(fn);
     return 0;
 }
 
@@ -376,13 +374,11 @@ PyInit_hnj(void)
 
 /* create HyDict_type */
 if (!(HyDict_type = PyType_FromSpec(&HyDict_type_spec))) {
-printf("hidttype could not be created.\n");
     goto fail;
 };
 Py_INCREF(HyDict_type);
     /* Add HiDict_type */
 	if (PyModule_AddObject(m, "hyphenator_", HyDict_type) < 0) {
-        printf("hidttype could not be added to module.\n");
         Py_DECREF(HyDict_type);
         goto fail;
     }

@@ -6,7 +6,7 @@ from setuptools import setup, Extension
 
 arg_dict = dict(
     name="PyHyphen",
-    version="3.0.2",
+    version="4.0.0",
     author="Dr. Leo & Regis Behmo",
     author_email="fhaxbox66@googlemail.com",
     url="https://github.com/dr-leo/PyHyphen",
@@ -37,7 +37,7 @@ arg_dict = dict(
                                  'src/hyphen.c',
                                  'src/hnjalloc.c'],
                   include_dirs=['include'])],
-    install_requires=['appdirs', 'six'],
+    install_requires=['appdirs'],
 )
 
 

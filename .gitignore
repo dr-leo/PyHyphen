@@ -5,7 +5,6 @@
 /htmlcov/
 /hyphen/*.so
 /PyHyphen.egg-info/
-/.tox/
 *.coverage
 *.out
 *.pyc
@@ -13,3 +12,4 @@
 *.log
 *.swp
 MANIFEST
+.pytest*

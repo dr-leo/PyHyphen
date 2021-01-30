@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         include:      
-          - python-version: '3.8'
+          - python-version: '3.7'
             os: ubuntu-latest            
           - python-version: '3.7'
             os: macos-latest

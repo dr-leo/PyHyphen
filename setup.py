@@ -28,7 +28,7 @@ arg_dict = dict(
         'Topic :: Text Processing',
         'Topic :: Text Processing :: Linguistic'
     ],
-    packages=['hyphen', 'textwrap2'],
+    packages=['hyphen', 'hyphen/tests', 'textwrap2'],
     entry_points={
         'console_scripts': ["wraptext = textwrap2.cli:main"]
     },

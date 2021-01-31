@@ -50,12 +50,12 @@ class TestDictools(unittest.TestCase):
     def test_parse_dictionary_location(self):
         origin_url = "http://pouac.com"
 
-        with open(os.path.join(os.path.dirname(__file__), "fixtures", "en", "dictionaries.xcu")) as xcu:
-            url, locales = hyphen.dictools.parse_dictionary_location(xcu, origin_url, "en_US")
+        with open(os.path.join(os.path.dirname(__file__), "fixtures", "en", "dictionaries.xcu"), 'rb') as xcu:
+            url, locales = hyphen.dictools.parse_dictionary_location(xcu.read(), origin_url, "en_US")
             self.assertEqual("http://pouac.com/hyph_en_US.dic", url)
             self.assertEqual(["en_US", "en_PH"], locales)
 
-        with open(os.path.join(os.path.dirname(__file__), "fixtures", "fr_FR", "dictionaries.xcu")) as xcu:
-            url, locales = hyphen.dictools.parse_dictionary_location(xcu, origin_url, "fr_FR")
+        with open(os.path.join(os.path.dirname(__file__), "fixtures", "fr_FR", "dictionaries.xcu"), 'rb') as xcu:
+            url, locales = hyphen.dictools.parse_dictionary_location(xcu.read(), origin_url, "fr_FR")
             self.assertEqual("http://pouac.com/hyph_fr.dic", url)
             self.assertEqual(["fr_FR", "fr_BE", "fr_CA", "fr_CH", "fr_MC", "fr_LU"], locales)

@@ -1,7 +1,7 @@
 # setup.py for the PyHyphen hyphenation package
 # (c) Dr. Leo (fhaxbox66 <at> gmail >dot< com)
 
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 
 
 arg_dict = dict(
@@ -28,15 +28,16 @@ arg_dict = dict(
         'Topic :: Text Processing',
         'Topic :: Text Processing :: Linguistic'
     ],
-    packages=['hyphen', 'hyphen/tests', 'textwrap2'],
+    packages=find_packages(where='src', include=['hyphen']),
+    package_dir={'': 'src'},
     entry_points={
         'console_scripts': ["wraptext = textwrap2.cli:main"]
     },
     ext_modules=[
-        Extension('hyphen.hnj', ['src/hnjmodule.c',
-                                 'src/hyphen.c',
-                                 'src/hnjalloc.c'],
-                  include_dirs=['include'])],
+        Extension('hyphen.hnj', ['lib/hnjmodule.c',
+                                 'lib/hyphen.c',
+                                 'lib/hnjalloc.c'],
+                  include_dirs=['lib'])],
     install_requires=['appdirs'],
 )
 

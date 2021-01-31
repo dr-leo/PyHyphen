@@ -38,7 +38,7 @@ arg_dict = dict(
                                  'lib/hyphen.c',
                                  'lib/hnjalloc.c'],
                   include_dirs=['lib'])],
-    install_requires=['appdirs'],
+    install_requires=['appdirs', "requests"],
 )
 
 

@@ -3,14 +3,11 @@
 '''
 This module contains convenience functions to manage hyphenation dictionaries.
 '''
-# from __future__ import unicode_literals
 
 import json
 import os
-
 import appdirs
-# from six.moves Don't think we need this? 
-import urllib
+import  requests 
 
 
 __all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
@@ -138,7 +135,8 @@ def uninstall(language, directory=None):
     Dictionaries(directory).remove(language)
 
 
-def install(language, directory=None, repos=None, use_description=True, overwrite=False):
+def install(language, directory=None, repos=None, use_description=True, overwrite=False, 
+    request_args={}):
     '''
     Download  and install a dictionary file.
 
@@ -149,6 +147,7 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
     use_description (bool): if True, parse dictionaries.xcu file to
         automatically find the appropriate dictionary.
     overwrite (bool): if True, overwrite any existing dictionary. Default: False
+    request_args(dict): kwargs to be passed to `requests.get()`
 
     Return the path to the file that was downloaded or is already installed.
     '''
@@ -170,7 +169,8 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
         locales = [language]
 
     # Install the dictionary file
-    dict_content = urllib.request.urlopen(dict_url).read()
+    response = requests.get(dict_url, **request_args)
+    dict_content = response.content
     return Dictionaries(directory).add(language, dict_content, locales, dict_url)
 
 
@@ -218,12 +218,9 @@ def parse_dictionary_location(descr_file, origin_url, language):
         url (unicode)
         locales (unicode list)
     '''
-    try:
-        from xml.etree.cElementTree import ElementTree
-    except ImportError:
-        from xml.etree.ElementTree import ElementTree
+    from xml.etree import ElementTree 
 
-    descr_tree = ElementTree(file=descr_file)
+    descr_tree = ElementTree.fromstring(descr_file)
 
     # Find the nodes containing meta data of hyphenation dictionaries
     # Iterate over all nodes
@@ -261,12 +258,11 @@ def parse_dictionary_location(descr_file, origin_url, language):
     return None, []
 
 
-def _download_dictionaries_xcu(origin_url):
+def _download_dictionaries_xcu(origin_url, **request_args):
     '''
     Try to download dictionaries.xcu from the url. In case of error, return None.
     '''
     url = origin_url + '/dictionaries.xcu'
-    try:
-        return urllib.request.urlopen(url)
-    except urllib.error.URLError:
-        return None
+    response = requests.get(url, **request_args)
+    if response.status_code == 200:
+        return response.content

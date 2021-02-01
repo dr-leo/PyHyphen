@@ -280,8 +280,13 @@ HyDict_init(HyDictobject *self, PyObject *args) {
 
     /* Pointer to file-path of  dict */
     PyBytesObject * fn;
-    char * fn_ch;
     
+    #if defined(_WIN32)
+    const wchar_t * fn_ch;
+#else
+    const char * fn_ch;
+ #endif
+ 
     if (!PyArg_ParseTuple(args, "O&iiii", PyUnicode_FSConverter, &fn,
     &self->lmin, &self->rmin, &self->compound_lmin, &self->compound_rmin))
 	return -1;
@@ -354,7 +359,7 @@ static struct PyModuleDef hnjmodule = {
 PyMODINIT_FUNC
 PyInit_hnj(void)
 {
-	PyObject *m, *HyDict_type = NULL;
+	PyObject *m, *HyDict_type;
 
 	
 

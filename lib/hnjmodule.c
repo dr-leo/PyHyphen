@@ -293,6 +293,7 @@ HyDict_init(HyDictobject *self, PyObject *args) {
 	return -1;
     
       fn_ch = PyBytes_AsString(fn);
+      printf("File path: %s .\n", fn_ch); 
       if (!(self->dict = hnj_hyphen_load(fn_ch)))
     {
           if (!PyErr_Occurred()) PyErr_SetString(PyExc_IOError, "Cannot load hyphen dictionary.");

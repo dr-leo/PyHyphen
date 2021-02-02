@@ -1,5 +1,5 @@
 #define PY_SSIZE_T_CLEAN
-#define Py_LIMITED_API = 0x03070000 
+#define Py_LIMITED_API 0x03070000 
 #include "Python.h"
 #include "structmember.h"
 #include "hyphen.h"
@@ -59,7 +59,7 @@ static char * hindex(char * word, int n, int utf8) {
 
 /* Depending on the value of 'mode', convert a  C string to PyUnicode, handle also
     capitalization and upper case words. */
-static PyObject * prepare_result(char *word, char *encoding, int mode)
+static PyObject * prepare_result(char *word, char *encoding, unsigned char mode)
 {
     PyObject *result, *temp;
     
@@ -108,7 +108,8 @@ HyDict_apply(HyDictobject *self, PyObject *args)
     char r;
     int * pos = NULL;
     int * cut = NULL;
-    unsigned int wd_size, i, j, k, mode;
+    unsigned char mode;
+    unsigned int wd_size, i, j, k ;
     Py_ssize_t hyph_count;
     PyObject *result, *s1, *s2, *separator_u = NULL;
 /* mode:
@@ -118,7 +119,7 @@ HyDict_apply(HyDictobject *self, PyObject *args)
 
 
     /* parse and check arguments */
-    if (!PyArg_ParseTuple(args, "esi", &self->dict->cset, &word_str, &mode))
+    if (!PyArg_ParseTuple(args, "esb", &self->dict->cset, &word_str, &mode))
           return NULL;
     wd_size = strlen(word_str);
     if (wd_size >= MAX_CHARS)
@@ -279,7 +280,7 @@ static int
 HyDict_init(HyDictobject *self, PyObject *args) {
 
     /* Pointer to file-path of  dict */
-    PyBytesObject * fn;
+    PyObject * fn;
     
     #if defined(_WIN32)
     const wchar_t * fn_ch;
@@ -291,7 +292,7 @@ HyDict_init(HyDictobject *self, PyObject *args) {
     &self->lmin, &self->rmin, &self->compound_lmin, &self->compound_rmin))
 	return -1;
     
-      fn_ch = PyBytes_AsString((PyObject *)fn);
+      fn_ch = PyBytes_AsString(fn);
       if (!(self->dict = hnj_hyphen_load(fn_ch)))
     {
           if (!PyErr_Occurred()) PyErr_SetString(PyExc_IOError, "Cannot load hyphen dictionary.");

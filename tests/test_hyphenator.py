@@ -1,6 +1,4 @@
-from __future__ import unicode_literals
 import unittest
-
 from hyphen import Hyphenator
 
 
@@ -10,7 +8,7 @@ class TestHyphenator(unittest.TestCase):
         h_en = Hyphenator('en_US')
 
         self.assertEqual(
-            [['beau', 'tiful'], [u'beauti', 'ful']],
+            [['beau', 'tiful'], ['beauti', 'ful']],
             h_en.pairs('beautiful')
         )
 

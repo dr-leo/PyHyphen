@@ -51,14 +51,20 @@ class Hyphenator:
         single or compound words
         '''
         file_path = dictools.install(language, directory=directory)
-        self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin, compound_lmin, compound_rmin)
+        try:
+            self.__hyphenate__ = hnj.hyphenator_(file_path, 
+                lmin, rmin, 
+                compound_lmin, compound_rmin)
+        except Exception as E:
+                raise RuntimeError(f'C extension    reported  error \
+                when initializing Hyphenator for dictionary at {file_path}') from E
         self.apply = self.__hyphenate__.apply
 
 
     def pairs(self, word):
         '''
-        Hyphenate a unicode string and return a list of lists of the form
-        [[u'hy', u'phenation'], [u'hyphen', u'ation']].
+        Hyphenate a  string and return a list of lists of the form
+        [['hy', 'phenation'], ['hyphen', 'ation']].
 
         Return [], if len(word) < 4 or if word could not be hyphenated because
 

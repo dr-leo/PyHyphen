@@ -170,6 +170,7 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
 
     # Install the dictionary file
     response = requests.get(dict_url, **request_args)
+    response.raise_for_status()
     dict_content = response.content
     return Dictionaries(directory).add(language, dict_content, locales, dict_url)
 

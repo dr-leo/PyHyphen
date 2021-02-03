@@ -55,6 +55,8 @@
 extern "C" {
 #endif /* __cplusplus */
 
+#include <stdio.h>
+
 typedef struct _HyphenDict HyphenDict;
 typedef struct _HyphenState HyphenState;
 typedef struct _HyphenTrans HyphenTrans;
@@ -93,11 +95,8 @@ struct _HyphenTrans {
   int new_state;
 };
 
-#if defined(_WIN32) && (PY_MAJOR_VERSION != 2)
-HyphenDict *hnj_hyphen_load (const wchar_t *fn);
-#else
 HyphenDict *hnj_hyphen_load (const char *fn);
-#endif
+HyphenDict *hnj_hyphen_load_file (FILE *f);
 void hnj_hyphen_free (HyphenDict *dict);
 
 /* obsolete, use hnj_hyphen_hyphenate2() or *hyphenate3() functions) */

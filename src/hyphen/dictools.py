@@ -43,7 +43,7 @@ class Dictionaries:
     def data(self):
         if self._data is None:
             if os.path.exists(self.path):
-                with open(self.path) as f:
+                with open(self.path, 'rb') as f:
                     self._data = json.load(f)
             else:
                 self._data = {}
@@ -101,7 +101,7 @@ class Dictionaries:
     def save(self):
         # Access data to make sure it's properly loaded
         data = self.data
-        with open(self.path, "w") as f:
+        with open(self.path, "rb") as f:
             json.dump(data, f, indent=2, sort_keys=True)
 
     def reload(self):

@@ -280,21 +280,18 @@ static int
 HyDict_init(HyDictobject *self, PyObject *args) {
 
     /* Pointer to file-path of  dict */
-    PyObject * fn;
     
     #if defined(_WIN32)
-    const wchar_t * fn_ch;
+    const wchar_t * fn;
 #else
-    const char * fn_ch;
+    const char * fn;
  #endif
  
-    if (!PyArg_ParseTuple(args, "O&iiii", PyUnicode_FSConverter, &fn,
+    if (!PyArg_ParseTuple(args, "siiii", &fn,
     &self->lmin, &self->rmin, &self->compound_lmin, &self->compound_rmin))
 	return -1;
     
-      fn_ch = PyBytes_AsString(fn);
-      printf("File path: %s .\n", fn_ch); 
-      if (!(self->dict = hnj_hyphen_load(fn_ch)))
+      if (!(self->dict = hnj_hyphen_load(fn)))
     {
           if (!PyErr_Occurred()) PyErr_SetString(PyExc_IOError, "Cannot load hyphen dictionary.");
           Py_DECREF(fn);

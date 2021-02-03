@@ -18,8 +18,8 @@ jobs:
         include:      
           - python-version: '3.9'
             os: ubuntu-latest            
-          - python-version: '3.7'
-            os: macos-11.0
+          # - python-version: '3.7'
+            # os: macos-11.0
           - python-version: '3.7'
             os: windows-latest            
           - python-version: '3.8'

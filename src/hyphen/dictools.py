@@ -101,7 +101,7 @@ class Dictionaries:
     def save(self):
         # Access data to make sure it's properly loaded
         data = self.data
-        with open(self.path, "rb") as f:
+        with open(self.path, "wt") as f:
             json.dump(data, f, indent=2, sort_keys=True)
 
     def reload(self):

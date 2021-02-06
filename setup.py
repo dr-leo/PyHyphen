@@ -6,7 +6,6 @@ from setuptools import setup, Extension, find_packages
 
 arg_dict = dict(
     name="PyHyphen",
-    version="4.0.0",
     author="Dr. Leo & Regis Behmo",
     author_email="fhaxbox66@googlemail.com",
     url="https://github.com/dr-leo/PyHyphen",
@@ -27,14 +26,13 @@ arg_dict = dict(
     ],
     packages=find_packages(where='src', include=['hyphen']),
     package_dir={'': 'src'},
-    entry_points={
-        'console_scripts': ["wraptext = textwrap2.cli:main"]
-    },
     ext_modules=[
         Extension('hyphen.hnj', ['lib/hnjmodule.c',
                                  'lib/hyphen.c',
                                  'lib/hnjalloc.c'],
-                  include_dirs=['lib'])],
+                  include_dirs=['lib'],
+                  py_limited_api=True)
+                  ],
     install_requires=['appdirs', "requests"],
 )
 

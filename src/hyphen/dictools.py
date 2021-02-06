@@ -162,7 +162,7 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
     dict_url = None
     if use_description:
         # Find the dictionary location from the dictionaries.xcu description
-        dict_url, locales = find_dictionary_location(repos, language)
+        dict_url, locales = find_dictionary_location(repos, language, **request_args)
     if not dict_url:
         # handle the case that there is no xml metadata: we just guess its url
         dict_url = repos + 'hyph_dict_' + language + '.dic'
@@ -175,20 +175,21 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
     return Dictionaries(directory).add(language, dict_content, locales, dict_url)
 
 
-def find_dictionary_location(repos, language):
+def find_dictionary_location(repos, language, **request_args):
     '''
     Find the location of a language dictionary from an xcu file from the LibreOffice repo.
+    Any kwargs will be passed to `requests.get()` to configure the HTTP connection.
     Raise an IOError if the dictionary location could not be found in the xcu file.
     '''
     # Download the dictionaries.xcu file from the LibreOffice repository if needed
     # This is an XML file that lists all the available dictionaries for that language.
     # First, try full language name; it won't work in all cases...
     origin_url = repos + language
-    descr_file = _download_dictionaries_xcu(origin_url)
+    descr_file = _download_dictionaries_xcu(origin_url, **request_args)
     if descr_file is None and len(language) > 2:
         # OK. So try with the country code.
         origin_url = repos + language[:2]
-        descr_file = _download_dictionaries_xcu(origin_url)
+        descr_file = _download_dictionaries_xcu(origin_url, **request_args)
 
     if not descr_file:
         return None, []
@@ -262,8 +263,9 @@ def parse_dictionary_location(descr_file, origin_url, language):
 def _download_dictionaries_xcu(origin_url, **request_args):
     '''
     Try to download dictionaries.xcu from the url. In case of error, return None.
+    Any **request_args are passed to `requests.get()` to configure the HTTP connection.
     '''
     url = origin_url + '/dictionaries.xcu'
     response = requests.get(url, **request_args)
-    if response.status_code == 200:
-        return response.content
+    response.raise_for_status()
+    return response.content

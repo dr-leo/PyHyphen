@@ -12,11 +12,14 @@ import  requests
 
 __all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 
-
+# default location to store hyphenation dictionaries
 DEFAULT_DICT_PATH = appdirs.user_data_dir("pyhyphen", appauthor=False)
+
+# Where PyHyphen tries to retrieve dictionaries for download
 DEFAULT_REPOSITORY = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
-# This is a list of languages supported by PyHyphen. In the following, language
-# codes are assumed to be in this list.
+
+# Incomplete list of languages for which there are dictionaries in the 
+# default repository.
 LANGUAGES = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG', 'bn_BD', 'br_FR', 'ca',
              'cs_CZ', 'da_DK', 'de', 'el_GR', 'en', 'es_ES', 'et_EE', 'fr_FR',
              'gd_GB', 'gl', 'gu_IN', 'he_IL', 'hi_IN', 'hr_HR', 'hu_HU',
@@ -147,7 +150,7 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
     use_description (bool): if True, parse dictionaries.xcu file to
         automatically find the appropriate dictionary.
     overwrite (bool): if True, overwrite any existing dictionary. Default: False
-    request_args(dict): kwargs to be passed to `requests.get()`
+    request_args(dict): kwargs to be passed to `requests.get()` for HTTP configuration
 
     Return the path to the file that was downloaded or is already installed.
     '''
@@ -267,5 +270,8 @@ def _download_dictionaries_xcu(origin_url, **request_args):
     '''
     url = origin_url + '/dictionaries.xcu'
     response = requests.get(url, **request_args)
-    response.raise_for_status()
-    return response.content
+    # Return the content if received.
+    # In case of an HTTP error, return the response.
+    # HTTP errors are silently dropped. Fix this?
+    if response.status == 200:
+        return response.content 

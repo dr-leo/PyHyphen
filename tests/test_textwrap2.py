@@ -1,7 +1,8 @@
 import unittest
-import textwrap2
-
 import hyphen
+from hyphen import textwrap2
+
+
 
 
 class TestTextwrap2(unittest.TestCase):

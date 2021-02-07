@@ -1,5 +1,9 @@
 import textwrap
 
+
+__all__ = ['TextWrapper', 'wrap', 'fill']
+
+
 class TextWrapper(textwrap.TextWrapper):
     """
     This class extends the Python 3 standard library's TextWrapper and adds an optional
@@ -114,3 +118,13 @@ class TextWrapper(textwrap.TextWrapper):
 
 
 
+
+# convenience functions
+
+def wrap(text, width=70, **kwargs):
+    w = TextWrapper(width=width, **kwargs)
+    return w.wrap(text)
+
+def fill(text, width=70, **kwargs):
+    w = TextWrapper(width=width, **kwargs)
+    return w.fill(text)

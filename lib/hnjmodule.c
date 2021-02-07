@@ -397,7 +397,7 @@ static struct PyModuleDef hnjmodule = {
 
 
 PyMODINIT_FUNC
-PyInit_hnjmodule(void)
+PyInit_hnj(void)
 {
     return PyModuleDef_Init(&hnjmodule);
 }

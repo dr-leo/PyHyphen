@@ -46,7 +46,7 @@ mode: the 3 least significant bits are interpreted as flags with the following m
 
 /* get a pointer to the nth 8-bit or UTF-8 character of the word */
 /* This is required because some operations are done at utf8 string level. */
-static char * hindex(char * word, int n, int utf8) {
+static size_t * hindex(char * word, int n, int utf8) {
     int j = 0;
     while (j < n) {
         j++;

@@ -95,7 +95,14 @@ struct _HyphenTrans {
   int new_state;
 };
 
-HyphenDict *hnj_hyphen_load (const char *fn);
+
+#if defined(_WIN32)
+    HyphenDict *hnj_hyphen_load (const wchar_t *fn);
+#else
+    HyphenDict *hnj_hyphen_load (const char *fn);
+ #endif
+
+
 HyphenDict *hnj_hyphen_load_file (FILE *f);
 void hnj_hyphen_free (HyphenDict *dict);
 

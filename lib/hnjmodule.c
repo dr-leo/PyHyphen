@@ -109,7 +109,7 @@ HyDict_apply(HyDictobject *self, PyObject *args)
     int * pos = NULL;
     int * cut = NULL;
     unsigned char mode;
-    unsigned int wd_size, i, j, k ;
+    size_t wd_size, i, j, k ;
     Py_ssize_t hyph_count;
     PyObject *result, *s1, *s2, *separator_u = NULL;
 /* mode:

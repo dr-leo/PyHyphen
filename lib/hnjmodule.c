@@ -46,7 +46,7 @@ mode: the 3 least significant bits are interpreted as flags with the following m
 
 /* get a pointer to the nth 8-bit or UTF-8 character of the word */
 /* This is required because some operations are done at utf8 string level. */
-static size_t * hindex(char * word, int n, int utf8) {
+static char * hindex(char * word, int n, int utf8) {
     int j = 0;
     while (j < n) {
         j++;
@@ -109,7 +109,7 @@ HyDict_apply(HyDictobject *self, PyObject *args)
     int * pos = NULL;
     int * cut = NULL;
     unsigned char mode;
-    size_t wd_size, i, j, k ;
+    size_t wd_size, i, j, k;
     Py_ssize_t hyph_count;
     PyObject *result, *s1, *s2, *separator_u = NULL;
 /* mode:

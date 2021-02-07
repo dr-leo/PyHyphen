@@ -348,24 +348,12 @@ by the hyphen.hyphenator class.\n"
 ;
 
 
-static struct PyModuleDef hnjmodule = {
-	PyModuleDef_HEAD_INIT,
-	.m_name = "hnj",
-	.m_doc = module_doc,
-	.m_size = -1,
-};
-
-PyMODINIT_FUNC
-PyInit_hnj(void)
+static int
+hnj_modexec(PyObject *m)
 {
-	PyObject *m, *HyDict_type;
 
+    	PyObject *HyDict_type;
 	
-
-	/* Create the module and add the functions */
-	m = PyModule_Create(&hnjmodule);
-	if (m == NULL)
-		goto fail;
 
 	/* Add some symbolic constants to the module */
 	if (ErrorObject == NULL) {
@@ -386,12 +374,30 @@ Py_INCREF(HyDict_type);
         Py_DECREF(HyDict_type);
         goto fail;
     }
-
-
-	return m;
+ 
+    return 0;
  fail:
- Py_DECREF(ErrorObject);
-	Py_XDECREF(m);
-	return NULL;
+    Py_XDECREF(m);
+    return -1;
 }
 
+
+static PyModuleDef_Slot hnj_slots[] = {
+    {Py_mod_exec, hnj_modexec},
+    {0, NULL}
+};
+
+static struct PyModuleDef hnjmodule = {
+	PyModuleDef_HEAD_INIT,
+	.m_name = "hnj",
+	.m_doc = module_doc,
+	.m_size = -1,
+    .m_slots = hnj_slots,
+};
+
+
+PyMODINIT_FUNC
+PyInit_hnjmodule(void)
+{
+    return PyModuleDef_Init(&hnjmodule);
+}

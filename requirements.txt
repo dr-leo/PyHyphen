@@ -1,4 +1,4 @@
-wheel >= 36.0
+wheel >= 0.36.0
 setuptools >= 52.0
 appdirs >= 1.4.0
 requests >= 2.25

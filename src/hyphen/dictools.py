@@ -273,5 +273,5 @@ def _download_dictionaries_xcu(origin_url, **request_args):
     # Return the content if received.
     # In case of an HTTP error, return the response.
     # HTTP errors are silently dropped. Fix this?
-    if response.status == 200:
+    if response.status_code == 200:
         return response.content 

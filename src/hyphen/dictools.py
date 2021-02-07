@@ -3,23 +3,22 @@
 '''
 This module contains convenience functions to manage hyphenation dictionaries.
 '''
+from __future__ import unicode_literals
 
 import json
 import os
+
 import appdirs
-import  requests 
+from six.moves import urllib
 
 
 __all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 
-# default location to store hyphenation dictionaries
+
 DEFAULT_DICT_PATH = appdirs.user_data_dir("pyhyphen", appauthor=False)
-
-# Where PyHyphen tries to retrieve dictionaries for download
-DEFAULT_REPOSITORY = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
-
-# Incomplete list of languages for which there are dictionaries in the 
-# default repository.
+DEFAULT_REPOSITORY = 'https://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
+# This is a list of languages supported by PyHyphen. In the following, language
+# codes are assumed to be in this list.
 LANGUAGES = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG', 'bn_BD', 'br_FR', 'ca',
              'cs_CZ', 'da_DK', 'de', 'el_GR', 'en', 'es_ES', 'et_EE', 'fr_FR',
              'gd_GB', 'gl', 'gu_IN', 'he_IL', 'hi_IN', 'hr_HR', 'hu_HU',
@@ -29,7 +28,7 @@ LANGUAGES = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG', 'bn_BD', 'br_FR', 'ca',
              'uk_UA', 'zu_ZA']
 
 
-class Dictionaries:
+class Dictionaries(object):
 
     def __init__(self, directory=None):
         self.directory = directory or DEFAULT_DICT_PATH
@@ -46,7 +45,7 @@ class Dictionaries:
     def data(self):
         if self._data is None:
             if os.path.exists(self.path):
-                with open(self.path, 'rb') as f:
+                with open(self.path) as f:
                     self._data = json.load(f)
             else:
                 self._data = {}
@@ -104,7 +103,7 @@ class Dictionaries:
     def save(self):
         # Access data to make sure it's properly loaded
         data = self.data
-        with open(self.path, "wt") as f:
+        with open(self.path, "w") as f:
             json.dump(data, f, indent=2, sort_keys=True)
 
     def reload(self):
@@ -138,8 +137,7 @@ def uninstall(language, directory=None):
     Dictionaries(directory).remove(language)
 
 
-def install(language, directory=None, repos=None, use_description=True, overwrite=False, 
-    request_args={}):
+def install(language, directory=None, repos=None, use_description=True, overwrite=False):
     '''
     Download  and install a dictionary file.
 
@@ -150,7 +148,6 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
     use_description (bool): if True, parse dictionaries.xcu file to
         automatically find the appropriate dictionary.
     overwrite (bool): if True, overwrite any existing dictionary. Default: False
-    request_args(dict): kwargs to be passed to `requests.get()` for HTTP configuration
 
     Return the path to the file that was downloaded or is already installed.
     '''
@@ -165,34 +162,31 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
     dict_url = None
     if use_description:
         # Find the dictionary location from the dictionaries.xcu description
-        dict_url, locales = find_dictionary_location(repos, language, **request_args)
+        dict_url, locales = find_dictionary_location(repos, language)
     if not dict_url:
         # handle the case that there is no xml metadata: we just guess its url
         dict_url = repos + 'hyph_dict_' + language + '.dic'
         locales = [language]
 
     # Install the dictionary file
-    response = requests.get(dict_url, **request_args)
-    response.raise_for_status()
-    dict_content = response.content
+    dict_content = urllib.request.urlopen(dict_url).read()
     return Dictionaries(directory).add(language, dict_content, locales, dict_url)
 
 
-def find_dictionary_location(repos, language, **request_args):
+def find_dictionary_location(repos, language):
     '''
     Find the location of a language dictionary from an xcu file from the LibreOffice repo.
-    Any kwargs will be passed to `requests.get()` to configure the HTTP connection.
     Raise an IOError if the dictionary location could not be found in the xcu file.
     '''
     # Download the dictionaries.xcu file from the LibreOffice repository if needed
     # This is an XML file that lists all the available dictionaries for that language.
     # First, try full language name; it won't work in all cases...
     origin_url = repos + language
-    descr_file = _download_dictionaries_xcu(origin_url, **request_args)
+    descr_file = _download_dictionaries_xcu(origin_url)
     if descr_file is None and len(language) > 2:
         # OK. So try with the country code.
         origin_url = repos + language[:2]
-        descr_file = _download_dictionaries_xcu(origin_url, **request_args)
+        descr_file = _download_dictionaries_xcu(origin_url)
 
     if not descr_file:
         return None, []
@@ -223,9 +217,12 @@ def parse_dictionary_location(descr_file, origin_url, language):
         url (unicode)
         locales (unicode list)
     '''
-    from xml.etree import ElementTree 
+    try:
+        from xml.etree.cElementTree import ElementTree
+    except ImportError:
+        from xml.etree.ElementTree import ElementTree
 
-    descr_tree = ElementTree.fromstring(descr_file)
+    descr_tree = ElementTree(file=descr_file)
 
     # Find the nodes containing meta data of hyphenation dictionaries
     # Iterate over all nodes
@@ -243,16 +240,16 @@ def parse_dictionary_location(descr_file, origin_url, language):
         # record
         locales = []
         dict_location = None
-        for prop in node:
+        for prop in list(node):
             for _pk, pv in prop.items():
                 if pv.lower() == 'locations':
                     # Its only child's text is a list of strings of the form %origin%<filename>
                     # For simplicity, we only use the first filename in the
                     # list.
-                    dict_location = prop[0].text.split()[0]
+                    dict_location = list(prop)[0].text.split()[0]
                 elif pv.lower() == 'locales':
                     # Its only child's text is a list of locales.
-                    locales = prop[0].text.replace(
+                    locales = list(prop)[0].text.replace(
                         '-', '_').split()
                     # break # skip any other values of this property
         if language in locales and dict_location:
@@ -263,15 +260,12 @@ def parse_dictionary_location(descr_file, origin_url, language):
     return None, []
 
 
-def _download_dictionaries_xcu(origin_url, **request_args):
+def _download_dictionaries_xcu(origin_url):
     '''
     Try to download dictionaries.xcu from the url. In case of error, return None.
-    Any **request_args are passed to `requests.get()` to configure the HTTP connection.
     '''
     url = origin_url + '/dictionaries.xcu'
-    response = requests.get(url, **request_args)
-    # Return the content if received.
-    # In case of an HTTP error, return the response.
-    # HTTP errors are silently dropped. Fix this?
-    if response.status_code == 200:
-        return response.content 
+    try:
+        return urllib.request.urlopen(url)
+    except urllib.error.URLError:
+        return None

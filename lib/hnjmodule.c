@@ -391,7 +391,6 @@ static struct PyModuleDef hnjmodule = {
 	PyModuleDef_HEAD_INIT,
 	.m_name = "hnj",
 	.m_doc = module_doc,
-	.m_size = -1,
     .m_slots = hnj_slots,
 };
 

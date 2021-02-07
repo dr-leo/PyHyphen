@@ -23,9 +23,6 @@
 # the GNU General Public License Version 2 or later (the "GPL"), or
 # the GNU Lesser General Public License Version 2.1 or later (the "LGPL",
 
-
-import six
-
 from . import dictools
 from . import hnj
 
@@ -54,22 +51,28 @@ class Hyphenator:
         single or compound words
         '''
         file_path = dictools.install(language, directory=directory)
-        self.__hyphenate__ = hnj.hyphenator_(file_path, lmin, rmin, compound_lmin, compound_rmin)
+        try:
+            self.__hyphenate__ = hnj.hyphenator_(file_path, 
+                lmin, rmin, 
+                compound_lmin, compound_rmin)
+        except Exception as E:
+                raise RuntimeError(f'C extension    reported  error \
+                when initializing Hyphenator for dictionary at {file_path}') from E
         self.apply = self.__hyphenate__.apply
 
 
     def pairs(self, word):
         '''
-        Hyphenate a unicode string and return a list of lists of the form
-        [[u'hy', u'phenation'], [u'hyphen', u'ation']].
+        Hyphenate a  string and return a list of lists of the form
+        [['hy', 'phenation'], ['hyphen', 'ation']].
 
         Return [], if len(word) < 4 or if word could not be hyphenated because
 
         * it is not encodable to the dictionary's encoding, or
         * the hyphenator could not find any hyphenation point
         '''
-        if not isinstance(word, six.text_type):
-            raise TypeError('Unicode object expected.')
+        if not isinstance(word, str):
+            raise TypeError('str expected.')
 
         # Discard very short words
         if (len(word) < 4) or ('=' in word):
@@ -95,8 +98,8 @@ class Hyphenator:
         Results are not consistent in case of non-standard hyphenation as a join of the syllables
         would not yield the original word.
         '''
-        if not isinstance(word, six.text_type):
-            raise TypeError('Unicode object expected.')
+        if not isinstance(word, str):
+            raise TypeError('str expected.')
         # discard very short words
         if (len(word) < 4) or ('=' in word):
             return []

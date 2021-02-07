@@ -1,12 +1,11 @@
 # setup.py for the PyHyphen hyphenation package
 # (c) Dr. Leo (fhaxbox66 <at> gmail >dot< com)
 
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 
 
 arg_dict = dict(
     name="PyHyphen",
-    version="3.0.2",
     author="Dr. Leo & Regis Behmo",
     author_email="fhaxbox66@googlemail.com",
     url="https://github.com/dr-leo/PyHyphen",
@@ -15,14 +14,9 @@ arg_dict = dict(
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
-        'Development Status :: 5 - Production/Stable',
+        'Development Status : 5 - Production/Stable',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
@@ -30,16 +24,16 @@ arg_dict = dict(
         'Topic :: Text Processing',
         'Topic :: Text Processing :: Linguistic'
     ],
-    packages=['hyphen', 'textwrap2'],
-    entry_points={
-        'console_scripts': ["wraptext = textwrap2.cli:main"]
-    },
+    packages=find_packages(where='src', include=['hyphen']),
+    package_dir={'': 'src'},
     ext_modules=[
-        Extension('hyphen.hnj', ['src/hnjmodule.c',
-                                 'src/hyphen.c',
-                                 'src/hnjalloc.c'],
-                  include_dirs=['include'])],
-    install_requires=['appdirs', 'six'],
+        Extension('hyphen.hnj', ['lib/hnjmodule.c',
+                                 'lib/hyphen.c',
+                                 'lib/hnjalloc.c'],
+                  include_dirs=['lib'],
+                  py_limited_api=True)
+                  ],
+    install_requires=['appdirs', "requests"],
 )
 
 

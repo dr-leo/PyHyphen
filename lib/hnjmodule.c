@@ -273,7 +273,7 @@ static void
 HyDict_dealloc(HyDictobject *self)
 {
 	if (self->dict) hnj_hyphen_free(self->dict);
-	PyObject_Del(self);
+	    PyObject_Del(self);
 }
 
 static int
@@ -368,10 +368,8 @@ hnj_modexec(PyObject *m)
 if (!(HyDict_type = PyType_FromSpec(&HyDict_type_spec))) {
     goto fail;
 };
-Py_INCREF(HyDict_type);
     /* Add HiDict_type */
 	if (PyModule_AddObject(m, "hyphenator_", HyDict_type) < 0) {
-        Py_DECREF(HyDict_type);
         goto fail;
     }
  

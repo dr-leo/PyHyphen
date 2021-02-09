@@ -72,16 +72,24 @@ class Hyphenator:
         * the hyphenator could not find any hyphenation point
         '''
         if not isinstance(word, str):
-            raise TypeError('str expected.')
+            raise TypeError(f'str expected, {type(word)} given.')
 
         # Discard very short words
         if (len(word) < 4) or ('=' in word):
             return []
-
+        # Set bit 0 of mode to 1 as we want a list of pairs.      
+        # Set bit 1 if word is capitalized. 
+        # In this case, the 
+        # hyphenator will return    capitalized      word.
+        if word.isupper():
+            word = word.lower()
+            mode = 3
+        else: 
+            mode = 1
         # Now call the hyphenator catching the case that 'word' is not encodable
         # to the dictionary's encoding.'
         try:
-            return self.apply(word, 1)
+            return self.apply(word, mode)
         except UnicodeError:
             return []
 
@@ -99,15 +107,19 @@ class Hyphenator:
         would not yield the original word.
         '''
         if not isinstance(word, str):
-            raise TypeError('str expected.')
+            raise TypeError(f'str expected, {type(word)} given.')
         # discard very short words
         if (len(word) < 4) or ('=' in word):
             return []
-
+        if word.isupper():
+            word = word.lower()
+            mode = 2
+        else: 
+            mode = 0
         # Now call the hyphenator catching the case that 'word' is not encodable
         # to the dictionary's encoding.'
-        try:
-            return self.apply(word, 0).split('=')
+        try:                
+            return self.apply(word, mode).split('=')
         except UnicodeError:
             return []
 

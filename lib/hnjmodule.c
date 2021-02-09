@@ -42,7 +42,7 @@ mode: the 3 least significant bits are interpreted as flags with the following m
         - mode & 1 = 0: return a string with '=' inserted at the hyphenation points\n\
         - mode & 1 = 1: return a list of lists of the form [before_hyphen, after_hyphen]\n\
         - mode & 2 = 1: return a capitalized word\n\
-        - mode & 4 = 1: return an upper-cased word\n";
+        - mode & 4 = 1: return an title-cased word\n";
 
 /* get a pointer to the nth 8-bit or UTF-8 character of the word */
 /* This is required because some operations are done at utf8 string level. */
@@ -66,20 +66,17 @@ static PyObject * prepare_result(char *word, char *encoding, unsigned char mode)
     /* first convert the C string to unicode. */
     if (!(temp = PyUnicode_Decode(word, strlen(word), encoding, unicode_errors)))
         return NULL;
-    if (mode & 4) { /* capitalize entire word */
-    printf("calling upper on %s", word);
-        if (!(result = PyObject_CallMethod(temp, "upper", NULL)))
+    if (mode & 4) { /* title-cased */
+        if (!(result = PyObject_CallMethod(temp, "title", NULL)))
         {
-            printf("error in upper");
             Py_DECREF(temp);
             return NULL;
       };
         }
     else
     {
-        if (mode & 2) { /* capitalize first letter */
-        printf("calling title");
-            if (!(result = PyObject_CallMethod(temp, "title", NULL)))
+        if (mode & 2) { /* upper-cased */
+            if (!(result = PyObject_CallMethod(temp, "upper", NULL)))
             {
                 Py_DECREF(temp);
                 return NULL;
@@ -273,7 +270,7 @@ static void
 HyDict_dealloc(HyDictobject *self)
 {
 	if (self->dict) hnj_hyphen_free(self->dict);
-	PyObject_Del(self);
+	    PyObject_Del(self);
 }
 
 static int
@@ -348,24 +345,12 @@ by the hyphen.hyphenator class.\n"
 ;
 
 
-static struct PyModuleDef hnjmodule = {
-	PyModuleDef_HEAD_INIT,
-	.m_name = "hnj",
-	.m_doc = module_doc,
-	.m_size = -1,
-};
-
-PyMODINIT_FUNC
-PyInit_hnj(void)
+static int
+hnj_modexec(PyObject *m)
 {
-	PyObject *m, *HyDict_type;
 
+    	PyObject *HyDict_type;
 	
-
-	/* Create the module and add the functions */
-	m = PyModule_Create(&hnjmodule);
-	if (m == NULL)
-		goto fail;
 
 	/* Add some symbolic constants to the module */
 	if (ErrorObject == NULL) {
@@ -380,18 +365,33 @@ PyInit_hnj(void)
 if (!(HyDict_type = PyType_FromSpec(&HyDict_type_spec))) {
     goto fail;
 };
-Py_INCREF(HyDict_type);
     /* Add HiDict_type */
 	if (PyModule_AddObject(m, "hyphenator_", HyDict_type) < 0) {
-        Py_DECREF(HyDict_type);
         goto fail;
     }
-
-
-	return m;
+ 
+    return 0;
  fail:
- Py_DECREF(ErrorObject);
-	Py_XDECREF(m);
-	return NULL;
+    Py_XDECREF(m);
+    return -1;
 }
 
+
+static PyModuleDef_Slot hnj_slots[] = {
+    {Py_mod_exec, hnj_modexec},
+    {0, NULL}
+};
+
+static struct PyModuleDef hnjmodule = {
+	PyModuleDef_HEAD_INIT,
+	.m_name = "hnj",
+	.m_doc = module_doc,
+    .m_slots = hnj_slots,
+};
+
+
+PyMODINIT_FUNC
+PyInit_hnj(void)
+{
+    return PyModuleDef_Init(&hnjmodule);
+}

@@ -26,3 +26,12 @@ class TestHyphenator(unittest.TestCase):
             ['beau', 'ti', 'ful'],
             h_en.syllables('beautiful')
         )
+
+    def test_uppercase(self):
+        h_en = Hyphenator() # default: en_US
+
+        self.assertEqual(
+            [['PAN', 'DEMIC']],
+            h_en.pairs('PANDEMIC')
+        )
+

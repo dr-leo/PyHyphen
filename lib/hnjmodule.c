@@ -42,7 +42,7 @@ mode: the 3 least significant bits are interpreted as flags with the following m
         - mode & 1 = 0: return a string with '=' inserted at the hyphenation points\n\
         - mode & 1 = 1: return a list of lists of the form [before_hyphen, after_hyphen]\n\
         - mode & 2 = 1: return a capitalized word\n\
-        - mode & 4 = 1: return an upper-cased word\n";
+        - mode & 4 = 1: return an title-cased word\n";
 
 /* get a pointer to the nth 8-bit or UTF-8 character of the word */
 /* This is required because some operations are done at utf8 string level. */
@@ -66,20 +66,17 @@ static PyObject * prepare_result(char *word, char *encoding, unsigned char mode)
     /* first convert the C string to unicode. */
     if (!(temp = PyUnicode_Decode(word, strlen(word), encoding, unicode_errors)))
         return NULL;
-    if (mode & 4) { /* capitalize entire word */
-    printf("calling upper on %s", word);
-        if (!(result = PyObject_CallMethod(temp, "upper", NULL)))
+    if (mode & 4) { /* title-cased */
+        if (!(result = PyObject_CallMethod(temp, "title", NULL)))
         {
-            printf("error in upper");
             Py_DECREF(temp);
             return NULL;
       };
         }
     else
     {
-        if (mode & 2) { /* capitalize first letter */
-        printf("calling title");
-            if (!(result = PyObject_CallMethod(temp, "title", NULL)))
+        if (mode & 2) { /* upper-cased */
+            if (!(result = PyObject_CallMethod(temp, "upper", NULL)))
             {
                 Py_DECREF(temp);
                 return NULL;

@@ -56,11 +56,16 @@ class Hyphenator:
                 lmin, rmin, 
                 compound_lmin, compound_rmin)
         except Exception as E:
-                raise RuntimeError(f'C extension    reported  error \
+                raise RuntimeError(f'C extension    raised  error \
                 when initializing Hyphenator for dictionary at {file_path}') from E
         self.apply = self.__hyphenate__.apply
+        self.language = language
+        self.dict_path = file_path
 
-
+    def __repr__(self):
+        return f"""hyphen.hyphenator.Hyphenator object. 
+            language: {self.language}, dictionary at {self.dict_path}"""  
+        
     def pairs(self, word):
         '''
         Hyphenate a  string and return a list of lists of the form

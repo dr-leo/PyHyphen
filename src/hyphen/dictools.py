@@ -16,17 +16,21 @@ __all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 DEFAULT_DICT_PATH = appdirs.user_data_dir("pyhyphen", appauthor=False)
 
 # Where PyHyphen tries to retrieve dictionaries for download
-DEFAULT_REPOSITORY = 'http://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
+DEFAULT_REPOSITORY = 'https://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
 
 # Incomplete list of languages for which there are dictionaries in the 
 # default repository.
-LANGUAGES = ['af_ZA', 'an_ES', 'ar', 'be_BY', 'bg_BG', 'bn_BD', 'br_FR', 'ca',
-             'cs_CZ', 'da_DK', 'de', 'el_GR', 'en', 'es_ES', 'et_EE', 'fr_FR',
-             'gd_GB', 'gl', 'gu_IN', 'he_IL', 'hi_IN', 'hr_HR', 'hu_HU',
-             'it_IT', 'ku_TR', 'lt_LT', 'lv_LV', 'ne_NP', 'nl_NL', 'no',
-             'oc_FR', 'pl_PL', 'prj', 'pt_BR', 'pt_PT', 'ro', 'ru_RU', 'si_LK',
-             'sk_SK', 'sl_SI', 'sr', 'sv_SE', 'sw_TZ', 'te_IN', 'th_TH',
-             'uk_UA', 'zu_ZA']
+LANGUAGES = [
+    "af_ZA", "be_BY", "bg_BG", "cs_CZ", 
+    "da_DK", "de_AT", "de_CH", "de_DE", 
+    "el_GR", "en_GB", "en_US", "es", "et_EE", 
+    "fr", "gl", "hr_HR", "hu_HU", "id_ID", "is", 
+    "it_IT", "lt", "lv_LV", "nl_NL", "nb_NO", 
+    "nn_NO", "pl_PL", "pt_BR", "pt_PT", 
+    "ro_RO", "ru_RU", "sk_SK", "sl_SI",
+    "sq_AL", "sr-Latn", "sr", "sv", 
+    "te_IN", "uk_UA", "zu_ZA"
+]
 
 
 class Dictionaries:

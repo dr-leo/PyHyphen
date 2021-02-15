@@ -11,7 +11,6 @@ arg_dict = dict(
     url="https://github.com/dr-leo/PyHyphen",
     description="The hyphenation library of LibreOffice and FireFox wrapped for Python",
     long_description=open('README.rst', 'rt').read(),
-    long_description_content_type='text/rst',
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',

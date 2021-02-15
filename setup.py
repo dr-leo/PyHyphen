@@ -1,5 +1,5 @@
 # setup.py for the PyHyphen hyphenation package
-# (c) Dr. Leo (fhaxbox66 <at> gmail >dot< com)
+# (c) 2007-2021 Dr. Leo (fhaxbox66@gmail.com) and other developers
 
 from setuptools import setup, Extension, find_packages
 
@@ -14,7 +14,7 @@ arg_dict = dict(
     classifiers=[
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
-        'Development Status : 5 - Production/Stable',
+        'Development Status :: 4 - Beta',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.7',
@@ -34,6 +34,7 @@ arg_dict = dict(
                   py_limited_api=True)
                   ],
     install_requires=['appdirs', "requests"],
+    include_package_data=True,
 )
 
 

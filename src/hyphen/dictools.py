@@ -143,7 +143,7 @@ def uninstall(language, directory=None):
 
 
 def install(language, directory=None, repos=None, use_description=True, overwrite=False, 
-    request_args={}):
+    **request_args):
     '''
     Download  and install a dictionary file.
 
@@ -154,7 +154,7 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
     use_description (bool): if True, parse dictionaries.xcu file to
         automatically find the appropriate dictionary.
     overwrite (bool): if True, overwrite any existing dictionary. Default: False
-    request_args(dict): kwargs to be passed to `requests.get()` for HTTP configuration
+    **request_args: additional kwargs to be passed to `requests.get()` for HTTP configuration
 
     Return the path to the file that was downloaded or is already installed.
     '''
@@ -172,7 +172,7 @@ def install(language, directory=None, repos=None, use_description=True, overwrit
         dict_url, locales = find_dictionary_location(repos, language, **request_args)
     if not dict_url:
         # handle the case that there is no xml metadata: we just guess its url
-        dict_url = repos + 'hyph_dict_' + language + '.dic'
+        dict_url = '/'.join((repos, language, 'hyph_' + language + '.dic'))
         locales = [language]
 
     # Install the dictionary file

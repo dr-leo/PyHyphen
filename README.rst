@@ -2,13 +2,13 @@
 PyHyphen - hyphenation for Python
 =================================
 
-(c) 2008-2017 Dr. Leo
+(c) 2008-2021 PyHyphen developers
 
-Contact: fhaxbox66@googlemail.com
+Contact: fhaxbox66@gmail.com
 
 Project home: https://github.com/dr-leo/PyHyphen
 
-Mailing list: http://groups.google.com/group/pyhyphen
+Mailing list: https://groups.google.com/group/pyhyphen
 
 
 .. contents::
@@ -16,31 +16,39 @@ Mailing list: http://groups.google.com/group/pyhyphen
 0. Quickstart
 =============
 
+With Python 3.7 or higher and a current version of pip, issue:
+
 ::
 
     $ pip install pyhyphen
-    $ echo "long sentences and complicated words are flabbergasting" | wraptext -w 10 -
-    long sen-
-    tences and
-    compli-
-    cated
-    words are 
-    flabber-
-    gasting
-
-
+    $ python
+    >>> from hyphen import Hyphenator
+    >>> # Download and install the hyphenation dict for German, if needed 
+    >>> h = Hyphenator('de_DE') # `language`defaults to 'en_US' 
+    >>> s='Politikverdrossenheit'
+    >>> h.pairs(s)
+    [['Po', 'litikverdrossenheit'],
+    ['Poli', 'tikverdrossenheit'],
+    ['Politik', 'verdrossenheit'],
+    ['Politikver', 'drossenheit'],
+    ['Politikverdros', 'senheit'],
+    ['Politikverdrossen', 'heit']]
+    >>> h.syllables(s)
+    ['Po', 'li', 'tik', 'ver', 'dros', 'sen', 'heit']
+    >>> h.wrap(s, 5)
+    ['Poli-', 'tikverdrossenheit']
+    
 1. Overview
 ================
 
-PyHyphen is a pythonic interface to the hyphenation C library used in software such as LibreOffice and the Mozilla suite.
+*PyHyphen* is a pythonic interface to the hyphenation library used in projects such as LibreOffice and the Mozilla suite.
 It comes with tools to download, install and uninstall hyphenation dictionaries from LibreOffice's Git repository.
-PyHyphen provides the 'hyphen' and 'textwrap2' packages as well as
-``wraptext.py``, a script which wraps 
-a text-file with hyphenation given a specified width. See the code example under "Quick start" above. 
+PyHyphen provides the `hyphen`   package.
+`hyphen.textwrap2` is a  modified version of the familiar `textwrap`module   
+which wraps 
+a text with hyphenation given a specified width. See the code example below. 
  
-PyHyphen supports Python 2.7 and 3.4 or higher, perhaps Python 3.3 works as well. 
-If you depend on earlier 2.x versions, use PyHyphen-1.0b1
-instead. In this case you may have to download hyphenation dictionaries manually.
+PyHyphen supports Python 3.7  or higher. 
 
 1.1 Content of the hyphen package
 ------------------------------------------
@@ -49,11 +57,11 @@ The 'hyphen' package contains the following:
 
 - the class hyphen.Hyphenator: each instance of it can hyphenate and wrap
   words using a dictionary compatible with the hyphenation feature of
-  LibreOffice and Mozilla. Required dictionaries are automatically
+  LibreOffice and Mozilla. Required dictionaries are automatically, if not already installed.
   downloaded at runtime.
 - the module dictools contains useful functions such as for downloading and
   installing dictionaries from a configurable repository. After
-  installation of PyHyphen, the LibreOffice repository is used by default.
+  installation of PyHyphen, the LibreOffice repository is used by default. Dictionaries are storedin the platform-specific user's app directory.
 - 'hyphen.hnj' is the C extension module that does all the ground work. It
   contains the high quality
   `C library libhyphen <http://sourceforge.net/projects/hunspell/files/Hyphen/>`_.
@@ -67,9 +75,7 @@ This module is an enhanced, though backwards-compatible version of the module
 'textwrap' from the Python standard library. Unsurprisingly, it adds
 hyphenation functionality to 'textwrap'. To this end, a new key word parameter
 'use_hyphenator' has been added to the __init__ method of the TextWrapper class which
-defaults to None. It can be initialized with any hyphenator object. Note that until version 0.7
-this keyword parameter was named 'use_hyphens'. So older code may need to be changed.'
-
+defaults to None. It can be initialized with any hyphenator object. 
 
 2. Code examples
 ======================
@@ -83,11 +89,8 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
         h_en = Hyphenator('en_US')
 
         # Now hyphenate some words
-        # Note: the following examples are written in Python 3.x syntax.
-        # If you use Python 2.x, you must add the 'u' prefixes as Hyphenator methods expect unicode strings.
-
         h_en.pairs('beautiful'
-        [['beau', 'tiful'], [u'beauti', 'ful']]
+        [['beau', 'tiful'], ['beauti', 'ful']]
 
         h_en.wrap('beautiful', 6)
         ['beau-', 'tiful']
@@ -98,11 +101,15 @@ this keyword parameter was named 'use_hyphens'. So older code may need to be cha
         h_en.syllables('beautiful')
         ['beau', 'ti', 'ful']
         
-        >>> from textwrap2 import fill
+        >>> from hyphen.textwrap2 import fill
         print fill('very long text...', width=40, use_hyphenator=h_en)
 
 Just by creating ``Hyphenator`` objects for a language, the corresponding
-dictionaries will be automatically downloaded. Dictionaries may be manually
+dictionaries will be automatically downloaded.
+For the HTTP connection to the LibreOffice server, PyHyphen uses the 
+familiar`requests <https://www.python-requests.org>`_ 
+library. Requests are fully configurable to handle  proxies etc. 
+Alternatively, dictionaries may be manually
 installed and listed with the ``dictools`` module::
 
         >>> from hyphen.dictools import *
@@ -110,7 +117,7 @@ installed and listed with the ``dictools`` module::
         # Download and install some dictionaries in the default directory using the default
         # repository, usually the LibreOffice website
         >>> for lang in ['de_DE', 'en_US']:
-            install(lang)
+            install(lang) # provide kwargs to configure the HTTP request 
             
         # Show locales of installed dictionaries
         >>> list_installed()
@@ -120,14 +127,14 @@ installed and listed with the ``dictools`` module::
 3. Installation
 ===============
 
-PyHyphen is pip-installable. In most scenarios the easiest way to install PyHyphen is to type from the shell prompt::
+PyHyphen is pip-installable from PyPI. In most scenarios the easiest way to install PyHyphen is to type from the shell prompt::
 
     $ pip install pyhyphen
 
-Besides the source distribution, there are wheels on PyPI for common Windows-based environments. So most Windows users
-can install PyHyphen without a C compiler. 
+Besides the source distribution, there is a  wheel on PyPI for Windows. As the 
+C extension uses the limited C API, the wheel should work on all Python versions >= 3.7. 
 
-Building PyHyphen from source under Linux may require root privileges.
+Building PyHyphen from source under Linux or MacOS should be straightforward. On Windows, the wheel isinstalled by default, so no C compiler is needed.
 
 4. Managing dictionaries
 ========================
@@ -180,21 +187,17 @@ dictionary file and the url from which it was downloaded.
 =====================================
 
 Questions can be asked in the Google group 
-(http://groups.google.com/group/pyhyphen). Or just send
+(https://groups.google.com/group/pyhyphen). Or just send
 an e-mail to the authors.
 
-Browse  or fork the Mercurial repository and report 
+Browse  or fork the  repository and report 
 bugs at PyHyphen's `project site on Github <https://github.com/dr-leo/PyHyphen>`_.
 
-Before submitting a PR, run the unit tests with pytest::
+Before submitting a PR, run the unit tests
+  ::
     
-    $ pip install pytest
-    $ pytest
+    $ python -m unittest
 
-To run unit tests for all supported versions of python, run tests with `tox <https://tox.readthedocs.io/en/latest/>`__::
-    
-    $ pip install tox
-    $ tox
 
 6. License
 ============
@@ -205,6 +208,42 @@ hyphen.c and a patched version of the Python standard module textwrap.
 
 7. Changelog
 ======================
+
+New in version 4.0.0 (2021-02-15):
+
+This is a  big release. The entire code-base has been overhauled. 
+A cross-Py-version wheel for Windows and the use of 
+the excellent `requests`package for HTTP connections  
+are but some of the highlights.
+
+* `hyphen.Hyphenator`: 
+
+  - support of hyphenation of upper-cased words as in version 2.x
+  - better error-handling
+  - human-friendly str representation of Hyphenator objects
+  
+* Builds:
+
+  - single-source package version (requires setuptools >= 47.0)
+  - CI: move to Github actions. Build ABI3-compatible wheel for Windows
+  
+* C extension:
+
+  - partial rewrite to support the limited API (PEP 384)
+  - multi-phase initialization of the module
+  - upgrade hyphen.c from hunspell
+  - clean-ups
+  
+* hyphen.dictools: 
+
+  - use `requests` instead of urllib for HTTP connections
+  - make HTTP connections configurable through kwargs passed to `requests.get`
+  - improve error-handling
+  - fix URL generation in some cases
+  - clean-ups  
+  
+* make textwrap2 a submodule of hyphen
+* remove wraptext script
 
 New in Version 3.0.1:
 

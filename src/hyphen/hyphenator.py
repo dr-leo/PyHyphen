@@ -37,7 +37,8 @@ class Hyphenator:
     """
 
     def __init__(self, language='en_US', lmin=2, rmin=2, compound_lmin=2,
-                 compound_rmin=2, directory=None):
+                 compound_rmin=2, directory=None,
+                 **request_args):
         '''
         Return a hyphenator object initialized with a dictionary for the specified language, typically a locale name.
 
@@ -49,8 +50,12 @@ class Hyphenator:
 
         lmin, rmin, compound_lmin and compound_rmin: set minimum number of chars to be cut off by hyphenation in
         single or compound words
+        
+        **request_args: any kwargs to be  passed on to `requests.get` 
+            to configure the HTTP connection if 
+            a dictionary needs to be downloaded.
         '''
-        file_path = dictools.install(language, directory=directory)
+        file_path = dictools.install(language, directory=directory, **request_args)
         try:
             self.__hyphenate__ = hnj.hyphenator_(file_path, 
                 lmin, rmin, 

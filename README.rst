@@ -16,9 +16,7 @@ Mailing list: https://groups.google.com/group/pyhyphen
 0. Quickstart
 =============
 
-With Python 3.7 or higher and a current version of pip, issue:
-
-::
+With Python 3.7 or higher and a current version of pip, issue::
 
     $ pip install pyhyphen
     $ python
@@ -41,10 +39,10 @@ With Python 3.7 or higher and a current version of pip, issue:
 1. Overview
 ================
 
-*PyHyphen* is a pythonic interface to the hyphenation library used in projects such as LibreOffice and the Mozilla suite.
+Pyhyphen is a pythonic interface to the hyphenation library used in projects such as Libre Office and the Mozilla suite.
 It comes with tools to download, install and uninstall hyphenation dictionaries from LibreOffice's Git repository.
-PyHyphen provides the `hyphen`   package.
-`hyphen.textwrap2` is a  modified version of the familiar `textwrap`module   
+PyHyphen provides the **hyphen**   package.
+`hyphen.textwrap2` is a  modified version of the familiar ``textwrap`` module   
 which wraps 
 a text with hyphenation given a specified width. See the code example below. 
  
@@ -81,7 +79,6 @@ defaults to None. It can be initialized with any hyphenator object.
 ======================
 
 
-::
 
         >>> from hyphen import Hyphenator
         # Create some hyphenators
@@ -211,9 +208,10 @@ hyphen.c and a patched version of the Python standard module textwrap.
 
 New in version 4.0.0 (2021-02-15):
 
-This is a  big release. The entire code-base has been overhauled. 
+This is a  big release. 
+The entire code-base has been overhauled. 
 A cross-Py-version wheel for Windows and the use of 
-the excellent `requests`package for HTTP connections  
+the excellent `requests` package for HTTP connections  
 are but some of the highlights.
 
 * `hyphen.Hyphenator`: 

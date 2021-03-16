@@ -259,7 +259,7 @@ HyDict_apply(HyDictobject *self, PyObject *args)
 static struct PyMethodDef HyDict_methods[] = {
 	{"apply",	(PyCFunction)HyDict_apply,	METH_VARARGS,	HyDict_apply__doc__},
 
-	{NULL}		/* sentinel */
+	{NULL, NULL}		/* sentinel */
 };
 
 /* ---------- */

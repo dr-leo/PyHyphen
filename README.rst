@@ -206,6 +206,10 @@ hyphen.c and a patched version of the Python standard module textwrap.
 7. Changelog
 ======================
 
+New in version 4.0.1 (2021-03-16):
+
+* Fix MacOS builds
+
 New in version 4.0.0 (2021-02-15):
 
 This is a  big release. 

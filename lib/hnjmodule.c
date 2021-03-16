@@ -256,10 +256,10 @@ HyDict_apply(HyDictobject *self, PyObject *args)
 }
 
 
-static struct PyMethodDef HyDict_methods[] = {
-	{"apply",	(PyCFunction)HyDict_apply,	METH_VARARGS,	HyDict_apply__doc__},
-
-	{NULL}		/* sentinel */
+static  PyMethodDef HyDict_methods[] = {
+	{"apply",	(PyCFunction)HyDict_apply,
+    METH_VARARGS,	HyDict_apply__doc__},
+	{NULL, NULL}		/* sentinel */
 };
 
 /* ---------- */
@@ -316,7 +316,7 @@ static PyType_Slot HyDict_type_slots[] = {
     {Py_tp_dealloc, (destructor)HyDict_dealloc},
     {Py_tp_methods, HyDict_methods},
     {Py_tp_init, (initproc)HyDict_init},
-    {Py_tp_free, },
+    {0, 0},
 };
 static PyType_Spec HyDict_type_spec = {
     "hnjmodule.hyphenator_",

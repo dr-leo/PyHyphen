@@ -316,7 +316,7 @@ static PyType_Slot HyDict_type_slots[] = {
     {Py_tp_dealloc, (destructor)HyDict_dealloc},
     {Py_tp_methods, HyDict_methods},
     {Py_tp_init, (initproc)HyDict_init},
-    {Py_tp_free, },
+    {0, 0},
 };
 static PyType_Spec HyDict_type_spec = {
     "hnjmodule.hyphenator_",

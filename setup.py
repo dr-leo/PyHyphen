@@ -1,10 +1,26 @@
 # setup.py for the PyHyphen hyphenation package
 # (c) 2007-2021 Dr. Leo (fhaxbox66@gmail.com) and other developers
 
+import io
+import os
 from setuptools import setup, Extension, find_packages
 
 
-arg_dict = dict(
+HERE = os.path.abspath(os.path.dirname(__file__))
+
+
+def load_requirements():
+    with io.open(
+        os.path.join(HERE, "requirements", "base.in"), "rt", encoding="utf-8"
+    ) as f:
+        return [line.strip() for line in f if is_requirement(line)]
+
+
+def is_requirement(line):
+    return not (line.strip() == "" or line.startswith("#"))
+
+
+setup(
     name="PyHyphen",
     author="Dr. Leo & Regis Behmo",
     author_email="fhaxbox66@googlemail.com",
@@ -33,9 +49,6 @@ arg_dict = dict(
                   include_dirs=['lib'],
                   py_limited_api=True)
                   ],
-    install_requires=['appdirs', "requests"],
+    install_requires=load_requirements(),
     include_package_data=True,
 )
-
-
-setup(**arg_dict)

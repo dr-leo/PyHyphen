@@ -188,7 +188,7 @@ Browse  or fork the  repository and report bugs at PyHyphen's `project site on G
 
 Before submitting a PR, run the unit tests::
 
-    $ python -m unittest
+    $ make test
 
 6. License
 ============

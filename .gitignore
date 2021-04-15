@@ -4,6 +4,7 @@
 /docs/
 /htmlcov/
 /hyphen/*.so
+/src/hyphen/*.so
 /src/PyHyphen.egg-info/
 *.coverage
 *.out

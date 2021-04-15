@@ -1,7 +1,7 @@
 /dist/
 /website/
 /build/
-/docs/
+/docs/_build
 /htmlcov/
 /hyphen/*.so
 /src/hyphen/*.so

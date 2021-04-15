@@ -1,8 +1,13 @@
 .DEFAULT_GOAL := help
+.PHONY: docs
 
 compile-requirements: ## Compile requirements files
 	pip-compile requirements/base.in
 	pip-compile requirements/dev.in
+	pip-compile requirements/doc.in
+
+docs: ## Build html documentation
+	$(MAKE) -C docs html
 
 test: ## Run run unit tests
 	python -m unittest

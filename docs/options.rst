@@ -1,24 +1,33 @@
-New option of Libhyphen 2.7: NOHYPHEN
+==============
+Hyphen options
+==============
+
+NOHYPHEN (new in Libhyphen 2.7)
+===============================
 
 Hyphen, apostrophe and other characters may be word boundary characters,
 but they don't need (extra) hyphenation. With NOHYPHEN option
 it's possible to hyphenate the words parts correctly.
 
-Example:
+Example::
 
-ISO8859-1
-NOHYPHEN -,'
-1-1
-1'1
-NEXTLEVEL
+    ISO8859-1
+    NOHYPHEN -,'
+    1-1
+    1'1
+    NEXTLEVEL
 
-Description:
+Description
+-----------
 
 1-1 and 1'1 declare hyphen and apostrophe as word boundary characters
 and NOHYPHEN with the comma separated character (or character sequence)
 list forbid the (extra) hyphens at the hyphen and apostrophe characters.
 
+.. _compound:
+
 Compound word hyphenation
+=========================
 
 Hyphen library supports better compound word hyphenation and special
 rules of compound word hyphenation of German languages and other
@@ -27,16 +36,18 @@ COMPOUNDLEFTHYPHENMIN and COMPOUNDRIGHTHYPHENMIN help to set the right
 style for the hyphenation of compound words.
 
 Algorithm
+---------
 
-The algorithm is an extension of the original pattern based hyphenation
+The algorithm is an extension of the original pattern-based hyphenation
 algorithm. It uses two hyphenation pattern sets, defined in the same
 pattern file and separated by the NEXTLEVEL keyword. First pattern
 set is for hyphenation only at compound word boundaries, the second one
 is for hyphenation within words or word parts.
 
 Recursive compound level hyphenation
+------------------------------------
 
-The algorithm is recursive: every word parts of a successful 
+The algorithm is recursive: every word parts of a successful
 first (compound) level hyphenation will be rehyphenated
 by the same (first) pattern set.
 
@@ -44,27 +55,32 @@ Finally, when first level hyphenation is not possible, Hyphen uses
 the second level hyphenation for the word or the word parts.
 
 Word endings and word parts
+---------------------------
 
 Patterns for word endings (patterns with ellipses) match the
 word parts, too.
 
 Options
+-------
 
-COMPOUNDLEFTHYPHENMIN: min. hyph. dist. from the left compound word boundary
-COMPOUNDRIGHTHYPHENMIN: min. hyph. dist. from the right comp. word boundary
-NEXTLEVEL: sign second level hyphenation patterns
+- COMPOUNDLEFTHYPHENMIN: min. hyph. dist. from the left compound word boundary
+- COMPOUNDRIGHTHYPHENMIN: min. hyph. dist. from the right comp. word boundary
+- NEXTLEVEL: sign second level hyphenation patterns
 
 Default hyphenmin values
+------------------------
 
 Default values of COMPOUNDLEFTHYPHENMIN and COMPOUNDRIGHTHYPHENMIN are 0,
 and 0 under the hyphenation, too. ("0" values of
 LEFTHYPHENMIN and RIGHTHYPHENMIN mean the default "2" under the hyphenation.)
 
 Examples
+--------
 
 See tests/compound* test files.
 
 Preparation of hyphenation patterns
+-----------------------------------
 
 It hasn't been special pattern generator tool for compound hyphenation
 patterns, yet. It is possible to use PATGEN to generate both of

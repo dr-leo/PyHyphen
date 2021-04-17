@@ -1,9 +1,10 @@
 /dist/
 /website/
 /build/
-/docs/
+/docs/_build
 /htmlcov/
 /hyphen/*.so
+/src/hyphen/*.so
 /src/PyHyphen.egg-info/
 *.coverage
 *.out

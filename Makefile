@@ -6,6 +6,11 @@ compile-requirements: ## Compile requirements files
 	pip-compile requirements/dev.in
 	pip-compile requirements/doc.in
 
+upgrade-requirements: ## Upgrade requirements files
+	pip-compile --upgrade requirements/base.in
+	pip-compile --upgrade requirements/dev.in
+	pip-compile --upgrade requirements/doc.in
+
 docs: ## Build html documentation
 	$(MAKE) -C docs html
 

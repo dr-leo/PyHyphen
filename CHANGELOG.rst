@@ -2,6 +2,11 @@
 Changelog
 =========
 
+Version 4.0.2 (2021-11-19)
+==========================
+
+* Update requirements, enhance MakeFile
+
 Version 4.0.1 (2021-03-16)
 ==========================
 

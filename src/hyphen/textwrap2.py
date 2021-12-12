@@ -41,6 +41,7 @@ class TextWrapper(textwrap.TextWrapper):
             # cur_len is just the length of all the chunks in cur_line.
             cur_line = []
             cur_len = 0
+            hyphenated_last = False
 
             # Figure out which static string will prefix this line.
             if lines:
@@ -72,11 +73,12 @@ class TextWrapper(textwrap.TextWrapper):
                         if hyphenated_chunk:
                             cur_line.append(hyphenated_chunk[0])
                             chunks[-1] = hyphenated_chunk[1]
+                            hyphenated_last = True
                     break
 
             # The current line is full, and the next chunk is too big to
             # fit on *any* line (not just this one).
-            if chunks and len(chunks[-1]) > width:
+            if chunks and len(chunks[-1]) > width and not hyphenated_last:
                 self._handle_long_word(chunks, cur_line, cur_len, width)
                 cur_len = sum(map(len, cur_line))
 

@@ -5,7 +5,7 @@
 #    pip-compile requirements/base.in
 #
 appdirs==1.4.4
-    # via -r requirements/base.in
+    # via -r base.in
 certifi==2021.10.8
     # via requests
 charset-normalizer==2.0.7
@@ -13,11 +13,11 @@ charset-normalizer==2.0.7
 idna==3.3
     # via requests
 requests==2.26.0
-    # via -r requirements/base.in
+    # via -r base.in
 urllib3==1.26.7
     # via requests
-wheel==0.37.0
-    # via -r requirements/base.in
+wheel==0.38.1
+    # via -r base.in
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

@@ -310,7 +310,7 @@ def parse_dictionary_location(descr_file, origin_url, language):
                     locales = prop[0].text.replace(
                         '-', '_').split()
                     # break # skip any other values of this property
-        if any(locale.startswith(language + "_") for locale in locales) and dict_location:
+        if (language in locales or any(locale.startswith(language + '_') for locale in locales)) and dict_location:
             # strip the prefix '%origin%'
             dict_url = origin_url + '/' + dict_location[9:]
             return dict_url, locales

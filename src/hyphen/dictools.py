@@ -16,20 +16,71 @@ __all__ = ['install', 'is_installed', 'uninstall', 'list_installed']
 DEFAULT_DICT_PATH = appdirs.user_data_dir("pyhyphen", appauthor=False)
 
 # Where PyHyphen tries to retrieve dictionaries for download
-DEFAULT_REPOSITORY = 'https://cgit.freedesktop.org/libreoffice/dictionaries/plain/'
+DEFAULT_REPOSITORY = 'https://raw.githubusercontent.com/LibreOffice/dictionaries/master/'
 
-# Incomplete list of languages for which there are dictionaries in the 
+# List of languages for which there are dictionaries in the
 # default repository.
 LANGUAGES = [
-    "af_ZA", "be_BY", "bg_BG", "cs_CZ", 
-    "da_DK", "de_AT", "de_CH", "de_DE", 
-    "el_GR", "en_GB", "en_US", "es", "et_EE", 
-    "fr", "gl", "hr_HR", "hu_HU", "id_ID", "is", 
-    "it_IT", "lt", "lv_LV", "nl_NL", "nb_NO", 
-    "nn_NO", "pl_PL", "pt_BR", "pt_PT", 
-    "ro_RO", "ru_RU", "sk_SK", "sl_SI",
-    "sq_AL", "sr-Latn", "sr", "sv", 
-    "te_IN", "uk_UA", "zu_ZA"
+"af_ZA",
+"an_ES",
+"ar",
+"be_BY",
+"bg_BG",
+"bn_BD",
+"bo",
+"br_FR",
+"bs_BA",
+"ca",
+"ckb",
+"cs_CZ",
+"da_DK",
+"de",
+"el_GR",
+"en",
+"eo",
+"es",
+"et_EE",
+"fa_IR",
+"fr_FR",
+"gd_GB",
+"gl",
+"gu_IN",
+"gug",
+"he_IL",
+"hi_IN",
+"hr_HR",
+"hu_HU",
+"id",
+"is",
+"it_IT",
+"kmr_Latn",
+"ko_KR",
+"lo_LA",
+"lt_LT",
+"lv_LV",
+"mn_MN",
+"ne_NP",
+"nl_NL",
+"no",
+"oc_FR",
+"pl_PL",
+"pt_BR",
+"pt_PT",
+"ro",
+"ru_RU",
+"si_LK",
+"sk_SK",
+"sl_SI",
+"sq_AL",
+"sr",
+"sv_SE",
+"sw_TZ",
+"te_IN",
+"th_TH",
+"tr_TR",
+"uk_UA",
+"vi",
+"zu_ZA",
 ]
 
 
@@ -259,7 +310,7 @@ def parse_dictionary_location(descr_file, origin_url, language):
                     locales = prop[0].text.replace(
                         '-', '_').split()
                     # break # skip any other values of this property
-        if language in locales and dict_location:
+        if (language in locales or any(locale.startswith(language + '_') for locale in locales)) and dict_location:
             # strip the prefix '%origin%'
             dict_url = origin_url + '/' + dict_location[9:]
             return dict_url, locales

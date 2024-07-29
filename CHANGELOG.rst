@@ -3,6 +3,14 @@ Changelog
 =========
 
 
+
+Version 4.0.4 (2024-07-30)
+==========================
+
+* update default dict location
+* update list of language strings
+* update some requirements
+ 
 Version 4.0.3 (2021-12-17)
 ==========================
 

@@ -2,7 +2,7 @@
 PyHyphen - hyphenation for Python
 =================================
 
-(c) 2008-2021 PyHyphen developers
+(c) 2008-2024 PyHyphen developers
 
 Contact: fhaxbox66@gmail.com
 
